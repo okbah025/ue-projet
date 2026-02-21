@@ -1,165 +1,481 @@
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * Classe Grille
+ * 
+ * Cette classe représente une grille de jeu Sokoban.
+ * Une grille est une matrice 2D contenant des objets du jeu (joueur, boîtes, murs, cibles).
+ * 
+ * Caractéristiques :
+ * - Contient tous les objets du niveau
+ * - Gère les déplacements des objets
+ * - Vérifie les conditions de victoire
+ * - Peut être sauvegardée et chargée
+ * 
+ */
 public class Grille {
-  /*explication: une grille est une matrice constituée d'objets de la classe Objet
-  **toute Grill est une piece
-  **chaque grille a une référence par rapport à la pièce à la quelle elle appartient
-  **elle a une longeur et une hauteur*/
-  Objet[][] matrice;
-  int longeur;
-  int hauteur;
-  Piece maitre;
-
-  /*constructeur*/
-  /*la grille reçoit en entrée une collection d'objets tel que les cases vides sont représentées par Null,
-  **lorsque le nombre d'objects dans la collection et inférieur au nombres de cases dans grille on lève une exception*/
-  public Grille(Collection<Objet> c, int l, int h, Piece m) {
-    if ((c.size() < (l * h)) || c.isEmpty()) {
-      throw new IllegalArgumentException("la collection d'objet doit avoir plus d'éléments");
-    }
-    this.longeur = l;
-    this.hauteur = h;
-    this.maitre = m;
-    this.matrice = new Objet[l][h];
-    Iterator<Objet> itr = c.iterator();
-    int i = 0;
-    int j = 0;
-    if (itr.hasNext()) {
-      while (i < l) {
-        while (j < h) {
-          matrice[i][j] = itr.next();
-          if (!itr.hasNext()) {
-            break;
-          }
-          j++;
+    
+    // ========== ATTRIBUTS ==========
+    
+    /**
+     * Matrice contenant tous les objets de la grille
+     * null représente une case vide
+     */
+    private Objet[][] matrice;
+    
+    /**
+     * Largeur de la grille (nombre de colonnes)
+     */
+    private int largeur;
+    
+    /**
+     * Hauteur de la grille (nombre de lignes)
+     */
+    private int hauteur;
+    
+    /**
+     * Référence vers le joueur dans cette grille
+     * Facilite l'accès au joueur pour les déplacements
+     */
+    private Joueur joueur;
+    
+    /**
+     * Liste des cibles dans la grille
+     * Utile pour vérifier la condition de victoire
+     */
+    private List<Cible> cibles;
+    
+    /**
+     * Liste des boîtes dans la grille
+     * Utile pour vérifier la condition de victoire
+     */
+    private List<Boite> boites;
+    
+    /**
+     * Nom ou identifiant de la grille
+     * Utile pour les niveaux à plusieurs mondes
+     */
+    private String nom;
+    
+    // ========== CONSTRUCTEURS ==========
+    
+    /**
+     * Constructeur principal d'une grille vide
+     * @param largeur La largeur de la grille
+     * @param hauteur La hauteur de la grille
+     * @param nom Le nom de la grille
+     */
+    public Grille(int largeur, int hauteur, String nom) {
+        if (largeur <= 0 || hauteur <= 0) {
+            throw new IllegalArgumentException("Les dimensions doivent être positives");
         }
-        if (!itr.hasNext()) {
-          break;
+        
+        this.largeur = largeur;
+        this.hauteur = hauteur;
+        this.nom = nom;
+        this.matrice = new Objet[largeur][hauteur];
+        this.cibles = new ArrayList<>();
+        this.boites = new ArrayList<>();
+        this.joueur = null;
+    }
+    
+    /**
+     * Constructeur simplifié sans nom
+     * @param largeur La largeur de la grille
+     * @param hauteur La hauteur de la grille
+     */
+    public Grille(int largeur, int hauteur) {
+        this(largeur, hauteur, "Niveau");
+    }
+    
+    // ========== GETTERS ==========
+    
+    /**
+     * Obtenir la largeur de la grille
+     * @return Le nombre de colonnes
+     */
+    public int getLargeur() {
+        return this.largeur;
+    }
+    
+    /**
+     * Obtenir la hauteur de la grille
+     * @return Le nombre de lignes
+     */
+    public int getHauteur() {
+        return this.hauteur;
+    }
+    
+    /**
+     * Obtenir le nom de la grille
+     * @return Le nom
+     */
+    public String getNom() {
+        return this.nom;
+    }
+    
+    /**
+     * Obtenir le joueur de cette grille
+     * @return Le joueur, ou null s'il n'y en a pas
+     */
+    public Joueur getJoueur() {
+        return this.joueur;
+    }
+    
+    /**
+     * Obtenir la liste des cibles
+     * @return La liste des cibles
+     */
+    public List<Cible> getCibles() {
+        return this.cibles;
+    }
+    
+    /**
+     * Obtenir la liste des boîtes
+     * @return La liste des boîtes
+     */
+    public List<Boite> getBoites() {
+        return this.boites;
+    }
+    
+    /**
+     * Obtenir un objet à une position donnée
+     * @param x La position horizontale
+     * @param y La position verticale
+     * @return L'objet à cette position, ou null si case vide ou hors grille
+     */
+    public Objet getObjet(int x, int y) {
+        if (!estDansGrille(x, y)) {
+            return null;
         }
-        i++;
-        j = 0;
-      }
+        return matrice[x][y];
     }
-  }
-
-  /*Méthodes*/
-  /*avoir la piece maitresse de la grille*/
-  public Piece getMaitre() {
-    return this.maitre;
-  }
-
-  /*avoir la hauteur et largeur de la grille*/
-  public int getLongueur() {
-    return this.longeur;
-  }
-
-  public int getHauteur() {
-    return this.hauteur;
-  }
-
-  /*avoir un objet à une coordonnées donnée*/
-  public Objet getObjet(int x, int y) {
-    if (horsGrille(x, y)) {
-      return null;
+    
+    /**
+     * Obtenir un objet à une position donnée (version avec Position)
+     * @param pos La position
+     * @return L'objet à cette position, ou null si case vide ou hors grille
+     */
+    public Objet getObjet(Position pos) {
+        return getObjet(pos.getX(), pos.getY());
     }
-    return matrice[x][y];
-  }
-
-  /*vérifie si les coordonnées d'un objet sont hors de la matrice*/
-  public boolean horsGrille(int x, int y) {
-    // Correction : Utilisation de || au lieu de && car si une seule condition est vraie, on est hors grille
-    return (x < 0 || x >= this.longeur || y < 0 || y >= this.hauteur);
-  }
-
-  /*mettre un objet à une place donnée*/
-  public void setObjet(Objet obj, int x, int y) {
-    matrice[x][y] = obj;
-  }
-
-  /*vérifie si un objet est au bord interne d'une grille*/
-  public boolean bordInterne(Objet obj, int x, int y) {
-    if (!obj.equals(matrice[x][y])) {
-      return false;
+    
+    // ========== SETTERS ==========
+    
+    /**
+     * Placer un objet dans la grille
+     * Met automatiquement à jour les listes de cibles, boîtes et joueur
+     * @param objet L'objet à placer
+     * @param x La position horizontale
+     * @param y La position verticale
+     */
+    public void setObjet(Objet objet, int x, int y) {
+        if (!estDansGrille(x, y)) {
+            throw new IllegalArgumentException("Position hors de la grille");
+        }
+        
+        // Mettre à jour la matrice
+        matrice[x][y] = objet;
+        
+        // Si l'objet n'est pas null, mettre à jour sa position et sa grille parente
+        if (objet != null) {
+            objet.setPosition(x, y);
+            objet.setGrilleParente(this);
+            
+            // Mettre à jour les références selon le type d'objet
+            if (objet instanceof Joueur) {
+                this.joueur = (Joueur) objet;
+            } else if (objet instanceof Cible) {
+                if (!cibles.contains(objet)) {
+                    cibles.add((Cible) objet);
+                }
+            } else if (objet instanceof Boite) {
+                if (!boites.contains(objet)) {
+                    boites.add((Boite) objet);
+                }
+            }
+        }
     }
-    return ((x == 0) || (y == 0) || (x == this.longeur - 1) || (y == this.hauteur - 1));
-  }
-
-  /*si l'objet est aux bords externes de la grille,
-  0 si n'est pas au bord,
-  1 si en haut,
-  2 si à gauche,
-  3 si en bas,
-  4 si à droite*/
-  public int emplacementExterne(Objet obj, Piece p, int x, int y, int posXp, int posYp) {
-    if (x + 1 == posXp && y == posYp) {
-      return 1;
+    
+    /**
+     * Placer un objet dans la grille (version avec Position)
+     * @param objet L'objet à placer
+     * @param pos La position
+     */
+    public void setObjet(Objet objet, Position pos) {
+        setObjet(objet, pos.getX(), pos.getY());
     }
-    if (x - 1 == posXp && y == posYp) {
-      return 3;
+    
+    // ========== MÉTHODES DE VÉRIFICATION ==========
+    
+    /**
+     * Vérifier si une position est dans la grille
+     * @param x Position horizontale
+     * @param y Position verticale
+     * @return true si dans la grille, false sinon
+     */
+    public boolean estDansGrille(int x, int y) {
+        return (x >= 0 && x < largeur && y >= 0 && y < hauteur);
     }
-    if (x == posXp && y == posYp + 1) {
-      return 2;
+    
+    /**
+     * Vérifier si une position est dans la grille (version avec Position)
+     * @param pos La position à vérifier
+     * @return true si dans la grille, false sinon
+     */
+    public boolean estDansGrille(Position pos) {
+        return estDansGrille(pos.getX(), pos.getY());
     }
-    if (x == posXp && y == posYp - 1) {
-      return 4;
+    
+    /**
+     * Vérifier si une case est vide (ou contient uniquement une cible)
+     * @param x Position horizontale
+     * @param y Position verticale
+     * @return true si la case est libre, false sinon
+     */
+    public boolean estCaseLibre(int x, int y) {
+        if (!estDansGrille(x, y)) {
+            return false;
+        }
+        
+        Objet objet = matrice[x][y];
+        // Une case est libre si elle est null ou si c'est une cible
+        return (objet == null || objet instanceof Cible);
     }
-    return 0;
-  }
-
-  /*déplacer un objet dans la grille*/
-  public boolean deplaceObejt(Objet obj, int dirX, int dirY) {
-    if (horsGrille(dirX, dirY)) {
-      return false;
+    
+    /**
+     * Vérifier si une case est vide (version avec Position)
+     * @param pos La position à vérifier
+     * @return true si la case est libre, false sinon
+     */
+    public boolean estCaseLibre(Position pos) {
+        return estCaseLibre(pos.getX(), pos.getY());
     }
-
-    int posX = obj.getPosx(); /*actuelle position l'objet*/
-    int posY = obj.getPosy();
-
-    /*si la direction donnée est près de l'emplacement de l'objet*/
-    if (posX == dirX - 1 || posY == dirY - 1 || posX == dirX + 1 || posY == dirY - 1) {
-
-      if (matrice[dirX][dirY] == null) {
-        obj.setPos(dirX, dirY);
-        matrice[dirX][dirY] = obj;
-        matrice[posX][posY] = null;
+    
+    /**
+     * Vérifier si le niveau est gagné
+     * Le niveau est gagné si toutes les boîtes sont sur des cibles
+     * @return true si le niveau est gagné, false sinon
+     */
+    public boolean estNiveauGagne() {
+        // Vérifier que chaque boîte est sur une cible
+        for (Boite boite : boites) {
+            if (!boite.estSurCible()) {
+                return false;
+            }
+        }
+        // Si on arrive ici, toutes les boîtes sont sur des cibles
         return true;
-      }
-
-      /*si l'objet se trouvant à la position donnée est une pièce,
-      on entre dans la pièce*/
-      if (matrice[dirX][dirY] instanceof Piece) {
-        /*entre dans la pièce*/
-        Piece p = (Piece) matrice[dirX][dirY];
-        int i = emplacementExterne(obj, p, posX, posY, dirX, dirY);
-        if (i == 1) {
-          p.entre(obj, 0, posY, p);
-          return true;
-        }
-        if (i == 2) {
-          p.entre(obj, posX, 0, p);
-          return true;
-        }
-        if (i == 3) {
-          p.entre(obj, p.getGrid().getHauteur() - 1, posY, p);
-          return true;
-        }
-        if (i == 4) {
-          p.entre(obj, posX, p.getGrid().getLongueur() - 1, p);
-          return true;
-        }
-      }
-
-      /*si c'est une cible*/
-      if (matrice[dirX][dirY] instanceof Cible) {
-        obj.setPos(dirX, dirY);
-        matrice[dirX][dirY] = obj;
-        matrice[posX][posY] = null;
-        /*une méthodes qui indique que la cible est atteinte sera implémentée*/
-        return true;
-      }
     }
-    return false;
-  }
-  /*des méthodes d'agrandissement et rapetissement de la grille*/
+    
+    /**
+     * Vérifier si un déplacement est valide pour un objet
+     * @param objet L'objet qui veut se déplacer
+     * @param destination La position de destination
+     * @param direction La direction du déplacement
+     * @return true si le déplacement est possible, false sinon
+     */
+    public boolean estDeplacementValide(Objet objet, Position destination, Direction direction) {
+        // Vérifier que la destination est dans la grille
+        if (!estDansGrille(destination)) {
+            return false;
+        }
+        
+        // Récupérer l'objet à la position de destination
+        Objet objetDestination = getObjet(destination);
+        
+        // Si la case est vide ou c'est une cible, le déplacement est valide
+        if (objetDestination == null || objetDestination instanceof Cible) {
+            return true;
+        }
+        
+        // Si c'est une boîte, vérifier si on peut la pousser
+        if (objetDestination instanceof Boite) {
+            Boite boite = (Boite) objetDestination;
+            return boite.peutEtrePousse(direction);
+        }
+        
+        // Sinon (mur, autre joueur), le déplacement n'est pas valide
+        return false;
+    }
+    
+    // ========== MÉTHODES DE DÉPLACEMENT ==========
+    
+    /**
+     * Déplacer le joueur dans une direction
+     * Cette méthode gère aussi le déplacement des boîtes si nécessaire
+     * @param direction La direction du déplacement
+     * @return true si le déplacement a réussi, false sinon
+     */
+    public boolean deplacerJoueur(Direction direction) {
+        if (joueur == null) {
+            return false;
+        }
+        
+        // Calculer la nouvelle position du joueur
+        Position positionActuelle = joueur.getPosition();
+        Position nouvellePosition = direction.appliquerSur(positionActuelle);
+        
+        // Vérifier que la nouvelle position est dans la grille
+        if (!estDansGrille(nouvellePosition)) {
+            return false;
+        }
+        
+        // Récupérer l'objet à la nouvelle position
+        Objet objetDestination = getObjet(nouvellePosition);
+        
+        // Cas 1 : Case vide ou cible -> déplacement simple
+        if (objetDestination == null || objetDestination instanceof Cible) {
+            return deplacerObjetSimple(joueur, nouvellePosition);
+        }
+        
+        // Cas 2 : Boîte -> essayer de pousser
+        if (objetDestination instanceof Boite) {
+            Boite boite = (Boite) objetDestination;
+            // Essayer de pousser la boîte
+            if (deplacerBoite(boite, direction)) {
+                // Si la boîte a été poussée, déplacer le joueur
+                return deplacerObjetSimple(joueur, nouvellePosition);
+            }
+            return false;
+        }
+        
+        // Cas 3 : Mur ou autre obstacle -> déplacement impossible
+        return false;
+    }
+    
+    /**
+     * Déplacer une boîte dans une direction
+     * @param boite La boîte à déplacer
+     * @param direction La direction du déplacement
+     * @return true si le déplacement a réussi, false sinon
+     */
+    private boolean deplacerBoite(Boite boite, Direction direction) {
+        // Vérifier que la boîte peut être poussée
+        if (!boite.peutEtrePousse(direction)) {
+            return false;
+        }
+        
+        // Calculer la nouvelle position de la boîte
+        Position positionActuelle = boite.getPosition();
+        Position nouvellePosition = direction.appliquerSur(positionActuelle);
+        
+        // Déplacer la boîte
+        return deplacerObjetSimple(boite, nouvellePosition);
+    }
+    
+    /**
+     * Déplacer un objet simple (sans pousser d'autres objets)
+     * Gère automatiquement les cibles
+     * @param objet L'objet à déplacer
+     * @param nouvellePosition La nouvelle position
+     * @return true si le déplacement a réussi, false sinon
+     */
+    private boolean deplacerObjetSimple(Objet objet, Position nouvellePosition) {
+        Position anciennePosition = objet.getPosition();
+        
+        // Récupérer ce qu'il y a aux deux positions
+        Objet objetDestination = getObjet(nouvellePosition);
+        Objet objetDepart = getObjet(anciennePosition);
+        
+        // Gérer le départ de l'ancienne position
+        // S'il y a une cible sous l'objet, la remettre
+        Cible cibleDepart = trouverCible(anciennePosition);
+        if (cibleDepart != null) {
+            matrice[anciennePosition.getX()][anciennePosition.getY()] = cibleDepart;
+            
+            // Si c'était une boîte, marquer la cible comme libre
+            if (objet instanceof Boite) {
+                cibleDepart.setOccupee(false);
+            }
+            // Si c'était le joueur, il n'est plus sur une cible
+            if (objet instanceof Joueur) {
+                ((Joueur) objet).setSurCible(false);
+            }
+        } else {
+            // Sinon, laisser la case vide
+            matrice[anciennePosition.getX()][anciennePosition.getY()] = null;
+        }
+        
+        // Gérer l'arrivée à la nouvelle position
+        // S'il y a une cible à la destination
+        if (objetDestination instanceof Cible) {
+            Cible cibleDestination = (Cible) objetDestination;
+            
+            // Si c'est une boîte, marquer la cible comme occupée
+            if (objet instanceof Boite) {
+                ((Boite) objet).setSurCible(true);
+                cibleDestination.setOccupee(true);
+            }
+            // Si c'est le joueur, il est maintenant sur une cible
+            if (objet instanceof Joueur) {
+                ((Joueur) objet).setSurCible(true);
+            }
+        } else {
+            // Si pas de cible à la destination
+            if (objet instanceof Boite) {
+                ((Boite) objet).setSurCible(false);
+            }
+            if (objet instanceof Joueur) {
+                ((Joueur) objet).setSurCible(false);
+            }
+        }
+        
+        // Placer l'objet à sa nouvelle position
+        matrice[nouvellePosition.getX()][nouvellePosition.getY()] = objet;
+        objet.setPosition(nouvellePosition);
+        
+        return true;
+    }
+    
+    /**
+     * Trouver une cible à une position donnée
+     * @param pos La position
+     * @return La cible si elle existe, null sinon
+     */
+    private Cible trouverCible(Position pos) {
+        for (Cible cible : cibles) {
+            if (cible.getPosition().equals(pos)) {
+                return cible;
+            }
+        }
+        return null;
+    }
+    
+    // ========== MÉTHODES D'AFFICHAGE ==========
+    
+    /**
+     * Afficher la grille en mode texte
+     * Utile pour le débogage et la persistance
+     * @return Une chaîne représentant la grille
+     */
+    public String afficherGrille() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(nom).append(" ").append(largeur).append("\n");
+        
+        for (int y = 0; y < hauteur; y++) {
+            for (int x = 0; x < largeur; x++) {
+                Objet objet = matrice[x][y];
+                if (objet == null) {
+                    sb.append(' '); // Case vide
+                } else {
+                    sb.append(objet.getSymbole());
+                }
+            }
+            sb.append('\n');
+        }
+        
+        return sb.toString();
+    }
+    
+    /**
+     * Représentation textuelle de la grille
+     * @return Une description de la grille
+     */
+    @Override
+    public String toString() {
+        return "Grille '" + nom + "' (" + largeur + "x" + hauteur + ") - " +
+              boites.size() + " boîtes, " + cibles.size() + " cibles";
+    }
 }
