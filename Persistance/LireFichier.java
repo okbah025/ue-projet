@@ -54,14 +54,28 @@ public class LireFichier {
 		if (c=='@')  o = new Joueur(x, y, grille);
 		
 		/*Joueur sur cible : ???*/
-		if (c=='+' ) {o= new Joueur(x, y, grille);
+		if (c=='+' ) {
+			/**Joueur o1= (Joueur) o;
+			o1= new Joueur(x, y, grille);
+			o1.setSurCible(true);*/
+			Joueur j = new Joueur(x, y, grille);
+  			j.setSurCible(true);
+   			o = j;
+
+   			grille.getCibles().add(new Cible(x, y, grille)); // IMPORTANT
+			
 		}
 		
 		if (c== '$' ) o = new Boite(x, y, grille);
 		
 		/*boite sur cible*/
-		if (c=='*' ) { o= new Boite(x, y, grille);
-			/*???* ex : grille.ajouterCible(x, y);*/
+		if (c=='*' ) { 
+			Boite b = new Boite(x, y, grille);
+   			 b.setSurCible(true);
+  			 o = b;
+
+   		 	grille.getCibles().add(new Cible(x, y, grille)); // IMPORTANT	
+
 		}
 		
 		if (c=='.') o= new Cible(x, y, grille);
