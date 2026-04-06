@@ -18,6 +18,8 @@ public abstract class Objet {
      * Position de l'objet dans sa grille parente
      */
     protected Position position;
+
+    protected Position oldPos;
     
     /**
      * Référence vers la grille qui contient cet objet
@@ -42,6 +44,7 @@ public abstract class Objet {
      */
     public Objet(int x, int y, Grille parent) {
         this.position = new Position(x, y);
+        this.oldPos = null;
         this.grilleParente = parent;
         this.couleur = "255,255,255"; // Blanc par défaut
     }
@@ -53,6 +56,7 @@ public abstract class Objet {
      */
     public Objet(Position pos, Grille parent) {
         this.position = pos;
+        this.oldPos = null;
         this.grilleParente = parent;
         this.couleur = "255,255,255"; // Blanc par défaut
     }
@@ -74,13 +78,25 @@ public abstract class Objet {
     public int getY() {
         return this.position.getY();
     }
+
+    public int getOldX() {
+        return this.oldPos.getX();
+    }
     
+    public int getOldY() {
+        return this.oldPos.getY();
+    }
+
     /**
      * Obtenir la position complète de l'objet
      * @return L'objet Position contenant x et y
      */
     public Position getPosition() {
         return this.position;
+    }
+
+    public Position getOldPos(){
+        return this.oldPos;
     }
     
     /**
@@ -107,6 +123,7 @@ public abstract class Objet {
      * @param nouvelleY Nouvelle position verticale
      */
     public void setPosition(int nouvelleX, int nouvelleY) {
+        this.oldPos = getPosition();
         this.position.setPosition(nouvelleX, nouvelleY);
     }
     
@@ -115,6 +132,7 @@ public abstract class Objet {
      * @param nouvellePosition La nouvelle position
      */
     public void setPosition(Position nouvellePosition) {
+        this.oldPos = getPosition();
         this.position = nouvellePosition;
     }
     
