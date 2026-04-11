@@ -1,3 +1,6 @@
+package fr.paris13.parabox.chemin;
+import fr.paris13.parabox.Modele.Position;
+
  //j'ecris ici tous les import 
  import java.util.*;
  public class c_chemin{

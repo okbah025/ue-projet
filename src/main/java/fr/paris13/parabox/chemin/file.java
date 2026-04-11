@@ -1,3 +1,5 @@
+package fr.paris13.parabox.chemin;
+
 import java.util.ArrayDeque ;
  import java.util.*; 
   public class file {
