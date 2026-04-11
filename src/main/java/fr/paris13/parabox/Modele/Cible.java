@@ -1,3 +1,4 @@
+package fr.paris13.parabox.Modele;
 /**
  * Classe Cible
  * 

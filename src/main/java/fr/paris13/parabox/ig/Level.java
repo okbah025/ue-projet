@@ -1,3 +1,6 @@
+package fr.paris13.parabox.ig;
+import fr.paris13.parabox.Modele.*;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;

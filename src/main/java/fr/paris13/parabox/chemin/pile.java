@@ -1,3 +1,6 @@
+package fr.paris13.parabox.chemin;
+import fr.paris13.parabox.Modele.Position;
+
 import java.util.Stack ;
  import java.util.*; 
 public class pile {

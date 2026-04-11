@@ -1,3 +1,4 @@
+package fr.paris13.parabox.Modele;
 /**
  * Classe Boite
  * 
@@ -19,7 +20,7 @@ public class Boite extends Objet {
      * Indique si la boîte est actuellement sur une cible
      * Important pour vérifier la condition de victoire
      */
-    private boolean surCible;
+    protected boolean surCible;
     
     // ========== CONSTRUCTEURS ==========
     

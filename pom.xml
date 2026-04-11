@@ -44,23 +44,28 @@
     <build>
 	 <plugins>
 
-	    <plugin>
-    		<groupId>org.codehaus.mojo</groupId>
-    		<artifactId>exec-maven-plugin</artifactId>
-    		<version>3.1.0</version>
-    		<configuration>
-        		<mainClass>fr.paris13.parabox.App</mainClass>
-    		</configuration>
-	</plugin>
+	    	<plugin>
+    			<groupId>org.codehaus.mojo</groupId>
+    			<artifactId>exec-maven-plugin</artifactId>
+    			<version>3.1.0</version>
+    			<configuration>
+        			<mainClass>fr.paris13.parabox.Modele.MainTerminalComplet</mainClass>
+    			</configuration>
+		</plugin>
 
-	<plugin>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-maven-plugin</artifactId>
-            <version>0.0.8</version>
-            <configuration>
-                <mainClass>ig.App</mainClass>
-            </configuration>
-        </plugin>
+		<plugin>
+            		<groupId>org.openjfx</groupId>
+            		<artifactId>javafx-maven-plugin</artifactId>
+            		<version>0.0.8</version>
+            		<configuration>
+                		<mainClass>fr.paris13.parabox.ig.Main</mainClass>
+            		</configuration>
+   		 </plugin>
+    		<plugin>
+    			<groupId>org.apache.maven.plugins</groupId>
+    			<artifactId>maven-surefire-plugin</artifactId>
+    			<version>3.1.2</version>
+		</plugin>
         </plugins>
 
    </build>
