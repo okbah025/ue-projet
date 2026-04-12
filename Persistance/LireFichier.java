@@ -23,7 +23,9 @@ public class LireFichier {
 
     try {
         FileReader entree = new FileReader(fichierLecture);
-
+        
+        while ((c = entree.read()) != '\n'); // la grille commence apres la ligne avec le nom du monde et la dimension
+       
         while ((c = entree.read()) != -1) {
 
             if (c == '\n') {
@@ -84,6 +86,57 @@ public class LireFichier {
 		return o;
 	
 	}
+	
+	
+	public int getDimGrilleFichier() {
+	 try (FileReader entree = new FileReader(fichierLecture)) {
+	
+	 char c = entree.read();
+	 String chaine= "";
+	 int nb;
+	
+        // while (!(c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) c= entree.read(); //avancer jusqu'à la premiere lettre, peut etre qu'elle nest pas tout au debut du fichier ?
+          
+	 c= entree.read(); //on arrive à " "
+	 
+	 while ( (c!=' ') || (c!= '\n')) {
+	 	chaine= chaine + c;
+	 	
+	 	c=entree.read();
+	}
+	
+	nb= Integer.parseInt(chaine);
+	
+	return nb;
+	
+	
+	} catch (IOException e) {
+        e.printStackTrace();
+	}
+   	 return -1;
+	
+      }
+	
+	
+	
+	public char getNomGrilleFichier() {
+		char c = null;
+		 try (FileReader entree = new FileReader(fichierLecture)) {
+			 c = entree.read();
+			 return c;
+		}
+		
+		catch (IOException e) {
+        e.printStackTrace();
+ 	        }
+
+    		return c;	
+    	}	
+
+	
+	
+	
+	//supp tout ce qui vient en dessous ?
 	
 	public int getHauteurGrilleDuFichier() {
     int j = 0, c;

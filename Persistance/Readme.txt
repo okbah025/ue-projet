@@ -1,4 +1,4 @@
-executer la comande : java MainTestFich niveau1
+executer la comande : java MainTestFich niveau1 fichierEcriture fichierEcritureHistoDeplacement
 
 (pour tester l affichage du niveau 1, et voir si bonne lecture et bon enregistrement des données du fichier vers la grille)
 

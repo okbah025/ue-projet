@@ -17,7 +17,8 @@ public class Historique {
      * Classe interne représentant un mouvement
      * Contient la direction et les positions avant/après le mouvement
      */
-    private class Mouvement {
+   
+   /* public class Mouvement {	/*j ai modif !!!
         Direction direction;
         Position positionJoueurAvant;
         Position positionJoueurApres;
@@ -32,7 +33,7 @@ public class Historique {
         
         /**
          * Constructeur d'un mouvement simple (sans pousser de boîte)
-         */
+         *
         public Mouvement(Direction dir, Position posJoueurAvant, Position posJoueurApres,
                         boolean joueurCibleAvant, boolean joueurCibleApres) {
             this.direction = dir;
@@ -45,7 +46,7 @@ public class Historique {
         
         /**
          * Constructeur d'un mouvement avec poussée de boîte
-         */
+         *
         public Mouvement(Direction dir, Position posJoueurAvant, Position posJoueurApres,
                         boolean joueurCibleAvant, boolean joueurCibleApres,
                         Boite boite, Position posBoiteAvant, Position posBoiteApres,
@@ -57,7 +58,7 @@ public class Historique {
             this.boiteSurCibleAvant = boiteCibleAvant;
             this.boiteSurCibleApres = boiteCibleApres;
         }
-    }
+    }*/
     
     // ========== ATTRIBUTS ==========
     
@@ -222,4 +223,10 @@ public class Historique {
     public String toString() {
         return "Historique : " + mouvements.size() + " mouvement(s)";
     }
+    
+    /* j ai ajouté ***/
+    public Mouvement popMouvement() {
+    	return mouvements.pop();
+    }
+    
 }
