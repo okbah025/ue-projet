@@ -1,237 +1,113 @@
-package fr.paris13.parabox.Modele;
 /**
  * Classe Piece (VERSION RÉCURSIVE - PARABOX)
- * 
- * Une Piece est une boîte spéciale qui contient un monde entier.
- * Le joueur peut entrer dedans et en ressortir.
- * 
- * Différence avec Boite simple :
- * - Boite : juste une boîte à pousser
- * - Piece : contient une grille interne (monde récursif)
+ *
+ * Une Piece est une case spéciale qui contient un monde entier (une grille interne).
+ * Dans le fichier de niveau, elle est représentée par une lettre MAJUSCULE (ex: 'E').
+ *
+ * Le joueur peut :
+ *  - Entrer dans une Piece en se déplaçant vers elle
+ *  - Se déplacer dans la grille interne
+ *  - Sortir de la Piece en atteignant le bord de la grille interne
+ *
+ * Différence avec Boite :
+ *  - Boite : boîte à pousser sur une cible, symbole '$'
+ *  - Piece  : monde récursif navigable, symbole = sa lettre (ex: 'E')
+ *
+ * Cette classe N'AFFECTE PAS la version simple du jeu.
  */
 public class Piece extends Boite {
-    
-    // ========== ATTRIBUTS SUPPLÉMENTAIRES ==========
-    
-    /**
-     * La grille interne (le monde à l'intérieur de cette pièce)
-     */
+
+    /** La grille interne (le monde à l'intérieur de cette Piece) */
     private Grille grilleInterne;
-    
-    /**
-     * Identifiant de la pièce (lettre : 'a', 'b', 'c', etc.)
-     */
+
+    /** La lettre majuscule qui identifie cette Piece dans le fichier de niveau */
     private char identifiant;
-    
-    /**
-     * Nombre de portes ouvertes (1 à 4)
-     * Par défaut, toutes les 4 portes sont ouvertes
-     */
-    private int nombrePortes;
-    
-    /**
-     * État des portes pour chaque direction
-     * [0]=HAUT, [1]=BAS, [2]=GAUCHE, [3]=DROITE
-     */
-    private boolean[] portesOuvertes;
-    
+
     // ========== CONSTRUCTEURS ==========
-    
+
     /**
-     * Constructeur d'une pièce-monde
-     * @param x Position horizontale
-     * @param y Position verticale
-     * @param parent Grille parente
-     * @param largeur Largeur de la grille interne
-     * @param hauteur Hauteur de la grille interne
-     * @param id Identifiant de la pièce
+     * Constructeur principal : grille interne DÉJÀ construite.
+     * Utilisé par ChargeurNiveau après avoir parsé les fichiers.
+     *
+     * @param x             Colonne dans la grille parente
+     * @param y             Ligne dans la grille parente
+     * @param parent        La grille parente
+     * @param grilleInterne La grille interne déjà construite
+     * @param id            La lettre identifiant cette Piece (ex: 'E')
+     */
+    public Piece(int x, int y, Grille parent, Grille grilleInterne, char id) {
+        super(x, y, parent);
+        this.identifiant = id;
+        this.grilleInterne = grilleInterne;
+        // Couleur violette pour distinguer visuellement les Pieces
+        this.couleur = "200,50,200";
+    }
+
+    /**
+     * Constructeur secondaire : grille interne VIDE à créer.
+     * Utile pour les tests ou la création manuelle.
+     *
+     * @param x       Colonne dans la grille parente
+     * @param y       Ligne dans la grille parente
+     * @param parent  La grille parente
+     * @param largeur Largeur de la grille interne à créer
+     * @param hauteur Hauteur de la grille interne à créer
+     * @param id      La lettre identifiant cette Piece
      */
     public Piece(int x, int y, Grille parent, int largeur, int hauteur, char id) {
         super(x, y, parent);
         this.identifiant = id;
         this.grilleInterne = new Grille(largeur, hauteur, "Monde_" + id);
-        
-        // Toutes les portes ouvertes par défaut
-        this.portesOuvertes = new boolean[]{true, true, true, true};
-        this.nombrePortes = 4;
-        
-        // Couleur violette pour les pièces-mondes
         this.couleur = "200,50,200";
     }
-    
+
     // ========== GETTERS ==========
-    
-    public Grille getGrilleInterne() {
-        return this.grilleInterne;
-    }
-    
-    public char getIdentifiant() {
-        return this.identifiant;
-    }
-    
-    public int getNombrePortes() {
-        return this.nombrePortes;
-    }
-    
+
     /**
-     * Vérifier si une porte est ouverte
-     * @param direction La direction
-     * @return true si la porte est ouverte
+     * Obtenir la grille interne (le monde contenu dans cette Piece).
+     * @return La grille interne
      */
-    public boolean aPorte(Direction direction) {
-        int index = directionVersIndex(direction);
-        return portesOuvertes[index];
-    }
-    
-    // ========== SETTERS ==========
-    
+    public Grille getGrilleInterne() { return this.grilleInterne; }
+
     /**
-     * Ouvrir ou fermer une porte
-     * @param direction La direction
-     * @param ouverte true pour ouvrir, false pour fermer
+     * Obtenir l'identifiant (lettre majuscule) de cette Piece.
+     * @return Ex: 'E', 'A', 'B'...
      */
-    public void setPorte(Direction direction, boolean ouverte) {
-        int index = directionVersIndex(direction);
-        boolean ancienEtat = portesOuvertes[index];
-        portesOuvertes[index] = ouverte;
-        
-        // Mettre à jour le compteur
-        if (ancienEtat && !ouverte) {
-            nombrePortes--;
-        } else if (!ancienEtat && ouverte) {
-            nombrePortes++;
-        }
-    }
-    
-    // ========== MÉTHODES POUR ENTRER/SORTIR ==========
-    
+    public char getIdentifiant() { return this.identifiant; }
+
+    // ========== MÉTHODES HÉRITÉES REDÉFINIES ==========
+
     /**
-     * Faire entrer le joueur dans la pièce
-     * @param joueur Le joueur qui entre
-     * @param direction La direction par laquelle il entre
-     * @return true si l'entrée a réussi
-     */
-    public boolean entrer(Joueur joueur, Direction direction) {
-        // Vérifier que la porte est ouverte
-        if (!aPorte(direction)) {
-            return false;
-        }
-        
-        // Calculer la position d'entrée dans la grille interne
-        Position posEntree = calculerPositionEntree(direction);
-        
-        // Vérifier que la position est libre
-        if (!grilleInterne.estCaseLibre(posEntree)) {
-            return false;
-        }
-        
-        // Retirer le joueur de la grille externe
-        Grille grilleExterne = joueur.getGrilleParente();
-        if (grilleExterne != null) {
-            grilleExterne.setObjet(null, joueur.getPosition());
-        }
-        
-        // Placer le joueur dans la grille interne
-        grilleInterne.setObjet(joueur, posEntree);
-        
-        return true;
-    }
-    
-    /**
-     * Faire sortir le joueur de la pièce
-     * @param joueur Le joueur qui sort
-     * @param direction La direction par laquelle il sort
-     * @return true si la sortie a réussi
-     */
-    public boolean sortir(Joueur joueur, Direction direction) {
-        // Vérifier que la porte est ouverte
-        if (!aPorte(direction)) {
-            return false;
-        }
-        
-        // Calculer la position de sortie dans la grille parente
-        Position posSortie = direction.appliquerSur(this.position);
-        
-        // Vérifier que la sortie est libre
-        if (grilleParente != null && !grilleParente.estCaseLibre(posSortie)) {
-            return false;
-        }
-        
-        // Retirer le joueur de la grille interne
-        grilleInterne.setObjet(null, joueur.getPosition());
-        
-        // Placer le joueur dans la grille parente
-        if (grilleParente != null) {
-            grilleParente.setObjet(joueur, posSortie);
-        }
-        
-        return true;
-    }
-    
-    // ========== MÉTHODES UTILITAIRES ==========
-    
-    /**
-     * Calculer la position d'entrée selon la direction
-     */
-    private Position calculerPositionEntree(Direction direction) {
-        int largeur = grilleInterne.getLargeur();
-        int hauteur = grilleInterne.getHauteur();
-        
-        switch (direction) {
-            case HAUT:
-                return new Position(largeur / 2, hauteur - 1);
-            case BAS:
-                return new Position(largeur / 2, 0);
-            case GAUCHE:
-                return new Position(largeur - 1, hauteur / 2);
-            case DROITE:
-                return new Position(0, hauteur / 2);
-            default:
-                return new Position(0, 0);
-        }
-    }
-    
-    /**
-     * Convertir une Direction en index
-     */
-    private int directionVersIndex(Direction direction) {
-        switch (direction) {
-            case HAUT: return 0;
-            case BAS: return 1;
-            case GAUCHE: return 2;
-            case DROITE: return 3;
-            default: return 0;
-        }
-    }
-    
-    // ========== REDÉFINITION DES MÉTHODES ==========
-    
-    /**
-     * Symbole : lettre minuscule ou MAJUSCULE si sur cible
+     * Symbole affiché : la lettre majuscule de la Piece.
+     * Contrairement à une Boite qui affiche '$' ou '*',
+     * une Piece affiche toujours sa lettre.
      */
     @Override
-    public char getSymbole() {
-        if (this.surCible) {
-            return Character.toUpperCase(identifiant);
-        } else {
-            return Character.toLowerCase(identifiant);
-        }
-    }
-    
+    public char getSymbole() { return this.identifiant; }
+
+    /**
+     * Une Piece ne peut PAS être poussée.
+     * On y entre en se déplaçant vers elle, on ne la pousse pas.
+     */
+    @Override
+    public boolean peutEtrePousse(Direction direction) { return false; }
+
+    /**
+     * Copier cette Piece (pour l'historique des mouvements).
+     * La grille interne est partagée (copie superficielle, simplification L2).
+     */
     @Override
     public Objet copier() {
-        Piece copie = new Piece(this.getX(), this.getY(), this.grilleParente,
-                               this.grilleInterne.getLargeur(),
-                               this.grilleInterne.getHauteur(),
-                               this.identifiant);
+        Piece copie = new Piece(this.getX(), this.getY(),
+                                this.grilleParente, this.grilleInterne, this.identifiant);
         copie.setSurCible(this.surCible);
         return copie;
     }
-    
+
     @Override
     public String toString() {
-        return "Piece '" + identifiant + "' à " + position.toString() +
-               " (monde " + grilleInterne.getLargeur() + "x" +
-               grilleInterne.getHauteur() + ")";
+        return "Piece '" + identifiant + "' à " + position.toString()
+               + " (grille interne : " + grilleInterne.getLargeur()
+               + "x" + grilleInterne.getHauteur() + ")";
     }
 }

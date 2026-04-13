@@ -1,4 +1,3 @@
-package fr.paris13.parabox.Modele;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -207,6 +206,44 @@ public class Grille {
     public void setObjet(Objet objet, Position pos) {
         setObjet(objet, pos.getX(), pos.getY());
     }
+
+    /**
+    * Retirer l'objet à une position donnée (mettre la case à null).
+    * Utilisé par la version RÉCURSIVE pour sortir le joueur d'une grille
+    * quand il entre dans une Piece ou en sort.
+    *
+    * Si une cible se trouvait sous l'objet, elle est automatiquement
+    * remise à la surface (visible dans la matrice).
+    *
+    * REMARQUE : cette méthode ne supprime PAS l'objet des listes internes
+    * (boites, cibles) car l'objet continue d'exister dans le jeu,
+    * simplement dans une autre grille.
+    *
+    * @param pos La position à vider
+    */
+    public void retirerObjet(Position pos) {
+    if (!estDansGrille(pos)) return;
+
+    Objet objet = matrice[pos.getX()][pos.getY()];
+
+    // Si c'était le joueur, on efface la référence interne
+    if (objet instanceof Joueur) {
+        this.joueur = null;
+    }
+
+    // Vider la case
+    matrice[pos.getX()][pos.getY()] = null;
+
+    // Si une cible était sous l'objet, la remettre visible dans la matrice
+    Cible cible = trouverCible(pos);
+    if (cible != null) {
+        matrice[pos.getX()][pos.getY()] = cible;
+        // Si c'était une boîte qui était dessus, libérer la cible
+        if (objet instanceof Boite) {
+            cible.setOccupee(false);
+        }
+    }
+}
     
     // ========== MÉTHODES DE VÉRIFICATION ==========
     
@@ -259,16 +296,22 @@ public class Grille {
      * Le niveau est gagné si toutes les boîtes sont sur des cibles
      * @return true si le niveau est gagné, false sinon
      */
+    /**
+ * Le niveau est gagné si toutes les boîtes NORMALES (pas les Pieces)
+ * sont sur des cibles, et qu'il y en a au moins une.
+ * Dans la version récursive, les Pieces (lettres majuscules) ne comptent
+ * pas comme des boîtes à placer.
+ */
     public boolean estNiveauGagne() {
-        // Vérifier que chaque boîte est sur une cible
+        int nombreBoitesNormales = 0;
         for (Boite boite : boites) {
-            if (!boite.estSurCible()) {
-                return false;
-            }
+            if (boite instanceof Piece) continue; // Les Pieces ne comptent pas
+            nombreBoitesNormales++;
+            if (!boite.estSurCible()) return false;
         }
-        // Si on arrive ici, toutes les boîtes sont sur des cibles
-        return true;
+        return nombreBoitesNormales > 0;
     }
+
     
     /**
      * Vérifier si un déplacement est valide pour un objet
@@ -331,14 +374,18 @@ public class Grille {
             return deplacerObjetSimple(joueur, nouvellePosition);
         }
         
-        // Cas 2 : Boîte -> essayer de pousser
-        if (objetDestination instanceof Boite) {
+        // Cas 2 : Boîte NORMALE (pas une Piece) -> essayer de pousser
+        if (objetDestination instanceof Boite && !(objetDestination instanceof Piece)) {
             Boite boite = (Boite) objetDestination;
-            // Essayer de pousser la boîte
             if (deplacerBoite(boite, direction)) {
-                // Si la boîte a été poussée, déplacer le joueur
                 return deplacerObjetSimple(joueur, nouvellePosition);
             }
+            return false;
+        }
+
+        // Cas 2b : Piece (version récursive) -> JeuRecursif gère l'entrée
+        // On retourne false ici pour signaler à JeuRecursif d'intercepter.
+        if (objetDestination instanceof Piece) {
             return false;
         }
         
@@ -477,6 +524,6 @@ public class Grille {
     @Override
     public String toString() {
         return "Grille '" + nom + "' (" + largeur + "x" + hauteur + ") - " +
-              boites.size() + " boîtes, " + cibles.size() + " cibles";
+               boites.size() + " boîtes, " + cibles.size() + " cibles";
     }
 }
