@@ -1,3 +1,5 @@
+package fr.paris13.parabox.Modele;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,8 +54,8 @@ public class MainTerminalComplet {
     private static final int ESC = 27;
 
     // ── Dossier des fichiers de niveaux ───────────────────────────────────────
-    // "." = dossier courant (là où on lance java)
-    private static final String DOSSIER = ".";
+    // "src/main/resources" = dossier de ressource
+    private static final String DOSSIER = "src/main/resources";
 
     // ── Versions disponibles ──────────────────────────────────────────────────
     private enum Version { SIMPLE, RECURSIVE }

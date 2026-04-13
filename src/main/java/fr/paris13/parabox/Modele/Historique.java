@@ -1,3 +1,5 @@
+package fr.paris13.parabox.Modele;
+
 import java.util.Stack;
 
 /**
