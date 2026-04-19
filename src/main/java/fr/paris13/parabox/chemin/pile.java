@@ -35,15 +35,19 @@ public class pile {
                 public int  size(){
                    return pil.size();
                    }
-                /* public void clear()
-                  {
-                      pile.clear();}*/
-               
-               public pile copie(){
+                
+                
+              public pile copie(){
                  pile temp=new pile();
+                 ArrayDeque<Position> aux =new ArrayDeque<>();
+                 //inverse une premiere fois 
                    for(Position p1: this.pil){
-                      temp.empiler(p1);
+                      aux.push(p1);
                       }
+                      //re_inverser pour garder le bon ordre 
+                      for(Position p2:aux){
+                        temp.empiler(p2);
+                        }
                       return temp;
                       }
                       }
