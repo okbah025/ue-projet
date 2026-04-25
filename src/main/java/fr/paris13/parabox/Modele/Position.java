@@ -78,13 +78,14 @@ public class Position {
      * @param autre L'autre position à comparer
      * @return true si les positions sont identiques, false sinon
      */
-    public boolean equals(Position autre) {
-        if (autre == null) {
-            return false;
-        }
+  
+       public boolean equals(Object o) {
+     if(this ==o) return true;
+     if(! (o instanceof Position)) return false ;
+     Position autre = (Position) o ; 
+        
         return (this.x == autre.x && this.y == autre.y);
     }
-    
     /**
      * Représentation textuelle de la position
      * Utile pour le débogage et l'affichage
