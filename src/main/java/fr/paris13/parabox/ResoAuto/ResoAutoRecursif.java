@@ -1,6 +1,14 @@
-public class ResoAutoRecursif extends ResoAutoClassique {
+package fr.paris13.parabox.ResoAuto;
+import fr.paris13.parabox.Modele.Position;
+import fr.paris13.parabox.Modele.Direction;
+import fr.paris13.parabox.chemin.pile;
+import fr.paris13.parabox.chemin.c_chemin;
 
-    public static PileDir recursif2 (boolean[][] M) {
+
+public class ResoAutoRecursif extends ResoAutoClassique  {
+
+    public static PileDir recursif2 () {
+        boolean[][] M=matrice(15, 15);
         pile chemin=new pile();
         pile p=new pile();
         p=inverser(c_chemin(M, 5, 12, 6, 12));
@@ -19,7 +27,8 @@ public class ResoAutoRecursif extends ResoAutoClassique {
         return d;
     }
 
-    public static PileDir recursif3(boolean[][] M) {
+    public static PileDir recursif3() {
+        boolean[][] M=matrice(7, 7);
         pile chemin=new pile();
         pile p=new pile();
         p=inverser(c_chemin(M, 4, 1, 5, 2));

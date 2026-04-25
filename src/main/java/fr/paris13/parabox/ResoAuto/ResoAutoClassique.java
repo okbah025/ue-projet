@@ -1,6 +1,13 @@
+package fr.paris13.parabox.ResoAuto;
+import fr.paris13.parabox.Modele.Position;
+import fr.paris13.parabox.Modele.Direction;
+import fr.paris13.parabox.chemin.pile;
+import fr.paris13.parabox.chemin.c_chemin;
+
 public class ResoAutoClassique extends ResoAutoFonctions {
 
-    public static PileDir classique1(boolean[][] M) {
+    public static PileDir classique1() {
+        boolean[][] M=matrice(5, 7);
         pile chemin=new pile();
         pile p=new pile();
         p=c_chemin(M, 4, 2, 1, 2);
@@ -10,7 +17,8 @@ public class ResoAutoClassique extends ResoAutoFonctions {
         return d;
     }
 
-    public static PileDir classique2(boolean[][] M) {
+    public static PileDir classique2() {
+        boolean[][] M=matrice(6, 8);
         pile chemin=new pile();
         pile p=new pile();
         p=inverser(c_chemin(M, 1, 3, 3, 4));
@@ -29,7 +37,8 @@ public class ResoAutoClassique extends ResoAutoFonctions {
         return d;
     }
 
-    public static PileDir classique3(boolean[][] M) {
+    public static PileDir classique3() {
+        boolean[][] M=matrice(6, 8);
         pile chemin=new pile();
         pile p=new pile();
         p=c_chemin(M, 1, 4, 1, 3);
@@ -48,7 +57,8 @@ public class ResoAutoClassique extends ResoAutoFonctions {
         return d;
     }
 
-    public static PileDir classique4(boolean[][] M) {
+    public static PileDir classique4() {
+        boolean[][] M=matrice(7, 9);
         pile chemin=new pile();
         pile p=new pile();
         p=c_chemin(M, 6, 3, 1, 3);

@@ -1,3 +1,9 @@
+package fr.paris13.parabox.ResoAuto;
+import fr.paris13.parabox.Modele.Position;
+import fr.paris13.parabox.Modele.Direction;
+import fr.paris13.parabox.chemin.pile;
+import fr.paris13.parabox.chemin.c_chemin;
+
 public class ResoAutoFonctions extends PileDir {
 
     public static boolean[][] matrice(int n, int m) {
@@ -11,19 +17,6 @@ public class ResoAutoFonctions extends PileDir {
             }
         }
         return M;
-    }
-
-    public static void afficher(boolean[][] M, int n, int m) {
-        int i, j;
-        for (i=0; i<n; i++) {
-            for (j=0; j<m; j++) {
-                if (M[i][j]==false)
-                    System.out.print("# ");
-                else
-                    System.out.print(". ");
-            }
-            System.out.println();
-        }
     }
 
     public static PileDir directions(pile p) {
