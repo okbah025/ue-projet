@@ -1,8 +1,10 @@
 package fr.paris13.parabox.ResoAuto;
 import fr.paris13.parabox.Modele.Position;
 import fr.paris13.parabox.Modele.Direction;
+import fr.paris13.parabox.Modele.Objet;
+import fr.paris13.parabox.Modele.Mur;
+import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.chemin.pile;
-import fr.paris13.parabox.chemin.c_chemin;
 
 public class ResoAutoFonctions extends PileDir {
 
@@ -11,6 +13,22 @@ public class ResoAutoFonctions extends PileDir {
         for (int i=0; i<n; i++) {
             for (int j=0; j<m; j++) {
                 if (i==0 || i==n-1 || j==0 || j==m-1)
+                    M[i][j]=false;
+                else
+                    M[i][j]=true;
+            }
+        }
+        return M;
+    }
+
+    public static boolean[][] remplir(Grille g) {
+        int n=g.getHauteur();
+        int m=g.getLargeur();
+        boolean M[][]=new boolean[n][m];
+        int i, j;
+        for (i=0; i<n; i++) {
+            for (j=0; j<m; j++) {
+                if (g.getObjet(j, i) instanceof Mur)
                     M[i][j]=false;
                 else
                     M[i][j]=true;
