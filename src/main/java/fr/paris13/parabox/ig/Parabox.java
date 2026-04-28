@@ -10,10 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 
-/**
- *
- * @author yakuros
- */
+
 public class Parabox extends StackPane {
     private final JeuRecursif jeu;
     private Level level;
