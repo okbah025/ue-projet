@@ -8,7 +8,7 @@ setlocal enabledelayedexpansion
 
 echo.
 
-echo      Installation de Jeu Parabox            
+echo   -------- Installation de Jeu Parabox -------           
 
 echo.
 
