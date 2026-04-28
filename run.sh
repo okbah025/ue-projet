@@ -16,16 +16,14 @@ RESET='\033[0m'
 MODE=${1:-"javafx"}
 
 echo -e "${CYAN}"
-echo "╔════════════════════════════════════════╗"
-echo "║          Lancement de Parabox          ║"
-echo "╚════════════════════════════════════════╝"
+echo "   ------Lancement de Jeu -------    "
 echo -e "${RESET}"
 
 if [ "$MODE" = "terminal" ]; then
-    echo -e "${JAUNE}▶ Lancement en mode terminal...${RESET}"
+    echo -e "${JAUNE} Lancement en mode terminal...${RESET}"
     mvn exec:java -q
 else
-    echo -e "${JAUNE}▶ Lancement en mode interface graphique...${RESET}"
+    echo -e "${JAUNE} Lancement en mode interface graphique...${RESET}"
     mvn javafx:run -q
 fi
 
