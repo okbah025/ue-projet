@@ -1,0 +1,62 @@
+package fr.paris13.parabox.ig.menu;
+
+
+import fr.paris13.parabox.Modele.Grille;
+import fr.paris13.parabox.Modele.Version;
+import fr.paris13.parabox.ig.Parabox;
+import fr.paris13.parabox.ig.Sokoban;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+
+
+public class LevelMenu extends VBox {
+    
+    
+    public LevelMenu(StackPane root, Grille[] grid, Version ver){
+        
+        Label text = new Label("Choose a Level");
+        
+        HBox box1 = new HBox();
+        HBox box2 = new HBox();
+        
+        for (int i = 0; i<grid.length/2; i++){
+            int level = i + 1;
+            MenuButton btn = new MenuButton("Lvl " + level, 150, 75);
+            Grille g = grid[i];
+            
+            if (ver == Version.SIMPLE){
+                btn.setOnAction(() -> root.getChildren().setAll(new Sokoban(g, root)));
+            } else {
+                btn.setOnAction(() -> root.getChildren().setAll(new Parabox(g, root)));
+            }
+            
+            box1.getChildren().add(btn);
+        }
+        
+        for (int i = grid.length/2; i<grid.length; i++){
+            int level = i + 1;
+            MenuButton btn = new MenuButton("Lvl " + level, 150, 75);
+            Grille g = grid[i];
+            
+            if (ver == Version.SIMPLE){
+                btn.setOnAction(() -> root.getChildren().setAll(new Sokoban(g, root)));
+            } else {
+                btn.setOnAction(() -> root.getChildren().setAll(new Parabox(g, root)));
+            }
+            
+            box2.getChildren().add(btn);
+        }
+        box1.setAlignment(Pos.CENTER);
+        box2.setAlignment(Pos.CENTER);
+        
+        // changer
+        MenuButton back = new MenuButton("Back", 100, 100);
+        back.setOnAction(() -> root.getChildren().setAll(new MainMenu(root)));
+        
+        this.getChildren().addAll(text, box1, box2, back);
+        this.setAlignment(Pos.CENTER);
+    }
+}
