@@ -1,7 +1,7 @@
-# Parabox - Jeu Sokoban Récursif
+# Parabox - Jeu Sokoban 
 
-Projet universitaire L2 Informatique - Université Paris 13  
-Un jeu de type Sokoban avec des boîtes-mondes récursives.
+Ue Projet L2 Informatique - Université Paris 13  
+Un jeu de type Sokoban.
 
 ---
 
@@ -38,9 +38,9 @@ install.bat
 ```
 
 Le script vérifie automatiquement :
-- ✅ La présence de Java 17
-- ✅ La présence de Maven (et l'installe si absent)
-- ✅ La compilation du projet
+-  La présence de Java 17
+-  La présence de Maven (et l'installe si absent)
+-  La compilation du projet
 
 ---
 
