@@ -1,13 +1,12 @@
 package fr.paris13.parabox.ResoAuto;
-import fr.paris13.parabox.Modele.Position;
-import fr.paris13.parabox.Modele.Direction;
+import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.chemin.pile;
 import fr.paris13.parabox.chemin.c_chemin;
 
 public class ResoAutoClassique extends ResoAutoFonctions {
 
-    public static PileDir classique1() {
-        boolean[][] M=matrice(5, 7);
+    public static PileDir classique1(Grille g) {
+        boolean[][] M=remplir(g);
         pile chemin=new pile();
         pile p=new pile();
         p=c_chemin(M, 4, 2, 1, 2);
@@ -17,8 +16,8 @@ public class ResoAutoClassique extends ResoAutoFonctions {
         return d;
     }
 
-    public static PileDir classique2() {
-        boolean[][] M=matrice(6, 8);
+    public static PileDir classique2(Grille g) {
+        boolean[][] M=remplir(g);
         pile chemin=new pile();
         pile p=new pile();
         p=inverser(c_chemin(M, 1, 3, 3, 4));
@@ -37,17 +36,26 @@ public class ResoAutoClassique extends ResoAutoFonctions {
         return d;
     }
 
-    public static PileDir classique3() {
-        boolean[][] M=matrice(6, 8);
+    public static PileDir classique3(Grille g) {
+        boolean[][] M=remplir(g);
         pile chemin=new pile();
         pile p=new pile();
         p=c_chemin(M, 1, 4, 1, 3);
         while (!p.isEmpty())
             chemin.empiler(p.depiler());
-        p=c_chemin(M, 5, 4, 2, 4);
+        p=c_chemin(M, 3, 4, 2, 4);
         while (!p.isEmpty())
             chemin.empiler(p.depiler());
-        p=inverser(c_chemin(M, 4, 4, 2, 1));
+        p=c_chemin(M, 5, 4, 4, 4);
+        while (!p.isEmpty())
+            chemin.empiler(p.depiler());
+        p=inverser(c_chemin(M, 4, 4, 4, 4));
+        while (!p.isEmpty())
+            chemin.empiler(p.depiler());
+        p=inverser(c_chemin(M, 3, 4, 2, 4));
+        while (!p.isEmpty())
+            chemin.empiler(p.depiler());
+        p=inverser(c_chemin(M, 2, 3, 2, 1));
         while (!p.isEmpty())
             chemin.empiler(p.depiler());
         p=c_chemin(M, 5, 1, 3, 1);
@@ -57,8 +65,8 @@ public class ResoAutoClassique extends ResoAutoFonctions {
         return d;
     }
 
-    public static PileDir classique4() {
-        boolean[][] M=matrice(7, 9);
+    public static PileDir classique4(Grille g) {
+        boolean[][] M=remplir(g);
         pile chemin=new pile();
         pile p=new pile();
         p=c_chemin(M, 6, 3, 1, 3);
@@ -116,6 +124,19 @@ public class ResoAutoClassique extends ResoAutoFonctions {
         while (!p.isEmpty())
             chemin.empiler(p.depiler());
         PileDir d=directions(chemin);
+        return d;
+    }
+
+    public static PileDir classique(Grille g, int niveau) {
+        PileDir d=new PileDir();
+        if (niveau==1)
+            d=classique1(g);
+        if (niveau==2)
+            d=classique2(g);
+        if (niveau==3)
+            d=classique3(g);
+        if (niveau==4)
+            d=classique4(g);
         return d;
     }
 }

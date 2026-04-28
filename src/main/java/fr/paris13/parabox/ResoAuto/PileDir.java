@@ -1,7 +1,5 @@
 package fr.paris13.parabox.ResoAuto;
-import fr.paris13.parabox.Modele.Position;
 import fr.paris13.parabox.Modele.Direction;
-import fr.paris13.parabox.chemin.pile;
 import fr.paris13.parabox.chemin.c_chemin;
 import java.util.*;
 
