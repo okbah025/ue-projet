@@ -7,17 +7,17 @@ setlocal enabledelayedexpansion
 :: ============================================================
 
 echo.
-echo ╔════════════════════════════════════════╗
-echo ║     Installation de Parabox            ║
-echo ╚════════════════════════════════════════╝
+
+echo      Installation de Jeu Parabox            
+
 echo.
 
-:: ─── Vérification Java ──────────────────────────────────────
+
 echo [1/3] Verification de Java...
 
 java -version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo X Java n'est pas installe !
+    echo  Java n'est pas installe !
     echo.
     echo Installez Java 17 :
     echo   https://adoptium.net
@@ -33,7 +33,7 @@ set JAVA_VERSION=%JAVA_VERSION:"=%
 for /f "delims=." %%a in ("%JAVA_VERSION%") do set JAVA_MAJOR=%%a
 
 if %JAVA_MAJOR% LSS 17 (
-    echo X Java %JAVA_MAJOR% detecte. Java 17 minimum requis !
+    echo  Java %JAVA_MAJOR% detecte. Java 17 minimum requis !
     echo   Telechargez Java 17 : https://adoptium.net
     pause
     exit /b 1
@@ -41,7 +41,7 @@ if %JAVA_MAJOR% LSS 17 (
 
 echo OK Java %JAVA_MAJOR% detecte
 
-:: ─── Vérification / Installation Maven ──────────────────────
+
 echo [2/3] Verification de Maven...
 
 mvn -version >nul 2>&1
@@ -51,7 +51,7 @@ if %errorlevel% neq 0 (
     :: Essayer avec winget
     winget install Apache.Maven >nul 2>&1
     if %errorlevel% neq 0 (
-        echo X Installation automatique echouee.
+        echo  Installation automatique echouee.
         echo.
         echo Installez Maven manuellement :
         echo   https://maven.apache.org/download.cgi
@@ -71,12 +71,12 @@ for /f "tokens=3" %%v in ('mvn -version 2^>^&1 ^| findstr /i "Apache Maven"') do
 )
 echo OK Maven %MVN_VERSION% detecte
 
-:: ─── Compilation du projet ───────────────────────────────────
+
 echo [3/3] Compilation du projet...
 
 mvn clean compile -q
 if %errorlevel% neq 0 (
-    echo X Erreur lors de la compilation !
+    echo  Erreur lors de la compilation !
     echo   Relancez avec : mvn clean compile pour voir les details
     pause
     exit /b 1
@@ -84,15 +84,14 @@ if %errorlevel% neq 0 (
 
 echo OK Compilation reussie
 
-:: ─── Fin ─────────────────────────────────────────────────────
+
 echo.
-echo ╔════════════════════════════════════════╗
-echo ║   OK Installation terminee avec succes ║
-echo ╠════════════════════════════════════════╣
-echo ║  Lancer le jeu (terminal) :            ║
-echo ║    run.bat terminal                    ║
-echo ║  Lancer le jeu (interface) :           ║
-echo ║    run.bat                             ║
-echo ╚════════════════════════════════════════╝
+
+echo    OK Installation terminee avec succes 
+echo  ========================================
+echo   Lancer le jeu (terminal) :            
+echo     run.bat terminal                    
+echo   Lancer le jeu (interface) :           
+echo     run.bat                             
 echo.
 pause
