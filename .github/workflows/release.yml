@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*'          # Se déclenche sur : git tag v1.0 && git push --tags
   workflow_dispatch:  # Permet aussi de lancer manuellement depuis GitHub
+	
+	permissions:
+  contents: write
 
 jobs:
 
