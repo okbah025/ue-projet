@@ -12,12 +12,10 @@ CYAN='\033[0;36m'
 RESET='\033[0m'
 
 echo -e "${CYAN}"
-echo "╔════════════════════════════════════════╗"
-echo "║     Installation de Parabox            ║"
-echo "╚════════════════════════════════════════╝"
+echo " ----------Installation de Jeu -------------   "
 echo -e "${RESET}"
 
-# ─── Vérification Java ───────────────────────────────────────
+
 echo -e "${JAUNE}[1/3] Vérification de Java...${RESET}"
 
 if ! command -v java &> /dev/null; then
@@ -38,13 +36,13 @@ if [ "$JAVA_VERSION" -lt 17 ]; then
     exit 1
 fi
 
-echo -e "${VERT}✓ Java $JAVA_VERSION détecté${RESET}"
+echo -e "${VERT} Java $JAVA_VERSION détecté${RESET}"
 
-# ─── Vérification / Installation Maven ───────────────────────
+
 echo -e "${JAUNE}[2/3] Vérification de Maven...${RESET}"
 
 if ! command -v mvn &> /dev/null; then
-    echo -e "${JAUNE}⚠ Maven non détecté. Installation en cours...${RESET}"
+    echo -e "${JAUNE} Maven non détecté. Installation en cours...${RESET}"
 
     OS="$(uname -s)"
     case "$OS" in
@@ -56,7 +54,7 @@ if ! command -v mvn &> /dev/null; then
             elif command -v pacman &> /dev/null; then
                 sudo pacman -S maven
             else
-                echo -e "${ROUGE}✗ Gestionnaire de paquets non reconnu.${RESET}"
+                echo -e "${ROUGE} Gestionnaire de paquets non reconnu.${RESET}"
                 echo "  Installez Maven manuellement : https://maven.apache.org/download.cgi"
                 exit 1
             fi
@@ -65,7 +63,7 @@ if ! command -v mvn &> /dev/null; then
             if command -v brew &> /dev/null; then
                 brew install maven
             else
-                echo -e "${ROUGE}✗ Homebrew non installé.${RESET}"
+                echo -e "${ROUGE} Homebrew non installé.${RESET}"
                 echo "  Installez Homebrew : https://brew.sh"
                 echo "  Puis relancez ce script."
                 exit 1
@@ -79,29 +77,27 @@ if ! command -v mvn &> /dev/null; then
 fi
 
 MVN_VERSION=$(mvn -version 2>&1 | head -1 | awk '{print $3}')
-echo -e "${VERT}✓ Maven $MVN_VERSION détecté${RESET}"
+echo -e "${VERT} Maven $MVN_VERSION détecté${RESET}"
 
-# ─── Compilation du projet ────────────────────────────────────
+
 echo -e "${JAUNE}[3/3] Compilation du projet...${RESET}"
 
 mvn clean compile -q
 if [ $? -ne 0 ]; then
-    echo -e "${ROUGE}✗ Erreur lors de la compilation !${RESET}"
+    echo -e "${ROUGE} Erreur lors de la compilation !${RESET}"
     echo "  Relancez avec : mvn clean compile pour voir les détails"
     exit 1
 fi
 
-echo -e "${VERT}✓ Compilation réussie${RESET}"
+echo -e "${VERT} Compilation réussie${RESET}"
 
 # ─── Fin ──────────────────────────────────────────────────────
 echo ""
 echo -e "${VERT}"
-echo "╔════════════════════════════════════════╗"
-echo "║   ✓ Installation terminée avec succès  ║"
-echo "╠════════════════════════════════════════╣"
-echo "║  Lancer le jeu (terminal) :            ║"
-echo "║    ./run.sh terminal                   ║"
-echo "║  Lancer le jeu (interface) :           ║"
-echo "║    ./run.sh                            ║"
-echo "╚════════════════════════════════════════╝"
+echo "     Installation terminée avec succès! "
+echo "========================================"
+echo "  Lancer le jeu (terminal) :            "
+echo "    ./run.sh terminal                   "
+echo "  Lancer le jeu (interface) :           "
+echo "    ./run.sh                            "
 echo -e "${RESET}"

@@ -14,66 +14,145 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>21</javafx.version>
+        <javafx.platform>linux</javafx.platform>
     </properties>
-    
+
     <dependencies>
-    	 <dependency>
-        	<groupId>org.junit.jupiter</groupId>
-        	<artifactId>junit-jupiter</artifactId>
-        	<version>5.10.1</version>
-        	<scope>test</scope>
-	 </dependency>
 
+        <!-- JUnit -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.1</version>
+            <scope>test</scope>
+        </dependency>
 
-    	 <!-- JavaFX Controls -->
-   	 <dependency>
-        	<groupId>org.openjfx</groupId>
-        	<artifactId>javafx-controls</artifactId>
-        	<version>21</version>
-    	 </dependency>
+        <!-- javafx-base : classes + natifs Linux -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
 
-   	 <!-- JavaFX FXML -->
-   	 <dependency>
-        	<groupId>org.openjfx</groupId>
-        	<artifactId>javafx-fxml</artifactId>
-        	<version>21</version>
-    	 </dependency>
+        <!-- javafx-graphics : classes + natifs Linux -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
+
+        <!-- javafx-controls : classes + natifs Linux -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
+
+        <!-- javafx-fxml : classes + natifs Linux -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+            <classifier>${javafx.platform}</classifier>
+        </dependency>
 
     </dependencies>
-    
+
     <build>
-	<resources>
-       		 <resource>
-            		<directory>src/main/resources</directory>
-        	</resource>
-   	 </resources>   
-	 <plugins>
 
-	    	<plugin>
-    			<groupId>org.codehaus.mojo</groupId>
-    			<artifactId>exec-maven-plugin</artifactId>
-    			<version>3.1.0</version>
-    			<configuration>
-        			<mainClass>fr.paris13.parabox.Modele.MainTerminalComplet</mainClass>
-    			</configuration>
-		</plugin>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
 
-		<plugin>
-            		<groupId>org.openjfx</groupId>
-            		<artifactId>javafx-maven-plugin</artifactId>
-            		<version>0.0.8</version>
-            		<configuration>
-                		<mainClass>fr.paris13.parabox.ig.Main</mainClass>
-            		</configuration>
-   		 </plugin>
-    		<plugin>
-    			<groupId>org.apache.maven.plugins</groupId>
-    			<artifactId>maven-surefire-plugin</artifactId>
-    			<version>3.1.2</version>
-		</plugin>
+        <plugins>
+
+            <!-- mvn javafx:run -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>fr.paris13.parabox.ig.Main</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- mvn exec:java (terminal) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>fr.paris13.parabox.Modele.MainTerminalComplet</mainClass>
+                </configuration>
+            </plugin>
+
+            <!-- Tests JUnit 5 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+            </plugin>
+
+            <!-- Fat-jar : mvn clean package → java -jar target/parabox-1.0-SNAPSHOT.jar -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>fr.paris13.parabox.ig.Launcher</mainClass>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>META-INF/MANIFEST.MF</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
-
-   </build>
+    </build>
 
 </project>
-

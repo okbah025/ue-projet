@@ -1,46 +1,40 @@
-# Parabox - Jeu Sokoban 
+# Parabox - Jeu Sokoban
 
-Ue Projet L2 Informatique - Université Paris 13  
-Un jeu de type Sokoban.
+Projet UE L2 Informatique — Université Paris 13  
+Un jeu de type Sokoban développé en Java.
 
 ---
 
-## Prérequis
+## Ce qu'il faut avoir installé
 
-| Outil | Version minimale | Lien |
-|-------|-----------------|------|
-| Java  | 17              | [adoptium.net](https://adoptium.net) |
-| Maven | 3.x             | Installé automatiquement par le script |
-
-> Maven sera installé automatiquement si absent.
+- **Java 17** minimum (si t'as pas ça, ça marchera pas) → [adoptium.net](https://adoptium.net)
+- **Maven 3.x** — pas besoin de l'installer à la main, le script s'en occupe si t'as pas
 
 ---
 
 ## Installation
 
-### 1. Cloner le projet
+### Cloner le projet
+
 ```bash
 git clone https://github.com/okbah025/ue-projet.git
 cd ue-projet
 ```
 
-### 2. Lancer le script d'installation
+### Lancer le script d'installation
 
-**Linux / macOS :**
+Sur **Linux / macOS** :
 ```bash
 chmod +x install.sh run.sh
 ./install.sh
 ```
 
-**Windows :**
+Sur **Windows** :
 ```bat
 install.bat
 ```
 
-Le script vérifie automatiquement :
--  La présence de Java 17
--  La présence de Maven (et l'installe si absent)
--  La compilation du projet
+Le script fait les vérifications de base (Java, Maven, compilation). Si Maven est absent il essaie de l'installer tout seul.
 
 ---
 
@@ -48,77 +42,79 @@ Le script vérifie automatiquement :
 
 ### Interface graphique (JavaFX)
 
-**Linux / macOS :**
+Linux / macOS :
 ```bash
 ./run.sh
 ```
 
-**Windows :**
+Windows :
 ```bat
 run.bat
 ```
 
-### Mode terminal
+### Mode terminal (si la fenêtre marche pas)
 
-**Linux / macOS :**
+Linux / macOS :
 ```bash
 ./run.sh terminal
 ```
 
-**Windows :**
+Windows :
 ```bat
 run.bat terminal
 ```
 
 ---
 
-## Commandes Maven utiles
+## Commandes Maven
+
+Si vous préférez passer par Maven directement :
 
 ```bash
-mvn clean compile    # Compiler le projet
-mvn test             # Lancer les tests
-mvn javafx:run       # Lancer l'interface graphique
-mvn exec:java        # Lancer le mode terminal
-mvn clean            # Nettoyer les fichiers compilés
+mvn clean compile    # compiler
+mvn test             # lancer les tests
+mvn javafx:run       # lancer l'interface graphique
+mvn exec:java        # lancer en mode terminal
+mvn clean            # nettoyer les fichiers compilés
 ```
 
 ---
 
 ## Structure du projet
-
-```
-parabox/
-├── pom.xml                          # Configuration Maven
-├── install.sh / install.bat         # Scripts d'installation
-├── run.sh / run.bat                 # Scripts de lancement
+.
+├── install.bat
+├── install.sh
+├── pom.xml
 ├── README.md
-└── src/
-    ├── main/
+├── run.bat
+├── run.sh
+└── src
+    ├── main
     │   ├── java/fr/paris13/parabox/
-    │   │   ├── Modele/              # Logique du jeu
-    │   │   ├── ig/                  # Interface graphique
-    │   │   └── chemin/              # Algorithme de chemin
-    │   └── resources/
-    │       └── images/              # Images du jeu
-    └── test/
+    │   │     								├── chemin 
+    │   │     								├── ig 
+    │   │        							├── Modele  
+    │   │               			└── ResoAuto
+    │   └── resources
+    │       ├── images
+    │       ├── niveau1.txt
+    │       ├── niveau2.txt
+    │       ├── niveau3.txt
+    │       ├── niveau4.txt
+    │       └── niveau5.txt
+    └── test
         └── java/fr/paris13/parabox/ # Tests JUnit
-```
-
+        
+        
 ---
 
-## Problèmes fréquents
+## Problèmes courants
 
-### Java non reconnu après installation
-Redémarrez votre terminal ou votre machine.
+**Java pas reconnu après installation** → Redémarrez le terminal (ou carrément la machine).
 
-### Erreur JavaFX au lancement
-Vérifiez que vous lancez via `mvn javafx:run` et non directement `java -jar`.
+**Erreur JavaFX** → Lancez bien via `mvn javafx:run` et pas directement avec `java -jar`, ça marchera pas.
 
-### Erreur de compilation
-```bash
-mvn clean compile
-```
-Lisez les messages d'erreur et vérifiez que Java 17 est bien utilisé :
+**Erreur de compilation** → Faites `mvn clean compile` et lisez les messages. Vérifiez aussi que c'est bien Java 17 qui est utilisé :
 ```bash
 java -version
 mvn -version
@@ -128,12 +124,13 @@ mvn -version
 
 ## Équipe
 
-| Rôle | Responsabilité |
-|------|---------------|
-| Coordinateur | Coordination générale |
-| Modèle | Logique du jeu |
-| Interface graphique | Affichage JavaFX |
-| Persistance | Sauvegarde/chargement |
-| Chemin | Algorithme de résolution |
-| Auto-résolution | Résolution automatique |
-| **Installation/Déploiement** | **Scripts, Maven, Git** |
+| Rôle |               Responsabilité |
+|------|------------------------------|
+| Coordinateur -> Coordination générale, Git
+| Modèle -> Logique du jeu 
+| Interface graphique -> Affichage JavaFX 
+| Persistance -> Sauvegarde / chargement 
+| Chemin -> Algorithme de résolution 
+| Auto-résolution -> Résolution automatique 
+| **Installation -> Déploiement** | **Scripts, Maven, Git** |
+

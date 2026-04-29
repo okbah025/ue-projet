@@ -29,8 +29,8 @@ public class Level extends GridPane {
         cells = new StackPane[col][row];
         setAlignment(Pos.CENTER);
         
-        this.getColumnConstraints().add(new ColumnConstraints(90));
-        this.getRowConstraints().add(new RowConstraints(90));
+        this.getColumnConstraints().add(new ColumnConstraints());
+        this.getRowConstraints().add(new RowConstraints());
     }
 
     public void setFloor(int i, int j){
