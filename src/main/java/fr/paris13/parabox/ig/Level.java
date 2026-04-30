@@ -1,15 +1,11 @@
 package fr.paris13.parabox.ig;
 import fr.paris13.parabox.Modele.*;
-import fr.paris13.parabox.Modele.Piece;
-import javafx.geometry.Pos;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.RowConstraints;
 
 /** Classe Level permettant d'afficher un niveau **/
 
@@ -22,22 +18,15 @@ public class Level extends GridPane {
     private int col;
     private int row;
     private final int lvl;
-    private final Position posJoueurInit;
 
     public Level(Grille grid, int lvl){
         this.lvl = lvl;
         this.grid = grid;
         player = grid.getJoueur();
-        posJoueurInit = player.getPosition();
         col = grid.getLargeur();
         row = grid.getHauteur();
         cells = new StackPane[col][row];
         setAlignment(Pos.CENTER);
-        
-        
-        this.getColumnConstraints().add(new ColumnConstraints());
-        this.getRowConstraints().add(new RowConstraints());
-        this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
     }
 
     public int getLvl(){
@@ -77,7 +66,7 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(wall);
     }
 
-     private void setBox(int i, int j){
+    private void setBox(int i, int j){
         ImageView box = new ImageView();
         box.setImage(new Image("/images/box.png"));
         box.setFitHeight(SIZE);
@@ -134,7 +123,7 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(p);
     }
     
-    private void setRoom(int i, int j, Grille grid){
+    private void setRoom(int i, int j){
         ImageView level = new ImageView();
         level.setImage(new Image("/images/room.png"));
         level.setFitHeight(SIZE);
@@ -166,9 +155,8 @@ public class Level extends GridPane {
             int i = box.getX();
             int j = box.getY();
             
-            if (box instanceof Piece room){
-                Grille g = room.getGrilleInterne();
-                setRoom(i, j, g);
+            if (box instanceof Piece){
+                setRoom(i, j);
             }
             else {
                 setBox(i, j);
@@ -212,15 +200,15 @@ public class Level extends GridPane {
             cells[i][j].getChildren().clear();
             setFloor(i, j);
             
-            if (box instanceof Piece room){
-                Grille g = room.getGrilleInterne();
-                setRoom(i, j, g);
+            if (box instanceof Piece){
+                setRoom(i, j);
             }
             else {
                 setBox(i, j);
             }
         }
     }
+    
     public void updateBoardReverse(){
         for (int i = 0; i<col; i++){
             for (int j = 0; j<row; j++){
@@ -248,7 +236,6 @@ public class Level extends GridPane {
         int i = player.getX();
         int j = player.getY();
         setPlayer(i, j);
-
     }
     
     public void updateBoardRec(Grille g){
@@ -261,16 +248,16 @@ public class Level extends GridPane {
         setBoard();
     }
     
-    public void clearBoard(){
+    private void clearBoard(){
         this.getChildren().clear();
     }
     
     
     /// à changer
-    public void updateBoardReverseRec(Grille g){
-        grid = g;
-        setBoard();
-    }
+//    public void updateBoardReverseRec(Grille g){
+//        grid = g;
+//        setBoard();
+//    }
     
 
 }
