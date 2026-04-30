@@ -66,20 +66,8 @@ jobs:
       - name: Build fat-jar
         run: mvn clean package -DskipTests
 
-      - name: Create .exe installer
-        run: |
-          jpackage `
-            --input target/ `
-            --name Parabox `
-            --main-jar parabox-1.0-SNAPSHOT.jar `
-            --main-class fr.paris13.parabox.ig.Launcher `
-            --type exe `
-            --app-version 1.0 `
-            --dest target/installer `
-            --win-shortcut `
-            --win-menu `
-            --java-options "-Xmx512m"
-            --icon src/main/resources/images/box.png `
+			- name: Create .exe installer
+        run: jpackage --input target/ --name Parabox --main-jar parabox-1.0-SNAPSHOT.jar --main-class fr.paris13.parabox.ig.Launcher --type exe --app-version 1.0 --dest target/installer --icon src/main/resources/images/box.png --win-shortcut --win-menu --java-options "-Xmx512m"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
