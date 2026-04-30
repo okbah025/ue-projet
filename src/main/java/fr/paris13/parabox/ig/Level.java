@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 
 /** Classe Level permettant d'afficher un niveau **/
@@ -15,69 +16,131 @@ import javafx.scene.layout.RowConstraints;
 public class Level extends GridPane {
     public static final int SIZE = 50;
     public static final Image floorImg = new Image("/images/floor.gif");
-    private final Joueur player;
+    private Joueur player;
     private Grille grid;
     private StackPane[][] cells;
     private int col;
     private int row;
+    private final int lvl;
+    private final Position posJoueurInit;
 
-    public Level(Grille grid){
+    public Level(Grille grid, int lvl){
+        this.lvl = lvl;
         this.grid = grid;
         player = grid.getJoueur();
+        posJoueurInit = player.getPosition();
         col = grid.getLargeur();
         row = grid.getHauteur();
         cells = new StackPane[col][row];
         setAlignment(Pos.CENTER);
         
+        
         this.getColumnConstraints().add(new ColumnConstraints());
         this.getRowConstraints().add(new RowConstraints());
+        this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
     }
 
-    public void setFloor(int i, int j){
+    public int getLvl(){
+        return this.lvl;
+    }
+    
+    public void reset(Grille g){
+        clearBoard();
+        resetGrid(g);
+        resetPlayer(g.getJoueur());
+        setBoard();
+    }
+    
+    private void resetGrid(Grille grid){
+        this.grid = grid;
+    }
+    
+    private void resetPlayer(Joueur player){
+        this.player = player;
+    }
+    
+    private void setFloor(int i, int j){
         ImageView floor = new ImageView();
         floor.setImage(floorImg);
         floor.setFitHeight(SIZE);
         floor.setFitWidth(SIZE);
+        floor.setPreserveRatio(true);
         cells[i][j].getChildren().add(floor);
     }
 
-    public void setWall(int i, int j){
+    private void setWall(int i, int j){
         ImageView wall = new ImageView();
         wall.setImage(new Image("/images/wall.png"));
         wall.setFitHeight(SIZE);
         wall.setFitWidth(SIZE);
+        wall.setPreserveRatio(true);
         cells[i][j].getChildren().add(wall);
     }
 
-     public void setBox(int i, int j){
+     private void setBox(int i, int j){
         ImageView box = new ImageView();
         box.setImage(new Image("/images/box.png"));
         box.setFitHeight(SIZE);
         box.setFitWidth(SIZE);
+        box.setPreserveRatio(true);
+
         cells[i][j].getChildren().add(box);
     }
 
-    public void setTarget(int i, int j){
+    private void setTarget(int i, int j){
         ImageView target = new ImageView();
         target.setImage(new Image("/images/target.png"));
         target.setFitHeight(SIZE);
         target.setFitWidth(SIZE);
+        target.setPreserveRatio(true);
+
         cells[i][j].getChildren().add(target);
     }
 
-    public void setPlayer(int i, int j){
+    private void setPlayer(int i, int j){
         ImageView p = new ImageView();
-        p.setImage(new Image("/images/p.png"));
+        p.setImage(new Image("/images/player.png"));
         p.setFitHeight(SIZE);
         p.setFitWidth(SIZE);
+        p.setPreserveRatio(true);
+
         cells[i][j].getChildren().add(p);
     }
     
-    public void setRoom(int i, int j, Grille grid){
+    private void setPlayerRight(int i, int j){
+        ImageView p = new ImageView();
+        p.setImage(new Image("/images/player_right.png"));
+        p.setFitHeight(SIZE);
+        p.setFitWidth(SIZE);
+        p.setPreserveRatio(true);
+        cells[i][j].getChildren().add(p);
+    }
+    
+    private void setPlayerLeft(int i, int j){
+        ImageView p = new ImageView();
+        p.setImage(new Image("/images/player_left.png"));
+        p.setFitHeight(SIZE);
+        p.setFitWidth(SIZE);
+        p.setPreserveRatio(true);
+        cells[i][j].getChildren().add(p);
+    }
+    
+    private void setPlayerUp(int i, int j){
+        ImageView p = new ImageView();
+        p.setImage(new Image("/images/player_back.png"));
+        p.setFitHeight(SIZE);
+        p.setFitWidth(SIZE);
+        p.setPreserveRatio(true);
+        cells[i][j].getChildren().add(p);
+    }
+    
+    private void setRoom(int i, int j, Grille grid){
         ImageView level = new ImageView();
         level.setImage(new Image("/images/room.png"));
         level.setFitHeight(SIZE);
         level.setFitWidth(SIZE);
+        level.setPreserveRatio(true);
+        
         cells[i][j].getChildren().add(level);
     }
 
@@ -117,7 +180,7 @@ public class Level extends GridPane {
         setPlayer(i, j);
     }
 
-    public void updateBoard(){
+    public void updateBoard(Direction dir){
         int oldX = player.getOldX();
         int oldY = player.getOldY();
         int x = player.getX();
@@ -134,8 +197,14 @@ public class Level extends GridPane {
             if (i == x && j == y) setTarget(i, j);
             if (i == oldX && j == oldY) setTarget(i, j);
         }
+        
 
-        setPlayer(x ,y);
+        switch (dir) {
+            case DROITE -> setPlayerRight(x, y);
+            case GAUCHE -> setPlayerLeft(x, y);
+            case HAUT -> setPlayerUp(x, y);
+            default -> setPlayer(x ,y);
+        }
 
         for (Boite box : grid.getBoites()){
             int i = box.getX();
@@ -196,40 +265,12 @@ public class Level extends GridPane {
         this.getChildren().clear();
     }
     
+    
+    /// à changer
     public void updateBoardReverseRec(Grille g){
         grid = g;
         setBoard();
     }
     
-//    private void setInsideBoard(){
-//        for (int i = 0; i<col; i++){
-//            for (int j = 0; j<row; j++){
-//                cells[i][j] = new StackPane();
-//                if(grid.getObjet(i, j) instanceof Mur){
-//                    setWall(i ,j);
-//                } else {
-//                    setFloor(i, j);
-//                }
-//                this.add(cells[i][j], i, j);
-//            }
-//        }
-//
-//        for (Cible target : grid.getCibles()){
-//            int i = target.getX();
-//            int j = target.getY();
-//            setTarget(i, j);
-//        }
-//        for (Boite box : grid.getBoites()){
-//            int i = box.getX();
-//            int j = box.getY();
-//            
-//            if (box instanceof Piece room){
-//                Grille g = room.getGrilleInterne();
-//                setRoom(i, j, g);
-//            }
-//            else {
-//                setBox(i, j);
-//            }
-//        }
-//    }
+
 }

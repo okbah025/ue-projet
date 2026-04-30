@@ -28,9 +28,9 @@ public class LevelMenu extends VBox {
             Grille g = grid[i];
             
             if (ver == Version.SIMPLE){
-                btn.setOnAction(() -> root.getChildren().setAll(new Sokoban(g, root)));
+                btn.setOnAction(() -> root.getChildren().setAll(new Sokoban(g, root, level)));
             } else {
-                btn.setOnAction(() -> root.getChildren().setAll(new Parabox(g, root)));
+                btn.setOnAction(() -> root.getChildren().setAll(new Parabox(g, root, level)));
             }
             
             box1.getChildren().add(btn);
@@ -42,9 +42,9 @@ public class LevelMenu extends VBox {
             Grille g = grid[i];
             
             if (ver == Version.SIMPLE){
-                btn.setOnAction(() -> root.getChildren().setAll(new Sokoban(g, root)));
+                btn.setOnAction(() -> root.getChildren().setAll(new Sokoban(g, root, level)));
             } else {
-                btn.setOnAction(() -> root.getChildren().setAll(new Parabox(g, root)));
+                btn.setOnAction(() -> root.getChildren().setAll(new Parabox(g, root, level)));
             }
             
             box2.getChildren().add(btn);
