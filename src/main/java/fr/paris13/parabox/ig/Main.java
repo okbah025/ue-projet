@@ -1,8 +1,6 @@
 package fr.paris13.parabox.ig;
 
-import fr.paris13.parabox.ig.menu.LevelMenu;
 import fr.paris13.parabox.ig.menu.MainMenu;
-import fr.paris13.parabox.ig.menu.PauseMenu;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
