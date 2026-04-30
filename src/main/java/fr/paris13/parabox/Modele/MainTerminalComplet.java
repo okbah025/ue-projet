@@ -1,4 +1,6 @@
 package fr.paris13.parabox.Modele;
+import fr.paris13.parabox.chemin.pile;
+import fr.paris13.parabox.chemin.c_chemin;
 
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoFonctions;
@@ -68,7 +70,10 @@ public class MainTerminalComplet extends ResoAutoRecursif {
     // ── Commandes reconnues en jeu ────────────────────────────────────────────
     private enum Commande {
         HAUT, BAS, GAUCHE, DROITE,
-        ANNULER, RECOMMENCER, AIDE, QUITTER, INDICE, INCONNU
+
+       
+        ANNULER, RECOMMENCER, AIDE, QUITTER, CHEMIN ,INCONNU
+
     }
 
     // =========================================================================
@@ -307,6 +312,7 @@ if (rep.equals("o")) {
                         
                         
                     case QUITTER:
+<<<<<<< HEAD
     SauvegardePlateau save = new SauvegardePlateau(fichierSave);
     save.ecrireGrille(jeu.getGrille());
 
@@ -323,6 +329,21 @@ histo.ecrireHistorique(jeu);
     break;
 
                     default:
+=======
+                        continuer = false;
+                        System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+                        break;
+                     case CHEMIN:
+						 
+			    System.out.print("Entrez x y : ");
+			    int x = scanner.nextInt();
+			    int y = scanner.nextInt();
+			    scanner.nextLine();
+                             
+			    jeu.getGrille().chemin_court(x, y );
+			    break;
+		      default:
+>>>>>>> f3f2ff6 (src/main/java/fr/paris13/parabox/Modele/ MainTerminalComplet.java)
                         break; // INCONNU : on ignore silencieusement
                 }
             }
@@ -507,7 +528,18 @@ histo.ecrireHistorique(jeu);
 			
                         
                         break;
-                    default:
+                        
+                     case CHEMIN:   
+                          
+				    System.out.print("Entrez x y : ");
+				    int x = scanner.nextInt();
+				    int y = scanner.nextInt();
+				    scanner.nextLine();
+
+				     jeu.getGrilleActive().chemin_court(x, y);
+				    break;
+							
+                     default:
                         break;
                 }
             }
@@ -568,7 +600,11 @@ histo.ecrireHistorique(jeu);
                     case 'R': return Commande.RECOMMENCER;
                     case 'H': return Commande.AIDE;
                     case 'X': return Commande.QUITTER;
+<<<<<<< HEAD
                     case 'I': return Commande.INDICE;
+=======
+                    case 'P': return Commande.CHEMIN;
+>>>>>>> f3f2ff6 (src/main/java/fr/paris13/parabox/Modele/ MainTerminalComplet.java)
                     default:  return Commande.INCONNU;
                 }
             }
@@ -748,6 +784,8 @@ histo.ecrireHistorique(jeu);
         System.out.println("   " + JAUNE + "H" + RESET + "  Afficher cette aide");
         System.out.println("   " + JAUNE + "I" + RESET + "  Indice");
         System.out.println("   " + JAUNE + "X" + RESET + "  Quitter");
+        System.out.println("    " + JAUNE + "P" + RESET + " chemin plus court (cliquer sur une cible)");
+ 
     }
 
     /** Afficher les contrôles avec les infos spécifiques à la version récursive. */
