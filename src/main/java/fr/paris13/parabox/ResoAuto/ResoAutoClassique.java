@@ -37,25 +37,16 @@ public class ResoAutoClassique extends ResoAutoFonctions {
     }
 
     public static PileDir classique3(Grille g) {
-        boolean[][] M=remplir(g);
+        boolean[][] M=remplir_vide(g);
         pile chemin=new pile();
         pile p=new pile();
         p=c_chemin(M, 1, 4, 1, 3);
         while (!p.isEmpty())
             chemin.empiler(p.depiler());
-        p=c_chemin(M, 3, 4, 2, 4);
+        p=c_chemin(M, 5, 4, 2, 4);
         while (!p.isEmpty())
             chemin.empiler(p.depiler());
-        p=c_chemin(M, 5, 4, 4, 4);
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        p=inverser(c_chemin(M, 4, 4, 4, 4));
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        p=inverser(c_chemin(M, 3, 4, 2, 4));
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        p=inverser(c_chemin(M, 2, 3, 2, 1));
+        p=inverser(c_chemin(M, 4, 4, 2, 1));
         while (!p.isEmpty())
             chemin.empiler(p.depiler());
         p=c_chemin(M, 5, 1, 3, 1);
