@@ -39,6 +39,7 @@ jobs:
             --type deb \
             --app-version 1.0 \
             --dest target/installer \
+            --icon src/main/resources/images/box.png \
             --java-options "-Xmx512m"
 
       - name: Upload artifact
@@ -78,6 +79,7 @@ jobs:
             --win-shortcut `
             --win-menu `
             --java-options "-Xmx512m"
+            --icon src/main/resources/images/box.png `
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -113,6 +115,7 @@ jobs:
             --type dmg \
             --app-version 1.0 \
             --dest target/installer \
+            --icon src/main/resources/images/box.png \
             --java-options "-Xmx512m"
 
       - name: Upload artifact
