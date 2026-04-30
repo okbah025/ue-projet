@@ -79,7 +79,7 @@ jobs:
             --win-shortcut `
             --win-menu `
             --java-options "-Xmx512m"
-            --icon src/main/resources/images/box.png \
+            --icon src/main/resources/images/box.png `
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
