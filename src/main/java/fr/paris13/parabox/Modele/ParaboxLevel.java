@@ -14,7 +14,6 @@ public class ParaboxLevel {
     public static Grille[] getList(){
         List<String> levels = listerFichiersNiveaux();   
         levelList = new Grille [levels.size()];
-        System.out.println(levels.size());
         for(int i = 0; i<levels.size(); i++){
             levelList[i] = ChargeurNiveau.charger(DOSSIER + File.separator + levels.get(i));
         }

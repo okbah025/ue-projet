@@ -20,7 +20,7 @@ public class SokobanLevel {
         }
     }
 
-    private static Grille niveauSimple1() {
+    public static Grille niveauSimple1() {
         Grille g = new Grille(7, 5, "Niveau 1");
         cadre(g, 7, 5);
         g.setObjet(new Cible(5, 2, g),  5, 2);
@@ -29,7 +29,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple2() {
+    public static Grille niveauSimple2() {
         Grille g = new Grille(8, 6, "Niveau 2");
         cadre(g, 8, 6);
         g.setObjet(new Cible(6, 1, g), 6, 1);
@@ -40,7 +40,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple3() {
+    public static Grille niveauSimple3() {
         Grille g = new Grille(8, 6, "Niveau 3");
         cadre(g, 8, 6);
         g.setObjet(new Mur(3, 2, g), 3, 2);
@@ -53,7 +53,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple4() {
+    public static Grille niveauSimple4() {
         Grille g = new Grille(9, 7, "Niveau 4");
         cadre(g, 9, 7);
         g.setObjet(new Mur(4, 2, g), 4, 2);
@@ -68,7 +68,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple5() {
+    public static Grille niveauSimple5() {
         Grille g = new Grille(10, 7, "Niveau 5");
         cadre(g, 10, 7);
         g.setObjet(new Mur(3, 1, g), 3, 1); g.setObjet(new Mur(3, 2, g), 3, 2);
@@ -84,7 +84,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple6() {
+    public static Grille niveauSimple6() {
         Grille g = new Grille(10, 8, "Niveau 6");
         cadre(g, 10, 8);
         for (int y = 2; y < 6; y++) g.setObjet(new Mur(5, y, g), 5, y);
@@ -97,7 +97,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple7() {
+    public static Grille niveauSimple7() {
         Grille g = new Grille(11, 8, "Niveau 7");
         cadre(g, 11, 8);
         for (int y = 2; y < 6; y++) g.setObjet(new Mur(5, y, g), 5, y);
@@ -111,7 +111,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple8() {
+    public static Grille niveauSimple8() {
         Grille g = new Grille(11, 9, "Niveau 8");
         cadre(g, 11, 9);
         for (int i = 1; i < 4; i++) {
@@ -131,7 +131,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple9() {
+    public static Grille niveauSimple9() {
         Grille g = new Grille(12, 9, "Niveau 9");
         cadre(g, 12, 9);
         for (int i = 1; i < 4; i++) {
@@ -153,7 +153,7 @@ public class SokobanLevel {
         return g;
     }
 
-    private static Grille niveauSimple10() {
+    public static Grille niveauSimple10() {
         Grille g = new Grille(13, 10, "Niveau 10");
         cadre(g, 13, 10);
         for (int i = 2; i < 8; i++) {
