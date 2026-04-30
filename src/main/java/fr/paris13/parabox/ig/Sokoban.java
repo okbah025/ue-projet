@@ -35,7 +35,7 @@ public class Sokoban extends StackPane {
         d = ResoAutoClassique.classique(g, lvl);
         jeu = new Jeu(g);
         level = new Level(g, lvl);
-        level.setBoard();
+        level.setBoard(Direction.BAS);
         pause = new PauseMenu(root, Version.SIMPLE);
         pause.setVisible(false);
         getChildren().addAll(level, pause);

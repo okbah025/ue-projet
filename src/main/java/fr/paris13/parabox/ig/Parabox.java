@@ -1,6 +1,5 @@
 package fr.paris13.parabox.ig;
 
-import fr.paris13.parabox.Modele.ChargeurNiveau;
 import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.JeuRecursif;
@@ -10,7 +9,6 @@ import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoRecursif;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
-import java.io.File;
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -34,7 +32,7 @@ public class Parabox extends StackPane {
         d = ResoAutoRecursif.recursif(g, lvl);
         jeu = new JeuRecursif(g);
         level = new Level(g, lvl);
-        level.setBoard();
+        level.setBoard(Direction.BAS);
         pause = new PauseMenu(root, Version.RECURSIVE);
         pause.setVisible(false);
         getChildren().addAll(level, pause);
@@ -68,7 +66,7 @@ public class Parabox extends StackPane {
                 break;
             case Z:
                 if (jeu.annulerMouvement()) {
-                    level.updateBoardRec(jeu.getGrilleActive());
+                    level.updateBoardRec(jeu.getGrilleActive(), null);
                 }
                 break;
             case R:
@@ -116,7 +114,7 @@ public class Parabox extends StackPane {
         if (direction != null) {
             boolean ok = jeu.deplacerJoueur(direction);
             if (ok){
-                level.updateBoardRec(jeu.getGrilleActive());
+                level.updateBoardRec(jeu.getGrilleActive(), direction);
                 if (jeu.estNiveauTermine()) {
                     root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level));
                 }
