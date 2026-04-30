@@ -86,25 +86,17 @@ jobs:
           path: target/installer/*.exe
 
   
-  # macOS → .dmg
-
-  build-macos:
-    runs-on: macos-latest
+  # macOS Intel → .dmg
+  build-macos-intel:
+    runs-on: macos-13      # macos-13 = dernier runner Intel
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Java 21
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
-
-      - name: Build fat-jar
-        run: mvn clean package -DskipTests
-
-      - name: Create .dmg installer
-        run: |
+      - run: mvn clean package -DskipTests
+      - run: |
           jpackage \
             --input target/ \
             --name Parabox \
@@ -114,18 +106,40 @@ jobs:
             --app-version 1.0 \
             --dest target/installer \
             --java-options "-Xmx512m"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: Parabox-macos
+          name: Parabox-macos-intel
           path: target/installer/*.dmg
 
+  # macOS Apple Silicon → .dmg
+  build-macos-arm:
+    runs-on: macos-latest  # macos-latest = Apple Silicon
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+      - run: mvn clean package -DskipTests
+      - run: |
+          jpackage \
+            --input target/ \
+            --name Parabox \
+            --main-jar parabox-1.0-SNAPSHOT.jar \
+            --main-class fr.paris13.parabox.ig.Launcher \
+            --type dmg \
+            --app-version 1.0 \
+            --dest target/installer \
+            --java-options "-Xmx512m"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Parabox-macos-arm
+          path: target/installer/*.dmg
 
   # Crée une Release GitHub avec les 3 fichiers
 
   release:
-    needs: [build-linux, build-windows, build-macos]
+    needs: [build-linux, build-windows, build-macos-intel, build-macos-arm]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
     steps:
