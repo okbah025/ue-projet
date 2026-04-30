@@ -23,4 +23,8 @@ public class PileDir extends c_chemin {
     public boolean isEmpty(){
         return pile.isEmpty();
     }
+    
+    public int size(){
+        return pile.size();
+    }
 }
