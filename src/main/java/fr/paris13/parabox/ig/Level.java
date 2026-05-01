@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 
 public class Level extends GridPane {
     public static final int SIZE = 50;
-    public static final Image floorImg = new Image("/images/floor.gif");
+    public static final Image floorImg = new Image("/images/floor.png");
     private Joueur player;
     private Grille grid;
     private StackPane[][] cells;
@@ -37,7 +37,7 @@ public class Level extends GridPane {
         clearBoard();
         resetGrid(g);
         resetPlayer(g.getJoueur());
-        setBoard();
+        setBoard(Direction.BAS);
     }
     
     private void resetGrid(Grille grid){
@@ -86,7 +86,7 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(target);
     }
 
-    private void setPlayer(int i, int j){
+    private void setPlayerDefault(int i, int j){
         ImageView p = new ImageView();
         p.setImage(new Image("/images/player.png"));
         p.setFitHeight(SIZE);
@@ -123,6 +123,15 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(p);
     }
     
+    private void setPlayer(int i, int j, Direction dir){
+        switch (dir) {
+            case DROITE -> setPlayerRight(i, j);
+            case GAUCHE -> setPlayerLeft(i, j);
+            case HAUT -> setPlayerUp(i, j);
+            default -> setPlayerDefault(i ,j);
+        }
+    }
+    
     private void setRoom(int i, int j){
         ImageView level = new ImageView();
         level.setImage(new Image("/images/room.png"));
@@ -133,7 +142,7 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(level);
     }
 
-    public void setBoard(){
+    public void setBoard(Direction dir){
         for (int i = 0; i<col; i++){
             for (int j = 0; j<row; j++){
                 cells[i][j] = new StackPane();
@@ -165,7 +174,7 @@ public class Level extends GridPane {
         
         int i = player.getX();
         int j = player.getY();
-        setPlayer(i, j);
+        setPlayer(i, j, dir);
     }
 
     public void updateBoard(Direction dir){
@@ -187,12 +196,8 @@ public class Level extends GridPane {
         }
         
 
-        switch (dir) {
-            case DROITE -> setPlayerRight(x, y);
-            case GAUCHE -> setPlayerLeft(x, y);
-            case HAUT -> setPlayerUp(x, y);
-            default -> setPlayer(x ,y);
-        }
+        setPlayer(x ,y, dir);
+        
 
         for (Boite box : grid.getBoites()){
             int i = box.getX();
@@ -235,17 +240,17 @@ public class Level extends GridPane {
 
         int i = player.getX();
         int j = player.getY();
-        setPlayer(i, j);
+        setPlayer(i, j, Direction.BAS);
     }
     
-    public void updateBoardRec(Grille g){
+    public void updateBoardRec(Grille g, Direction dir){
         grid = g;
         col = grid.getLargeur();
         row = grid.getHauteur();
         clearBoard();
         cells = new StackPane[col][row];
 
-        setBoard();
+        setBoard(dir);
     }
     
     private void clearBoard(){

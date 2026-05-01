@@ -35,7 +35,7 @@ public class Sokoban extends StackPane {
         d = ResoAutoClassique.classique(g, lvl);
         jeu = new Jeu(g);
         level = new Level(g, lvl);
-        level.setBoard();
+        level.setBoard(Direction.BAS);
         pause = new PauseMenu(root, Version.SIMPLE);
         pause.setVisible(false);
         getChildren().addAll(level, pause);
@@ -83,7 +83,7 @@ public class Sokoban extends StackPane {
                     int cmpt = d.size();
                     Timeline t = new Timeline(new KeyFrame(Duration.seconds(0.5), 
                             e -> {
-                                Direction dir2 = d.depiler2();
+                                Direction dir2 = d.depilerDir();
                                 jeu.deplacerJoueur(dir2);
                                 level.updateBoard(dir2);
                                 
