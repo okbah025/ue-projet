@@ -7,7 +7,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.GridPane;
 
-/** Classe Level permettant d'afficher un niveau **/
+ /**
+  * Classe Level permettant d'afficher un niveau.
+  *
+  */
 
 public class Level extends GridPane {
     public static final int SIZE = 50;
@@ -19,6 +22,13 @@ public class Level extends GridPane {
     private int row;
     private final int lvl;
 
+    
+    /**
+     * Inintialise un Level avec une grille.
+     * 
+     * @param grid la Grille à afficher
+     * @param lvl  le numéro du niveau
+     */
     public Level(Grille grid, int lvl){
         this.lvl = lvl;
         this.grid = grid;
@@ -29,10 +39,20 @@ public class Level extends GridPane {
         setAlignment(Pos.CENTER);
     }
 
+    /**
+     * Retourne le numéro du niveau.
+     * 
+     * @return le numéro du niveau
+     */
     public int getLvl(){
         return this.lvl;
     }
     
+    /**
+     * Réinitialise le niveau avec la grille donné en paramètre.
+     * 
+     * @param g la nouvelle grille
+     */
     public void reset(Grille g){
         clearBoard();
         resetGrid(g);
@@ -40,14 +60,30 @@ public class Level extends GridPane {
         setBoard(Direction.BAS);
     }
     
+    /**
+     * Mets la grille du niveau à la grille donné en paramètre.
+     * 
+     * @param grid la nouvelle grille
+     */
     private void resetGrid(Grille grid){
         this.grid = grid;
     }
     
+    /**
+     * Mets le joueur du niveau en tant que joueur donné en paramètre.
+     * 
+     * @param player le nouveau joueur
+     */
     private void resetPlayer(Joueur player){
         this.player = player;
     }
     
+   /**
+    * Ajoute une image (sol) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setFloor(int i, int j){
         ImageView floor = new ImageView();
         floor.setImage(floorImg);
@@ -57,6 +93,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(floor);
     }
 
+    /**
+    * Ajoute une image (mur) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setWall(int i, int j){
         ImageView wall = new ImageView();
         wall.setImage(new Image("/images/wall.png"));
@@ -66,6 +108,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(wall);
     }
 
+    /**
+    * Ajoute une image (boite) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setBox(int i, int j){
         ImageView box = new ImageView();
         box.setImage(new Image("/images/box.png"));
@@ -76,6 +124,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(box);
     }
 
+    /**
+    * Ajoute une image (cible) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setTarget(int i, int j){
         ImageView target = new ImageView();
         target.setImage(new Image("/images/target.png"));
@@ -86,6 +140,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(target);
     }
 
+    /**
+    * Ajoute une image (joueur) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setPlayerDefault(int i, int j){
         ImageView p = new ImageView();
         p.setImage(new Image("/images/player.png"));
@@ -96,6 +156,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(p);
     }
     
+    /**
+    * Ajoute une image (joueur se dirigeant vers la droite) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setPlayerRight(int i, int j){
         ImageView p = new ImageView();
         p.setImage(new Image("/images/player_right.png"));
@@ -105,6 +171,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(p);
     }
     
+    /**
+    * Ajoute une image (joueur se dirigeant vers la gauche) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setPlayerLeft(int i, int j){
         ImageView p = new ImageView();
         p.setImage(new Image("/images/player_left.png"));
@@ -114,6 +186,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(p);
     }
     
+    /**
+    * Ajoute une image (joueur se dirigeant vers le haut) à la cellule position (i,j).
+    * 
+    * @param i colonne i
+    * @param j ligne j
+    */
     private void setPlayerUp(int i, int j){
         ImageView p = new ImageView();
         p.setImage(new Image("/images/player_back.png"));
@@ -123,6 +201,13 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(p);
     }
     
+    /**
+     * Ajoute le joueur se dirigeant vers la direction donné à la cellule position (i,j).
+     * 
+     * @param i colonne i
+     * @param j ligne j
+     * @param dir direction du joueur
+     */
     private void setPlayer(int i, int j, Direction dir){
         switch (dir) {
             case DROITE -> setPlayerRight(i, j);
@@ -132,6 +217,12 @@ public class Level extends GridPane {
         }
     }
     
+    /**
+     * Ajoute une image (pièce) à la cellule position (i,j).
+     * 
+     * @param i colonne i
+     * @param j ligne j
+     */
     private void setRoom(int i, int j){
         ImageView level = new ImageView();
         level.setImage(new Image("/images/room.png"));
@@ -142,6 +233,12 @@ public class Level extends GridPane {
         cells[i][j].getChildren().add(level);
     }
 
+    /**
+     * Permet d'afficher le niveau en ajoutant les images dans les cellules qui
+     * seront ensuite ajouté dans notre layout GridPane.
+     * 
+     * @param dir direction dans laquel le joueur se dirige (utile pour récursif)
+     */
     public void setBoard(Direction dir){
         for (int i = 0; i<col; i++){
             for (int j = 0; j<row; j++){
@@ -177,6 +274,11 @@ public class Level extends GridPane {
         setPlayer(i, j, dir);
     }
 
+    /**
+     * Mets à jour l'affichage du jeu classique
+     * 
+     * @param dir direction du joueur
+     */
     public void updateBoard(Direction dir){
         int oldX = player.getOldX();
         int oldY = player.getOldY();
@@ -214,6 +316,10 @@ public class Level extends GridPane {
         }
     }
     
+    /**
+     * Mets à jour l'affichage lors de l'annulation d'un mouvement.
+     * 
+     */
     public void updateBoardReverse(){
         for (int i = 0; i<col; i++){
             for (int j = 0; j<row; j++){
@@ -243,6 +349,12 @@ public class Level extends GridPane {
         setPlayer(i, j, Direction.BAS);
     }
     
+    /**
+     * Mets à jour l'affichage du jeu récursif
+     * 
+     * @param g la grille dans lequel le joueur est actuellement
+     * @param dir direction du joueur
+     */
     public void updateBoardRec(Grille g, Direction dir){
         grid = g;
         col = grid.getLargeur();
@@ -253,6 +365,10 @@ public class Level extends GridPane {
         setBoard(dir);
     }
     
+    /**
+     * Enlève tous les éléments de notre layout GridPane.
+     * 
+     */
     private void clearBoard(){
         this.getChildren().clear();
     }

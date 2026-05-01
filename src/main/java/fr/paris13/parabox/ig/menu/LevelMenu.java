@@ -1,10 +1,9 @@
 package fr.paris13.parabox.ig.menu;
-
-
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ig.Parabox;
 import fr.paris13.parabox.ig.Sokoban;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -12,9 +11,19 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 
+/**
+ * Classe LevelMenu qui affiche une liste des niveaux disponible selon la version choisis.
+ *
+ */
 public class LevelMenu extends VBox {
     
-    
+    /**
+     * Initialise le Menu des niveaux 
+     * 
+     * @param root StackPane pour changement de vue
+     * @param grid tableau contenant les différentes grille de niveau
+     * @param ver version du jeu
+     */
     public LevelMenu(StackPane root, Grille[] grid, Version ver){
         
         Label text = new Label("Choose a Level");
@@ -52,7 +61,6 @@ public class LevelMenu extends VBox {
         box1.setAlignment(Pos.CENTER);
         box2.setAlignment(Pos.CENTER);
         
-        // changer
         MenuButton back = new MenuButton("Back", 100, 100);
         back.setOnAction(() -> root.getChildren().setAll(new MainMenu(root)));
         

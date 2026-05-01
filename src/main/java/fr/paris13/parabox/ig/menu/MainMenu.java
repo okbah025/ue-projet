@@ -1,16 +1,17 @@
-
 package fr.paris13.parabox.ig.menu;
-
-
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.ParaboxLevel;
 import fr.paris13.parabox.Modele.SokobanLevel;
 import fr.paris13.parabox.Modele.Version;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
-
+/**
+ * Classe MainMenu qui affiche le menu principal de l'application.
+ * 
+ */
 public class MainMenu extends VBox {
     
     private final MenuButton sokoban;
@@ -19,6 +20,11 @@ public class MainMenu extends VBox {
     private Grille[] lvlIte;
     private Grille[] lvlRec;
     
+    /**
+     * Initialise le menu principal
+     * 
+     * @param root StackPane pour changer la vue
+     */
     public MainMenu(StackPane root){
         lvlIte = SokobanLevel.getList();
         lvlRec = ParaboxLevel.getList();
@@ -41,11 +47,5 @@ public class MainMenu extends VBox {
         });
         
         exit.setOnAction(() -> System.exit(0));
-        
-      
- 
-    }   
-    
-    
-    
+    }    
 }
