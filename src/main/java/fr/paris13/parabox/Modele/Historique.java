@@ -31,6 +31,14 @@ public class Historique {
         boolean boiteSurCibleApres;
         boolean joueurSurCibleAvant;
         boolean joueurSurCibleApres;
+        // Pour gérer les transitions de grille (entrée/sortie d'une Piece)
+        // Si ce champ est non-null, c'est un mouvement de transition, pas un déplacement normal
+        Piece pieceTransition;      // La Piece dans laquelle on entre (ou sort)
+        boolean estEntree;          // true = entrée dans la Piece, false = sortie
+        Grille grilleAvant;         // La grille où était le joueur avant la transition
+        Grille grilleApres;         // La grille où se trouve le joueur après la transition
+        Position posJoueurDansGrilleAvant;  // Position du joueur dans la grille d'avant
+        Position posJoueurDansGrilleApres;  // Position du joueur dans la grille d'après
         
         /**
          * Constructeur d'un mouvement simple (sans pousser de boîte)
@@ -59,6 +67,33 @@ public class Historique {
             this.boiteSurCibleAvant = boiteCibleAvant;
             this.boiteSurCibleApres = boiteCibleApres;
         }
+
+        /**
+         * Constructeur d'un mouvement de transition (entrée ou sortie de Piece).
+         *
+         * @param dir       La direction du déplacement
+         * @param piece     La Piece concernée
+         * @param entree    true si c'est une entrée dans la Piece, false si c'est une sortie
+         * @param grilleAv  La grille où était le joueur avant
+         * @param grilleAp  La grille où est le joueur après
+         * @param posAv     Position du joueur dans la grille d'avant
+         * @param posAp     Position du joueur dans la grille d'après
+         */
+        public Mouvement(Direction dir, Piece piece, boolean entree,
+                         Grille grilleAv, Grille grilleAp,
+                         Position posAv, Position posAp) {
+            this.direction = dir;
+            this.pieceTransition = piece;
+            this.estEntree = entree;
+            this.grilleAvant = grilleAv;
+            this.grilleApres = grilleAp;
+            this.posJoueurDansGrilleAvant = posAv;
+            this.posJoueurDansGrilleApres = posAp;
+            this.boitePoussee = null;
+            // Les positions joueurAvant/Apres "standards" ne sont pas utilisées ici
+            this.positionJoueurAvant = posAv;
+            this.positionJoueurApres = posAp;
+        }
     }
     
     // ========== ATTRIBUTS ==========
@@ -68,6 +103,14 @@ public class Historique {
      * Le dernier mouvement est au sommet de la pile
      */
     private Stack<Mouvement> mouvements;
+    
+    /**
+     * Informations sur la dernière annulation, si c'était une transition de grille.
+     * Utilisé par JeuRecursif.annulerMouvement() pour ajuster ses piles.
+     */
+    public boolean estDerniereAnnulationTransition = false;
+    public boolean derniereTransitionEstEntree = false;
+    public Piece derniereTransitionPiece = null;
     
     /**
      * Nombre maximum de mouvements à conserver
@@ -146,49 +189,92 @@ public class Historique {
     }
     
     /**
-     * Annuler le dernier mouvement (Ctrl+Z)
-     * Remet le jeu dans l'état précédent
-     * @param grille La grille du jeu (nécessaire pour restaurer les positions)
+     * Ajouter une transition de grille à l'historique.
+     * Utilisé quand le joueur entre ou sort d'une Piece.
+     *
+     * @param direction La direction du déplacement
+     * @param piece     La Piece concernée (le monde dans lequel on entre/sort)
+     * @param estEntree true = le joueur vient d'entrer dans la Piece,
+     *                  false = le joueur vient de sortir de la Piece
+     * @param grilleAvant La grille parente (où était le joueur avant)
+     * @param grilleApres La grille interne (où est le joueur après, si entrée)
+     *                    ou la grille parente (si sortie)
+     * @param posAvant  Position du joueur avant la transition
+     * @param posApres  Position du joueur après la transition
+     */
+    public void ajouterTransition(Direction direction, Piece piece, boolean estEntree,
+                                   Grille grilleAvant, Grille grilleApres,
+                                   Position posAvant, Position posApres) {
+        Mouvement mvt = new Mouvement(direction, piece, estEntree,
+                                      grilleAvant, grilleApres, posAvant, posApres);
+        mouvements.push(mvt);
+        if (mouvements.size() > TAILLE_MAX) {
+            mouvements.remove(0);
+        }
+    }
+
+    /**
+     * Annuler le dernier mouvement (Ctrl+Z / touche U).
+     * Gère trois cas :
+     *  - Mouvement simple : repositionne le joueur
+     *  - Mouvement avec boîte : repositionne joueur ET boîte
+     *  - Transition de grille : repositionne le joueur entre les deux grilles
+     *    et met à jour la pile dans JeuRecursif (via le callback)
+     *
+     * @param grille La grille active au moment de l'annulation
      * @return true si un mouvement a été annulé, false si l'historique est vide
      */
     public boolean annulerDernierMouvement(Grille grille) {
-        // Vérifier qu'il y a des mouvements à annuler
         if (mouvements.isEmpty()) {
             return false;
         }
-        
-        // Récupérer le dernier mouvement
+
         Mouvement dernierMvt = mouvements.pop();
-        
-        // Récupérer le joueur
-        Joueur joueur = grille.getJoueur();
-        if (joueur == null) {
-            return false;
+
+        // ── Cas : transition de grille (entrée ou sortie de Piece) ──
+        // Ce cas est signalé par pieceTransition != null.
+        // La restauration de la pile (pileGrilles/pilePieces) est faite
+        // par JeuRecursif.annulerMouvement() qui détecte ce cas.
+        if (dernierMvt.pieceTransition != null) {
+            // Retirer le joueur de la grille où il se trouve APRÈS la transition
+            Joueur joueur = dernierMvt.grilleApres.getJoueur();
+            if (joueur == null) return false;
+
+            dernierMvt.grilleApres.retirerObjet(joueur.getPosition());
+
+            // Remettre le joueur dans la grille où il était AVANT la transition
+            dernierMvt.grilleAvant.setObjet(joueur, dernierMvt.posJoueurDansGrilleAvant);
+            joueur.setSurCible(dernierMvt.joueurSurCibleAvant);
+
+            // Signaler à l'appelant que c'est une transition (pour ajuster les piles)
+            // On stocke temporairement l'info dans un champ accessible
+            this.derniereTransitionEstEntree = dernierMvt.estEntree;
+            this.derniereTransitionPiece = dernierMvt.pieceTransition;
+            this.estDerniereAnnulationTransition = true;
+
+            return true;
         }
-        
-        // Restaurer la position du joueur
+
+        // ── Cas : déplacement normal (avec ou sans boîte) ──
+        this.estDerniereAnnulationTransition = false;
+
+        Joueur joueur = grille.getJoueur();
+        if (joueur == null) return false;
+
         Position posActuelle = joueur.getPosition();
-        
-        // Retirer le joueur de sa position actuelle
         grille.setObjet(null, posActuelle);
-        
-        // Si une boîte avait été poussée, la remettre à sa position précédente
+
         if (dernierMvt.boitePoussee != null) {
             Boite boite = dernierMvt.boitePoussee;
             Position posBoiteActuelle = boite.getPosition();
-            
-            // Retirer la boîte de sa position actuelle
             grille.setObjet(null, posBoiteActuelle);
-            
-            // Remettre la boîte à sa position précédente
             grille.setObjet(boite, dernierMvt.positionBoiteAvant);
             boite.setSurCible(dernierMvt.boiteSurCibleAvant);
         }
-        
-        // Remettre le joueur à sa position précédente
+
         grille.setObjet(joueur, dernierMvt.positionJoueurAvant);
         joueur.setSurCible(dernierMvt.joueurSurCibleAvant);
-        
+
         return true;
     }
     

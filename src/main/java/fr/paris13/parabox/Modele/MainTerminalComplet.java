@@ -207,7 +207,7 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                             char cmd2 = Character.toUpperCase(ligne.charAt(0));
                             switch (cmd2) {
                                 case 'A':
-                                    Direction dir2 = d.depiler2();
+                                    Direction dir2 = d.depilerDir();
                                     boolean ok = false;
                                     if (dir2 == Direction.HAUT)
                                         ok = jeu.deplacerJoueur(commandeVersDirection(Commande.HAUT));
@@ -382,7 +382,7 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                             char cmd2 = Character.toUpperCase(ligne.charAt(0));
                             switch (cmd2) {
                                 case 'A':
-                                    Direction dir2 = d.depiler2();
+                                    Direction dir2 = d.depilerDir();
                                     boolean ok = false;
                                     if (dir2 == Direction.HAUT)
                                         ok = jeu.deplacerJoueur(commandeVersDirection(Commande.HAUT));

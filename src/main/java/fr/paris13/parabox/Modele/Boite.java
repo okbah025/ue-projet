@@ -124,6 +124,12 @@ public class Boite extends Objet {
             return true;
         }
         
+        // Si c'est une Piece, on peut "pousser" la boîte vers elle
+        // (la boîte va entrer dans la Piece, c'est JeuRecursif qui gère ensuite)
+        if (objetDestination instanceof Piece) {
+            return true;
+        }
+
         // Sinon (mur, autre boîte, joueur), on ne peut pas pousser
         return false;
     }

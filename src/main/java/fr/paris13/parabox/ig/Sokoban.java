@@ -99,7 +99,7 @@ public class Sokoban extends StackPane {
                     int cmpt = d.size();
                     Timeline t = new Timeline(new KeyFrame(Duration.seconds(0.5), 
                             e -> {
-                                Direction dir2 = d.depiler2();
+                                Direction dir2 = d.depilerDir();
                                 jeu.deplacerJoueur(dir2);
                                 level.updateBoard(dir2);
                                 
