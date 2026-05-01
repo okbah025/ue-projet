@@ -128,7 +128,40 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         System.out.println(VERT + "─────────────────────────────────────────────────────────" + RESET);
 
         int choix = demanderChoix(scanner, 1, 10);
+        String fichierSave = "niveau" + choix + "_save.txt";
+String fichierSolution = "niveau" + choix + "_solution.txt";
+
+
+        
+        
+        
         Grille grille = creerNiveauSimple(choix);
+        
+
+System.out.print("Reprendre une partie ? (o/n) : ");
+String rep = scanner.nextLine();
+
+if (rep.equalsIgnoreCase("o")) {
+
+    File f = new File(fichierSave);
+
+    if (f.exists()) {
+        grille = ChargeurSauvegarde.charger(fichierSave);
+        System.out.println(VERT + "✓ Partie chargée !" + RESET);
+    } else {
+        System.out.println(ROUGE + "✗ Aucune sauvegarde trouvée !" + RESET);
+        grille = creerNiveauSimple(choix);
+    }
+
+} else {
+    grille = creerNiveauSimple(choix);
+}
+        
+        
+        
+   
+        
+        
         if (grille == null) {
             System.out.println(ROUGE + "Niveau invalide !" + RESET);
             return;
@@ -164,8 +197,25 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     effacer();
                     afficherEtatSimple(jeu);
                     if (jeu.estNiveauTermine()) {
-                        afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
-                    }
+                    
+                    
+                    
+                    
+			    afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+
+			    // sauvegarde solution
+			    SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
+			    save.ecrireGrille(jeu.getGrille());
+
+			    // suppression sauvegarde en cours
+			    new File(fichierSave).delete();
+}
+
+
+
+
+
+
                 }
                 // Si ok=false : mur, on ne fait rien (pas de message parasite)
 
@@ -241,10 +291,18 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     case AIDE:
                         afficherControles();
                         break;
+                        
+                        
                     case QUITTER:
-                        continuer = false;
-                        System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
-                        break;
+    SauvegardePlateau save = new SauvegardePlateau(fichierSave);
+    save.ecrireGrille(jeu.getGrille());
+
+    System.out.println(CYAN + "\nPartie sauvegardée !" + RESET);
+    System.out.println(CYAN + "Merci d'avoir joué ! 👋" + RESET);
+
+    continuer = false;
+    break;
+
                     default:
                         break; // INCONNU : on ignore silencieusement
                 }
@@ -333,6 +391,12 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     effacer();
                     afficherEtatRecursif(jeu);
                     if (jeu.estNiveauTermine()) {
+                    
+                    
+                    
+                    
+                    
+                    
                         afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
                     }
                 }
