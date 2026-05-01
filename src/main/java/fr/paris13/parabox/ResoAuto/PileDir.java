@@ -7,20 +7,24 @@ public class PileDir extends c_chemin {
 
     ArrayDeque<Direction> pile;
 
-    public PileDir(){
+    public PileDir() {
         this.pile=new ArrayDeque<>();
     }
 
-    public void empiler2(Direction dir){
+    public void empilerDir(Direction dir) {
         pile.push(dir);
     }
 
-    public Direction depiler2(){
+    public Direction depilerDir() {
         Direction dir=pile.pop();
         return dir;
     }
 
-    public boolean isEmpty(){
+    public boolean estVidePile() {
         return pile.isEmpty();
+    }
+
+    public int size() {
+        return pile.size();
     }
 }

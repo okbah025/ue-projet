@@ -15,7 +15,6 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javafx.version>21</javafx.version>
-        <javafx.platform>linux</javafx.platform>
     </properties>
 
     <dependencies>
@@ -28,7 +27,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- javafx-base : classes + natifs Linux -->
+        <!-- javafx-base -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
@@ -41,7 +40,7 @@
             <classifier>${javafx.platform}</classifier>
         </dependency>
 
-        <!-- javafx-graphics : classes + natifs Linux -->
+        <!-- javafx-graphics -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
@@ -54,7 +53,7 @@
             <classifier>${javafx.platform}</classifier>
         </dependency>
 
-        <!-- javafx-controls : classes + natifs Linux -->
+        <!-- javafx-controls -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -67,7 +66,7 @@
             <classifier>${javafx.platform}</classifier>
         </dependency>
 
-        <!-- javafx-fxml : classes + natifs Linux -->
+        <!-- javafx-fxml -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -81,6 +80,44 @@
         </dependency>
 
     </dependencies>
+
+    <!-- Détection automatique de l'OS -->
+    <profiles>
+        <profile>
+            <id>linux</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                    <name>Linux</name>
+                </os>
+            </activation>
+            <properties>
+                <javafx.platform>linux</javafx.platform>
+            </properties>
+        </profile>
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <javafx.platform>mac</javafx.platform>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <javafx.platform>win</javafx.platform>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
 

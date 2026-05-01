@@ -1,5 +1,9 @@
 package fr.paris13.parabox.Modele;
 
+import fr.paris13.parabox.ResoAuto.PileDir;
+import fr.paris13.parabox.ResoAuto.ResoAutoFonctions;
+import fr.paris13.parabox.ResoAuto.ResoAutoClassique;
+import fr.paris13.parabox.ResoAuto.ResoAutoRecursif;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +33,7 @@ import java.util.Scanner;
  *   U         : annuler le dernier mouvement
  *   R         : recommencer le niveau depuis le début
  *   H         : afficher l'aide / les contrôles
+ *   I         : demander un indice
  *   X         : quitter le jeu
  *
  * COMPILATION ET LANCEMENT :
@@ -36,7 +41,7 @@ import java.util.Scanner;
  *   java MainTerminalComplet
  *   (les fichiers niveau*.txt doivent être dans le même dossier)
  */
-public class MainTerminalComplet {
+public class MainTerminalComplet extends ResoAutoRecursif {
 
     // ── Codes couleur ANSI pour l'affichage terminal ──────────────────────────
     private static final String CLEAR  = "\033[H\033[2J";
@@ -63,7 +68,7 @@ public class MainTerminalComplet {
     // ── Commandes reconnues en jeu ────────────────────────────────────────────
     private enum Commande {
         HAUT, BAS, GAUCHE, DROITE,
-        ANNULER, RECOMMENCER, AIDE, QUITTER, INCONNU
+        ANNULER, RECOMMENCER, AIDE, QUITTER, INDICE, INCONNU
     }
 
     // =========================================================================
@@ -138,6 +143,9 @@ public class MainTerminalComplet {
         System.out.println(JAUNE + "\nAppuyez sur ENTRÉE pour commencer..." + RESET);
         scanner.nextLine();
 
+        // Pile qui contiendra toutes les directions à prendre pour résoudre le niveau
+        PileDir d = new PileDir();
+
         // Boucle de jeu
         Jeu jeu = new Jeu(grille);
         effacer();
@@ -145,6 +153,7 @@ public class MainTerminalComplet {
         afficherControles();
 
         boolean continuer = true;
+        boolean indice = false;
         while (continuer && !jeu.estNiveauTermine()) {
             Commande cmd = lireCommande();
             Direction dir = commandeVersDirection(cmd);
@@ -176,6 +185,58 @@ public class MainTerminalComplet {
                         jeu.setGrille(nouvelleGrille);
                         effacer(); afficherEtatSimple(jeu);
                         System.out.println(VERT + "✓ Niveau recommencé !" + RESET);
+                        break;
+                    case INDICE:
+                        // Les indices sont disponibles seulement pour les niveaux 1, 2, 3 et 4.
+                        if (choix>=1 && choix<=4) {
+                            Grille nouvelleGrille2 = creerNiveauSimple(choix);
+                            jeu.setGrille(nouvelleGrille2);
+                            effacer();
+                            afficherEtatSimple(jeu);
+                            System.out.println(" ");
+                            System.out.println("Cliquez sur A pour avoir l'indice suivant.");
+                            System.out.println("Cliquez sur J pour quitter l'option Indice.");
+                            d = classique(grille, choix);
+                            indice = true;
+                        }
+                        while (indice && !jeu.estNiveauTermine()) {
+                            String ligne;
+                            do {
+                                ligne = scanner.nextLine().trim();
+                            } while (ligne.isEmpty());
+                            char cmd2 = Character.toUpperCase(ligne.charAt(0));
+                            switch (cmd2) {
+                                case 'A':
+                                    Direction dir2 = d.depilerDir();
+                                    boolean ok = false;
+                                    if (dir2 == Direction.HAUT)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.HAUT));
+                                    if (dir2 == Direction.BAS)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.BAS));
+                                    if (dir2 == Direction.DROITE)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.DROITE));
+                                    if (dir2 == Direction.GAUCHE)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.GAUCHE));
+                                    if (ok) {
+                                        effacer();
+                                        afficherEtatSimple(jeu);
+                                        System.out.println(" ");
+                                        System.out.println("Cliquez sur A pour avoir l'indice suivant.");
+                                        System.out.println("Cliquez sur J pour quitter l'option Indice.");
+                                        if (jeu.estNiveauTermine()) {
+                                            afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+                                        }
+                                    }
+                                    break;
+                                case 'J':
+                                    indice = false;
+                                    effacer();
+                                    afficherEtatSimple(jeu);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
                         break;
                     case AIDE:
                         afficherControles();
@@ -239,6 +300,9 @@ public class MainTerminalComplet {
             return;
         }
 
+        // Pile qui contiendra toutes les directions à prendre pour résoudre le niveau
+        PileDir d = new PileDir();
+
         // Intro
         effacer();
         System.out.println(CYAN + "╔════════════════════════════════════════════════════════╗" + RESET);
@@ -258,6 +322,7 @@ public class MainTerminalComplet {
         afficherControlesRecursif();
 
         boolean continuer = true;
+        boolean indice = false;
         while (continuer && !jeu.estNiveauTermine()) {
             Commande cmd = lireCommande();
             Direction dir = commandeVersDirection(cmd);
@@ -294,6 +359,60 @@ public class MainTerminalComplet {
                             System.out.println(ROUGE + "✗ Impossible de recharger le niveau !" + RESET);
                         }
                         break;
+                    case INDICE:
+                        // Les indices sont disponibles seulement pour les niveaux 2 et 3.
+                        if (choix>=2 && choix<=3) {
+                            Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
+                            if (ng2 != null) {
+                                jeu.reinitialiser(ng2);
+                                effacer();
+                                afficherEtatRecursif(jeu);
+                            }
+                            System.out.println(" ");
+                            System.out.println("Cliquez sur A pour avoir l'indice suivant.");
+                            System.out.println("Cliquez sur J pour quitter l'option Indice.");
+                            d = recursif(grilleRacine, choix);
+                            indice = true;
+                        }
+                        while (indice && !jeu.estNiveauTermine()) {
+                            String ligne;
+                            do {
+                                ligne = scanner.nextLine().trim();
+                            } while (ligne.isEmpty());
+                            char cmd2 = Character.toUpperCase(ligne.charAt(0));
+                            switch (cmd2) {
+                                case 'A':
+                                    Direction dir2 = d.depilerDir();
+                                    boolean ok = false;
+                                    if (dir2 == Direction.HAUT)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.HAUT));
+                                    if (dir2 == Direction.BAS)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.BAS));
+                                    if (dir2 == Direction.DROITE)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.DROITE));
+                                    if (dir2 == Direction.GAUCHE)
+                                        ok = jeu.deplacerJoueur(commandeVersDirection(Commande.GAUCHE));
+                                    if (ok) {
+                                        effacer();
+                                        afficherEtatRecursif(jeu);
+                                        System.out.println(" ");
+                                        System.out.println("Cliquez sur A pour avoir l'indice suivant.");
+                                        System.out.println("Cliquez sur J pour quitter l'option Indice.");
+                                        if (jeu.estNiveauTermine()) {
+                                            afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+                                        }
+                                    }
+                                    break;
+                                case 'J':
+                                    indice = false;
+                                    effacer();
+                                    afficherEtatRecursif(jeu);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        break;
                     case AIDE:
                         afficherControlesRecursif();
                         break;
@@ -318,7 +437,7 @@ public class MainTerminalComplet {
      * Gère les séquences ANSI des touches flèches :
      *   Flèche = ESC (27) + '[' (91) + lettre (A/B/C/D)
      *
-     * Et les touches simples : Z S Q D (ZQSD), 8 2 4 6 (pavé), U R H X.
+     * Et les touches simples : Z S Q D (ZQSD), 8 2 4 6 (pavé), U R H I X.
      *
      * Cette méthode BLOQUE jusqu'à ce qu'une touche soit pressée.
      *
@@ -362,6 +481,7 @@ public class MainTerminalComplet {
                     case 'R': return Commande.RECOMMENCER;
                     case 'H': return Commande.AIDE;
                     case 'X': return Commande.QUITTER;
+                    case 'I': return Commande.INDICE;
                     default:  return Commande.INCONNU;
                 }
             }
@@ -539,6 +659,7 @@ public class MainTerminalComplet {
         System.out.println("   " + JAUNE + "U" + RESET + "  Annuler dernier mouvement");
         System.out.println("   " + JAUNE + "R" + RESET + "  Recommencer le niveau");
         System.out.println("   " + JAUNE + "H" + RESET + "  Afficher cette aide");
+        System.out.println("   " + JAUNE + "I" + RESET + "  Indice");
         System.out.println("   " + JAUNE + "X" + RESET + "  Quitter");
     }
 
