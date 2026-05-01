@@ -60,7 +60,6 @@ public class Level extends GridPane {
         row = grid.getHauteur();
         resetPlayer(g.getJoueur());
         cells = new StackPane[col][row];
-        setBoard(Direction.BAS);
     }
     
     /**
@@ -360,6 +359,8 @@ public class Level extends GridPane {
      */
     public void updateBoardRec(Grille g, Direction dir){
         reset(g);
+        setBoard(dir);
+
     }
     
     /**

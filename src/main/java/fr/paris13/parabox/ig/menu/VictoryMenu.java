@@ -50,10 +50,10 @@ public class VictoryMenu extends StackPane {
         Text text3 = new Text("Mouvement : " + mvt);
         Text text4 = new Text("Poussées : " + pousse);
         
-        text.setStyle("-fx-font: 60 arial;");
-        text2.setStyle("-fx-font: 24 arial;");
-        text3.setStyle("-fx-font: 24 arial;");
-        text4.setStyle("-fx-font: 24 arial;");
+        text.setStyle("-fx-font: 60 system;");
+        text2.setStyle("-fx-font: 24 system;");
+        text3.setStyle("-fx-font: 24 system;");
+        text4.setStyle("-fx-font: 24 system;");
         
         button.getChildren().addAll(home, list, next);
         score.getChildren().addAll(text3, text4);

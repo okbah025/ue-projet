@@ -7,6 +7,7 @@ import fr.paris13.parabox.Modele.ParaboxLevel;
 import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoRecursif;
+import fr.paris13.parabox.ig.menu.HelpMenu;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
 import java.io.File;
@@ -30,10 +31,12 @@ public class Parabox extends StackPane {
     private final JeuRecursif jeu;
     private final Level level;
     private final PauseMenu pause;
+    private final HelpMenu help;
     private final StackPane root;
     private final int lvl;
     private final PileDir d;
     private final String nomFich;
+    private boolean helpVisible;
     
     /**
      * Initialise le jeu récursif avec une grille donnée
@@ -50,9 +53,11 @@ public class Parabox extends StackPane {
         jeu = new JeuRecursif(g);
         level = new Level(g, lvl);
         level.setBoard(Direction.BAS);
+        help = new HelpMenu(Version.RECURSIVE);
+        helpVisible = true;
         pause = new PauseMenu(root, Version.RECURSIVE);
         pause.setVisible(false);
-        getChildren().addAll(level, pause);
+        getChildren().addAll(level, help, pause);
         
         Scene scene = root.getScene();
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -92,6 +97,8 @@ public class Parabox extends StackPane {
                 if(ng !=null) {
                     jeu.reinitialiser(ng);
                     level.reset(ng);
+                    level.setBoard(Direction.BAS);
+
                 }
                 break;
                 
@@ -100,6 +107,7 @@ public class Parabox extends StackPane {
                     Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);                    if(ng2 !=null) {
                         jeu.reinitialiser(ng2);
                         level.reset(ng2);
+                        level.setBoard(Direction.BAS);
                     }
                     auto = true;
                 }
@@ -126,6 +134,15 @@ public class Parabox extends StackPane {
                 
             case ESCAPE: // Pause
                 pause.setVisible(true);
+                
+            case H: // Aide
+                if(helpVisible){
+                    help.setVisible(false);
+                    helpVisible = false;
+                } else {
+                    help.setVisible(true);
+                    helpVisible = true;
+                }
         }
 
         if (direction != null) {

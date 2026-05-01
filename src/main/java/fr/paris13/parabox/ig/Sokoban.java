@@ -6,6 +6,7 @@ import fr.paris13.parabox.Modele.SokobanLevel;
 import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoClassique;
+import fr.paris13.parabox.ig.menu.HelpMenu;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
 
@@ -28,9 +29,11 @@ public class Sokoban extends StackPane {
     private final Jeu jeu;
     private final Level level;
     private final PauseMenu pause;
+    private final HelpMenu help;
     private final StackPane root;
     private final int lvl;
     private final PileDir d;
+    private boolean helpVisible;
     
     
     /**
@@ -47,9 +50,11 @@ public class Sokoban extends StackPane {
         jeu = new Jeu(g);
         level = new Level(g, lvl);
         level.setBoard(Direction.BAS);
+        help = new HelpMenu(Version.SIMPLE);
+        helpVisible = true;
         pause = new PauseMenu(root, Version.SIMPLE);
         pause.setVisible(false);
-        getChildren().addAll(level, pause);
+        getChildren().addAll(level, help, pause);
         
         
         Scene scene = root.getScene();
@@ -87,12 +92,14 @@ public class Sokoban extends StackPane {
                 Grille nouvelleGrille = creerNiveauSimple(lvl);
                 jeu.setGrille(nouvelleGrille);
                 level.reset(nouvelleGrille);
+                level.setBoard(Direction.BAS);
                 break;
             case A: // Auto
                 if (level.getLvl() >=1 && level.getLvl() <=4){
                     Grille nouvelleGrille2 = creerNiveauSimple(lvl);                 
                     jeu.setGrille(nouvelleGrille2);
                     level.reset(nouvelleGrille2);
+                    level.setBoard(Direction.BAS);
                     auto = true;
                 }
                 if(auto && !jeu.estNiveauTermine()) {
@@ -118,6 +125,15 @@ public class Sokoban extends StackPane {
             
             case ESCAPE: // Pause
                 pause.setVisible(true);
+                
+            case H: // Aide
+                if(helpVisible){
+                    help.setVisible(false);
+                    helpVisible = false;
+                } else {
+                    help.setVisible(true);
+                    helpVisible = true;
+                } 
         }
 
         if (!auto && direction != null) {
