@@ -1,6 +1,4 @@
 package fr.paris13.parabox.ig;
-
-
 import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.Jeu;
@@ -20,6 +18,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+/**
+ * Classe Parabox qui gère le jeu d'un niveau classique.
+ * 
+ *
+ */
 public class Sokoban extends StackPane {
     
     private final Jeu jeu;
@@ -29,6 +32,14 @@ public class Sokoban extends StackPane {
     private final int lvl;
     private final PileDir d;
     
+    
+    /**
+     * Initialise le jeu classique avec une grille donnée
+     * 
+     * @param g la grille du niveau
+     * @param root StackPane permettant de changer de vue
+     * @param lvl num du niveau
+     */
     public Sokoban(Grille g, StackPane root, int lvl){
         this.root = root;
         this.lvl = lvl;
@@ -45,6 +56,11 @@ public class Sokoban extends StackPane {
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     }
     
+    /**
+     * Gère les évènements selon l'entrée du clavier donné.
+     * 
+     * @param code entrée du clavier
+     */
     private void handleKeyInput(KeyCode code){
         Direction direction = null;
         boolean auto = false;
@@ -90,7 +106,7 @@ public class Sokoban extends StackPane {
                                 if (jeu.estNiveauTermine()) {
                                     PauseTransition p = new PauseTransition(Duration.seconds(0.5));
                                     p.setOnFinished(ev -> 
-                                        root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level)));
+                                        root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees())));
                                     p.play();
                                 }
                             }
@@ -100,7 +116,7 @@ public class Sokoban extends StackPane {
                 }
                 break;
             
-            case ESCAPE:
+            case ESCAPE: // Pause
                 pause.setVisible(true);
         }
 
@@ -109,11 +125,17 @@ public class Sokoban extends StackPane {
             level.updateBoard(direction);
 
             if (jeu.estNiveauTermine()) {
-                root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level));
+                root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees()));
             }
         }
     }
     
+    /**
+     * Renvoie la grille du niveau donné
+     * 
+     * @param numero num du niveau choisi
+     * @return la grille du niveau donné
+     */
     private static Grille creerNiveauSimple(int numero) {
         switch (numero) {
             case 1:  return SokobanLevel.niveauSimple1();

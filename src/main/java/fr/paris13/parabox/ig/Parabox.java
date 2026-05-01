@@ -1,5 +1,4 @@
 package fr.paris13.parabox.ig;
-
 import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.JeuRecursif;
@@ -9,6 +8,7 @@ import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoRecursif;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
@@ -17,6 +17,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+/**
+ * Classe Parabox qui gère le jeu d'un niveau récursif.
+ * 
+ * 
+ */
 
 public class Parabox extends StackPane {
     private final JeuRecursif jeu;
@@ -26,6 +31,14 @@ public class Parabox extends StackPane {
     private final int lvl;
     private final PileDir d;
     
+    
+    /**
+     * Initialise le jeu récursif avec une grille donnée
+     * 
+     * @param g la grille du niveau
+     * @param root StackPane permettant de changer de vue
+     * @param lvl num du niveau
+     */
     public Parabox(Grille g, StackPane root, int lvl){
         this.root = root;
         this.lvl = lvl;
@@ -42,7 +55,11 @@ public class Parabox extends StackPane {
 
     }
    
-    
+    /**
+     * Gère les évènements selon l'entrée du clavier donné.
+     * 
+     * @param code entrée du clavier
+     */
     private void handleKeyInput(KeyCode code){
         Direction direction = null;
         boolean auto = false;
@@ -50,26 +67,22 @@ public class Parabox extends StackPane {
         switch(code){
             case UP:
                 direction = Direction.HAUT;
-                
                 break;
             case DOWN:
                 direction = Direction.BAS;
-                
                 break;
             case LEFT:
                 direction = Direction.GAUCHE;
-                
                 break;
             case RIGHT:
                 direction = Direction.DROITE;
-                
                 break;
-            case Z:
+            case Z: // Annuler
                 if (jeu.annulerMouvement()) {
                     level.updateBoardRec(jeu.getGrilleActive(), null);
                 }
                 break;
-            case R:
+            case R: // Recommencer
                 Grille ng = ParaboxLevel.getList()[lvl-1];
                 if(ng !=null) {
                     jeu.reinitialiser(ng);
@@ -97,7 +110,7 @@ public class Parabox extends StackPane {
                                 if (jeu.estNiveauTermine()) {
                                     PauseTransition p = new PauseTransition(Duration.seconds(0.5));
                                     p.setOnFinished(ev -> 
-                                        root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level)));
+                                        root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees())));
                                     p.play();
                                 }
                             }
@@ -107,7 +120,7 @@ public class Parabox extends StackPane {
                 }
                 break;
                 
-            case ESCAPE:
+            case ESCAPE: // Pause
                 pause.setVisible(true);
         }
 
@@ -116,7 +129,7 @@ public class Parabox extends StackPane {
             if (ok){
                 level.updateBoardRec(jeu.getGrilleActive(), direction);
                 if (jeu.estNiveauTermine()) {
-                    root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level));
+                    root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees()));
                 }
             }
         }    
