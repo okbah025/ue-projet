@@ -20,7 +20,7 @@ public class ParaboxLevel {
         return levelList;
     }
     
-    private static List<String> listerFichiersNiveaux() {
+    public static List<String> listerFichiersNiveaux() {
         List<String> liste = new ArrayList<>();
         File dir = new File(DOSSIER);
         if (dir.exists() && dir.isDirectory()) {

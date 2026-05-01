@@ -56,7 +56,10 @@ public class Level extends GridPane {
     public void reset(Grille g){
         clearBoard();
         resetGrid(g);
+        col = grid.getLargeur();
+        row = grid.getHauteur();
         resetPlayer(g.getJoueur());
+        cells = new StackPane[col][row];
         setBoard(Direction.BAS);
     }
     
@@ -356,13 +359,7 @@ public class Level extends GridPane {
      * @param dir direction du joueur
      */
     public void updateBoardRec(Grille g, Direction dir){
-        grid = g;
-        col = grid.getLargeur();
-        row = grid.getHauteur();
-        clearBoard();
-        cells = new StackPane[col][row];
-
-        setBoard(dir);
+        reset(g);
     }
     
     /**
@@ -372,13 +369,4 @@ public class Level extends GridPane {
     private void clearBoard(){
         this.getChildren().clear();
     }
-    
-    
-    /// à changer
-//    public void updateBoardReverseRec(Grille g){
-//        grid = g;
-//        setBoard();
-//    }
-    
-
 }

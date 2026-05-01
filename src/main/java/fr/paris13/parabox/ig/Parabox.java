@@ -1,4 +1,5 @@
 package fr.paris13.parabox.ig;
+import fr.paris13.parabox.Modele.ChargeurNiveau;
 import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.JeuRecursif;
@@ -8,6 +9,7 @@ import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoRecursif;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
+import java.io.File;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -24,13 +26,14 @@ import javafx.util.Duration;
  */
 
 public class Parabox extends StackPane {
+    private static final String DOSSIER = "src/main/resources";
     private final JeuRecursif jeu;
     private final Level level;
     private final PauseMenu pause;
     private final StackPane root;
     private final int lvl;
     private final PileDir d;
-    
+    private final String nomFich;
     
     /**
      * Initialise le jeu récursif avec une grille donnée
@@ -42,6 +45,7 @@ public class Parabox extends StackPane {
     public Parabox(Grille g, StackPane root, int lvl){
         this.root = root;
         this.lvl = lvl;
+        nomFich = ParaboxLevel.listerFichiersNiveaux().get(lvl-1);
         d = ResoAutoRecursif.recursif(g, lvl);
         jeu = new JeuRecursif(g);
         level = new Level(g, lvl);
@@ -79,11 +83,12 @@ public class Parabox extends StackPane {
                 break;
             case Z: // Annuler
                 if (jeu.annulerMouvement()) {
-                    level.updateBoardRec(jeu.getGrilleActive(), null);
+                    level.updateBoardRec(jeu.getGrilleActive(), Direction.BAS);
                 }
                 break;
+                
             case R: // Recommencer
-                Grille ng = ParaboxLevel.getList()[lvl-1];
+                Grille ng = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);
                 if(ng !=null) {
                     jeu.reinitialiser(ng);
                     level.reset(ng);
@@ -92,8 +97,7 @@ public class Parabox extends StackPane {
                 
             case A: // Auto
                 if (level.getLvl() >=2 && level.getLvl() <=3){
-                    Grille ng2 = ParaboxLevel.getList()[lvl-1];
-                    if(ng2 !=null) {
+                    Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);                    if(ng2 !=null) {
                         jeu.reinitialiser(ng2);
                         level.reset(ng2);
                     }
