@@ -499,8 +499,8 @@ if (rep.equals("o")) {
                         }
                         break;
                     case INDICE:
-                        // Les indices sont disponibles seulement pour les niveaux 1 et 2.
-                        if (choix>=1 && choix<=2) {
+                        // Les indices sont disponibles seulement pour les niveaux 1, 2 et 4.
+                        if (choix==1 || choix==2 || choix==4) {
                             Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
                             if (ng2 != null) {
                                 jeu.reinitialiser(ng2);
