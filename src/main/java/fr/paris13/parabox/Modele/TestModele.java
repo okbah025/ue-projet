@@ -5,11 +5,6 @@ package fr.paris13.parabox.Modele;
  * Cette classe contient des exemples d'utilisation du modèle.
  * Elle montre comment créer un niveau simple et effectuer des déplacements.
  * 
- * Cette classe est principalement pour :
- * - Tester le modèle
- * - Montrer aux autres membres de l'équipe comment utiliser les classes
- * - Servir d'exemple de documentation
- * 
  */
 public class TestModele {
     
@@ -206,7 +201,7 @@ public class TestModele {
     }
     
     /**
-     * Test bonus : Montrer comment utiliser les Direction
+     * Montrer comment utiliser les Direction
      */
     public static void testDirections() {
         System.out.println("--- Test Bonus : Directions ---");

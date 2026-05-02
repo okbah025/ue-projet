@@ -63,7 +63,7 @@ public abstract class Objet {
         this.couleur = "255,255,255"; // Blanc par défaut
     }
     
-    // ========== GETTERS (Accesseurs) ==========
+    // ========== GETTERS  ==========
     
     /**
      * Obtenir la position X de l'objet
@@ -117,7 +117,7 @@ public abstract class Objet {
         return this.couleur;
     }
     
-    // ========== SETTERS (Mutateurs) ==========
+    // ========== SETTERS  ==========
     
     /**
      * Modifier la position de l'objet
@@ -160,13 +160,11 @@ public abstract class Objet {
     /**
      * Méthode abstraite pour vérifier si l'objet est franchissable
      * Un objet franchissable permet au joueur de se déplacer dessus
-     * 
      * Exemples :
      * - Case vide (null) : franchissable
      * - Cible : franchissable
      * - Mur : NON franchissable
      * - Boîte : dépend (franchissable si on peut la pousser)
-     * 
      * @return true si le joueur peut passer sur cet objet, false sinon
      */
     public abstract boolean estFranchissable();
@@ -178,7 +176,6 @@ public abstract class Objet {
      * - Boîte : peut être poussée
      * - Mur : ne peut pas être poussé
      * - Joueur : ne peut pas être poussé
-     * 
      * @param direction La direction dans laquelle on veut pousser l'objet
      * @return true si l'objet peut être poussé dans cette direction, false sinon
      */
@@ -187,7 +184,6 @@ public abstract class Objet {
     /**
      * Méthode abstraite pour obtenir le symbole ASCII de l'objet
      * Utilisé pour l'affichage en mode texte et la sauvegarde de niveaux
-     * 
      * Convention Sokoban :
      * - '#' pour mur
      * - '@' pour joueur
@@ -196,7 +192,6 @@ public abstract class Objet {
      * - ' ' pour case vide
      * - '*' pour boîte sur cible
      * - '+' pour joueur sur cible
-     * 
      * @return Le caractère représentant cet objet
      */
     public abstract char getSymbole();

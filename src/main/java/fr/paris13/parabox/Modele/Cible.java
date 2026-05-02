@@ -3,7 +3,7 @@ package fr.paris13.parabox.Modele;
 /**
  * Classe Cible
  * 
- * Cette classe représente une cible (destination) dans le jeu Sokoban.
+ * Cette classe représente une cible (destination) dans le jeu 
  * Une cible est un emplacement où une boîte doit être placée.
  * 
  * Caractéristiques :
