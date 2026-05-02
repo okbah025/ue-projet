@@ -3,6 +3,7 @@ package fr.paris13.parabox.ig;
 import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.Jeu;
+import fr.paris13.parabox.Modele.Position;
 import fr.paris13.parabox.Modele.SokobanLevel;
 import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ResoAuto.PileDir;
@@ -73,7 +74,7 @@ public class Sokoban extends StackPane {
         Scene scene = root.getScene();
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
     }
-    
+      
     /**
      * Gère les évènements selon l'entrée du clavier donné.
      * 
@@ -124,10 +125,10 @@ public class Sokoban extends StackPane {
                                 level.updateBoard(dir2);
                                 
                                 if (jeu.estNiveauTermine()) {
-                                    PauseTransition p = new PauseTransition(Duration.seconds(0.5));
-                                    p.setOnFinished(ev -> 
-                                        root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees())));
-                                    p.play();
+                                        PauseTransition p = new PauseTransition(Duration.seconds(0.5));
+                                        p.setOnFinished(ev -> 
+                                            root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees())));
+                                        p.play();
                                 }
                             }
                         ));
@@ -135,7 +136,25 @@ public class Sokoban extends StackPane {
                     t.play();
                 }
                 break;
-            
+            case P: // Chemin
+                level.setBoard(Direction.BAS);
+                Level copie = new Level(jeu.getGrille(), lvl);
+                this.getChildren().add(copie);
+                copie.setBoard(Direction.BAS);
+                copie.setOnMouseClicked(e -> {
+                    Position pos = copie.getSelectedCell();
+                    this.getChildren().removeLast();
+                    if(jeu.getGrille().estCaseLibre(pos)){
+                        level.chemin_court(pos.getX(), pos.getY(), jeu.getGrille());
+                    } else {
+                        this.getChildren().add(showMsg("Mouvement impossible"));
+                        PauseTransition p = new PauseTransition(Duration.seconds(1));
+                        p.setOnFinished(ev -> 
+                            this.getChildren().removeLast());
+                        p.play();
+                    }
+                });
+                break;
             case ESCAPE: // Pause
                 pause.setVisible(true);
                 
@@ -146,7 +165,7 @@ public class Sokoban extends StackPane {
                 } else {
                     help.setVisible(true);
                     helpVisible = true;
-                } 
+                }
         }
 
         if (!auto && direction != null) {
@@ -180,7 +199,16 @@ public class Sokoban extends StackPane {
             default: return null;
         }
     }
-
     
+    private static StackPane showMsg(String s){
+        StackPane st = new StackPane();
+        Label msg = new Label(s);
+        st.setAlignment(Pos.TOP_CENTER);
+        msg.setPadding(new Insets(10));
+        msg.setStyle("-fx-font: 20 system; ");
+        st.getChildren().add(msg);
+        
+        return st;
+    }
 }
 
