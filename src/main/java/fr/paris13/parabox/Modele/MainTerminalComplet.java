@@ -375,13 +375,61 @@ if (rep.equals("o")) {
         int choix = demanderChoix(scanner, 1, fichiers.size());
         String fichierChoisi = fichiers.get(choix - 1);
 
-        // Charger la grille depuis le fichier
+
+	// fichiers de sauvegarde (même logique que version simple)
+	String fichierSave = "niveau" + choix + "_rec_save.txt";
+	String fichierSolution = "niveau" + choix + "_rec_solution.txt";
+	String fichierHisto = "niveau" + choix + "_rec_histo_deplacements.txt";
+	String fichierHistoSolution = "niveau" + choix + "_rec_sol_deplacements.txt";
+
+	Grille grilleRacine;
+
+
+
+
+	// 🔥 reprise de partie
+	String rep;
+	do {
+	    System.out.print("Reprendre une partie récursive ? (o/n) : ");
+	    rep = scanner.nextLine().trim().toLowerCase();
+	} while (!rep.equals("o") && !rep.equals("n"));
+
+	if (rep.equals("o")) {
+
+	    File f = new File(fichierSave);
+
+	    if (f.exists()) {
+		// ⚠️ ici il faut un chargeur de sauvegarde récursive (pas le simple)
+		grilleRacine = ChargeurSauvegardeRecursif.charger(fichierSave);
+
+		System.out.println(VERT + "✓ Partie récursive chargée !" + RESET);
+	    } else {
+		System.out.println(ROUGE + "✗ Aucune sauvegarde trouvée !" + RESET);
+		grilleRacine = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
+	    }
+
+	} else {
+	    grilleRacine = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
+	}
+
+	if (grilleRacine == null) {
+	    System.out.println(ROUGE + "Niveau invalide !" + RESET);
+	    return;
+	}
+
+
+
+
+        /* Charger la grille depuis le fichier
         System.out.println(CYAN + "\nChargement : " + fichierChoisi + "..." + RESET);
         Grille grilleRacine = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
         if (grilleRacine == null) {
             System.out.println(ROUGE + "Impossible de charger le niveau !" + RESET);
             return;
         }
+        */
+        
+        
 
         // Pile qui contiendra toutes les directions à prendre pour résoudre le niveau
         PileDir d = new PileDir();
@@ -418,12 +466,20 @@ if (rep.equals("o")) {
                     afficherEtatRecursif(jeu);
                     if (jeu.estNiveauTermine()) {
                     
-                    
-                    
-                    
-                    
-                    
                         afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+                        
+                        /*new : ajout persistance*/
+                        
+		    // sauvegarde plateau solution
+		    SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
+		    saveSol.ecrireGrilleRecursif(jeu.getGrille());
+
+		    // sauvegarde historique solution
+		    SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
+		    histoSol.ecrireHistoriqueRecursif(jeu);
+                        
+                        
+                        
                     }
                 }
                 // ok=false = mouvement bloqué (mur) : on ignore silencieusement
@@ -490,6 +546,17 @@ if (rep.equals("o")) {
                                         System.out.println("Cliquez sur J pour quitter l'option Indice.");
                                         if (jeu.estNiveauTermine()) {
                                             afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+                                            
+                                            // sauvegarde plateau solution
+				    SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
+				    saveSol.ecrireGrilleRecursif(jeu.getGrille());
+
+				    //  sauvegarde historique solution
+				    SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
+				    histoSol.ecrireHistoriqueRecursif(jeu);
+
+                                            
+                                            
                                         }
                                     }
                                     break;
@@ -510,7 +577,12 @@ if (rep.equals("o")) {
                         continuer = false;
                         System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
                         
-			
+                        /*new : persistance*/
+                        SauvegardePlateauRecursif save = new SauvegardePlateauRecursif(fichierSave);
+save.ecrireGrilleRecursif(jeu.getGrille());
+
+SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
+histo.ecrireHistoriqueRecursif(jeu);
 			
                         
                         break;
