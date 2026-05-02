@@ -48,19 +48,19 @@ public class MainTerminalComplet extends ResoAutoRecursif {
     private static final String MAGENTA= "\033[35m";
     private static final String RESET  = "\033[0m";
 
-    // ── Codes des touches flèches (séquences ANSI ESC [ X) ───────────────────
+    // Codes des touches flèches (séquences ANSI ESC [ X) 
     // Quand on appuie sur une flèche, le terminal envoie 3 octets :
     //   ESC (27) + '[' (91) + lettre (A=haut, B=bas, C=droite, D=gauche)
     private static final int ESC = 27;
 
-    // ── Dossier des fichiers de niveaux ───────────────────────────────────────
+    // Dossier des fichiers de niveaux 
     // "src/main/resources" = dossier de ressource
     private static final String DOSSIER = "src/main/resources";
 
-    // ── Versions disponibles ──────────────────────────────────────────────────
+    // Versions disponibles 
     private enum Version { SIMPLE, RECURSIVE }
 
-    // ── Commandes reconnues en jeu ────────────────────────────────────────────
+    // Commandes reconnues en jeu 
     private enum Commande {
         HAUT, BAS, GAUCHE, DROITE,
 
@@ -69,10 +69,6 @@ public class MainTerminalComplet extends ResoAutoRecursif {
 
     }
 
-    // =========================================================================
-    //  POINT D'ENTRÉE
-    // =========================================================================
-
     /**
      * Méthode principale : lance le jeu depuis le terminal.
      * @param args Arguments en ligne de commande (non utilisés)
@@ -80,11 +76,11 @@ public class MainTerminalComplet extends ResoAutoRecursif {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // ── Étape 1 : Choisir la version ──────────────────────────────────────
+        //  Étape 1 : Choisir la version 
         effacer();
         Version version = menuPrincipal(scanner);
 
-        // ── Étape 2 : Choisir le niveau et lancer le jeu ─────────────────────
+        // Étape 2 : Choisir le niveau et lancer le jeu 
         effacer();
         if (version == Version.SIMPLE) {
             lancerSimple(scanner);
@@ -95,16 +91,11 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         scanner.close();
     }
 
-    // =========================================================================
-    //  LANCEMENT VERSION SIMPLE
-    // =========================================================================
+    //  LANCEMENT VERSION SIMPLE  //
 
-    /**
-     * Gérer le lancement et la boucle de jeu pour la VERSION SIMPLE.
+    /** Gérer le lancement et la boucle de jeu pour la VERSION SIMPLE.
      * Les niveaux sont codés en dur dans ce fichier.
-     *
-     * @param scanner Le scanner pour lire les entrées clavier
-     */
+     * @param scanner Le scanner pour lire les entrées clavier     */
     private static void lancerSimple(Scanner scanner) {
         // Afficher le menu des niveaux simples
         System.out.println(CYAN + "╔════════════════════════════════════════════════════════╗" + RESET);
@@ -137,7 +128,7 @@ String fichierHistoSolution = "niveau" + choix + "_sol_deplacements.txt";
 
 Grille grille;
 
-// 🔥 lecture propre de la réponse
+//  lecture de la réponse
 String rep;
 do {
     System.out.print("Reprendre une partie ? (o/n) : ");
@@ -150,17 +141,15 @@ if (rep.equals("o")) {
 
     if (f.exists()) {
         grille = ChargeurSauvegarde.charger(fichierSave);
-        System.out.println(VERT + "✓ Partie chargée !" + RESET);
+        System.out.println(VERT + " Partie chargée !" + RESET);
     } else {
-        System.out.println(ROUGE + "✗ Aucune sauvegarde trouvée !" + RESET);
+        System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
         grille = creerNiveauSimple(choix);
     }
 
 } else {
     grille = creerNiveauSimple(choix);
 }
-   /* A FAIRE : charger l historique !!*/
-        
         
         if (grille == null) {
             System.out.println(ROUGE + "Niveau invalide !" + RESET);
@@ -222,16 +211,16 @@ if (rep.equals("o")) {
 
 
                 }
-                // Si ok=false : mur, on ne fait rien (pas de message parasite)
+                // Si ok=false : mur, on ne fait rien 
 
             } else {
                 switch (cmd) {
                     case ANNULER:
                         if (jeu.annulerMouvement()) {
                             effacer(); afficherEtatSimple(jeu);
-                            System.out.println(VERT + "✓ Mouvement annulé !" + RESET);
+                            System.out.println(VERT + " Mouvement annulé !" + RESET);
                         } else {
-                            System.out.println(ROUGE + "✗ Rien à annuler !" + RESET);
+                            System.out.println(ROUGE + " Rien à annuler !" + RESET);
                         }
                         break;
                     case RECOMMENCER:
@@ -239,7 +228,7 @@ if (rep.equals("o")) {
                         Grille nouvelleGrille = creerNiveauSimple(choix);
                         jeu.setGrille(nouvelleGrille);
                         effacer(); afficherEtatSimple(jeu);
-                        System.out.println(VERT + "✓ Niveau recommencé !" + RESET);
+                        System.out.println(VERT + " Niveau recommencé !" + RESET);
                         break;
                     case INDICE:
                         // Les indices sont disponibles seulement pour les niveaux 1, 2, 3 et 4.
@@ -306,7 +295,7 @@ if (rep.equals("o")) {
                         
                     case QUITTER:
                            continuer = false;
-			System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+			System.out.println(CYAN + "\nMerci d'avoir joué ! " + RESET);
 			break;
 
 			case CHEMIN:
@@ -328,16 +317,11 @@ if (rep.equals("o")) {
         }
     }
 
-    // =========================================================================
-    //  LANCEMENT VERSION RÉCURSIVE
-    // =========================================================================
+    //  LANCEMENT VERSION RÉCURSIVE  //
 
-    /**
-     * Gérer le lancement et la boucle de jeu pour la VERSION RÉCURSIVE.
+    /** Gérer le lancement et la boucle de jeu pour la VERSION RÉCURSIVE.
      * Les niveaux sont chargés depuis les fichiers niveau*.txt du dossier courant.
-     *
-     * @param scanner Le scanner pour lire les entrées clavier
-     */
+     * @param scanner Le scanner pour lire les entrées clavier     */
     private static void lancerRecursif(Scanner scanner) {
         // Lister les fichiers niveau*.txt disponibles
         List<String> fichiers = listerFichiersNiveaux();
@@ -369,7 +353,7 @@ if (rep.equals("o")) {
         String fichierChoisi = fichiers.get(choix - 1);
 
 
-	// fichiers de sauvegarde (même logique que version simple)
+	// fichiers de sauvegarde 
 	String fichierSave = "niveau" + choix + "_rec_save.txt";
 	String fichierSolution = "niveau" + choix + "_rec_solution.txt";
 	String fichierHisto = "niveau" + choix + "_rec_histo_deplacements.txt";
@@ -380,7 +364,7 @@ if (rep.equals("o")) {
 
 
 
-	// 🔥 reprise de partie
+	// reprise de partie
 	String rep;
 	do {
 	    System.out.print("Reprendre une partie récursive ? (o/n) : ");
@@ -392,12 +376,11 @@ if (rep.equals("o")) {
 	    File f = new File(fichierSave);
 
 	    if (f.exists()) {
-		// ⚠️ ici il faut un chargeur de sauvegarde récursive (pas le simple)
 		grilleRacine = ChargeurSauvegardeRecursif.charger(fichierSave);
 
-		System.out.println(VERT + "✓ Partie récursive chargée !" + RESET);
+		System.out.println(VERT + " Partie récursive chargée !" + RESET);
 	    } else {
-		System.out.println(ROUGE + "✗ Aucune sauvegarde trouvée !" + RESET);
+		System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
 		grilleRacine = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
 	    }
 
@@ -475,16 +458,16 @@ if (rep.equals("o")) {
                         
                     }
                 }
-                // ok=false = mouvement bloqué (mur) : on ignore silencieusement
+                // ok=false = mouvement bloqué (mur)
 
             } else {
                 switch (cmd) {
                     case ANNULER:
                         if (jeu.annulerMouvement()) {
                             effacer(); afficherEtatRecursif(jeu);
-                            System.out.println(VERT + "✓ Mouvement annulé !" + RESET);
+                            System.out.println(VERT + " Mouvement annulé !" + RESET);
                         } else {
-                            System.out.println(ROUGE + "✗ Rien à annuler !" + RESET);
+                            System.out.println(ROUGE + " Rien à annuler !" + RESET);
                         }
                         break;
                     case RECOMMENCER:
@@ -493,9 +476,9 @@ if (rep.equals("o")) {
                         if (ng != null) {
                             jeu.reinitialiser(ng);
                             effacer(); afficherEtatRecursif(jeu);
-                            System.out.println(VERT + "✓ Niveau rechargé depuis le fichier !" + RESET);
+                            System.out.println(VERT + " Niveau rechargé depuis le fichier !" + RESET);
                         } else {
-                            System.out.println(ROUGE + "✗ Impossible de recharger le niveau !" + RESET);
+                            System.out.println(ROUGE + " Impossible de recharger le niveau !" + RESET);
                         }
                         break;
                     case INDICE:
@@ -568,7 +551,7 @@ if (rep.equals("o")) {
                         break;
                     case QUITTER:
                         continuer = false;
-                        System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+                        System.out.println(CYAN + "\nMerci d'avoir joué ! " + RESET);
                         
                         /*new : persistance*/
                         SauvegardePlateauRecursif save = new SauvegardePlateauRecursif(fichierSave);
@@ -597,22 +580,14 @@ histo.ecrireHistoriqueRecursif(jeu);
         }
     }
 
-    // =========================================================================
-    //  LECTURE DES TOUCHES CLAVIER
-    // =========================================================================
+    //  LECTURE DES TOUCHES CLAVIER  //
 
-    /**
-     * Lire une commande depuis le clavier.
-     *
+    /** Lire une commande depuis le clavier.
      * Gère les séquences ANSI des touches flèches :
      *   Flèche = ESC (27) + '[' (91) + lettre (A/B/C/D)
-     *
      * Et les touches simples : Z S Q D (ZQSD), 8 2 4 6 (pavé), U R H I X.
-     *
      * Cette méthode BLOQUE jusqu'à ce qu'une touche soit pressée.
-     *
-     * @return La commande correspondant à la touche pressée
-     */
+     * @return La commande correspondant à la touche pressée    */
     private static Commande lireCommande() {
         try {
             int premier = System.in.read();
@@ -661,13 +636,10 @@ histo.ecrireHistoriqueRecursif(jeu);
         }
     }
 
-    /**
-     * Convertir une Commande en Direction (ou null si ce n'est pas un déplacement).
-     *
+    /** Convertir une Commande en Direction (ou null si ce n'est pas un déplacement).
      * @param cmd La commande lue
-     * @return La Direction correspondante, ou null si c'est une commande spéciale
-     */
-    private static Direction commandeVersDirection(Commande cmd) {
+     * @return La Direction correspondante, ou null si c'est une commande spéciale     */
+    private static Direction commandeVersDirection(Commande cmd){
         switch (cmd) {
             case HAUT:   return Direction.HAUT;
             case BAS:    return Direction.BAS;
@@ -677,16 +649,11 @@ histo.ecrireHistoriqueRecursif(jeu);
         }
     }
 
-    // =========================================================================
-    //  AFFICHAGE EN JEU
-    // =========================================================================
+    //  AFFICHAGE EN JEU  //
 
-    /**
-     * Afficher l'état du jeu pour la VERSION SIMPLE.
+    /** Afficher l'état du jeu pour la VERSION SIMPLE.
      * Montre la grille + les statistiques.
-     *
-     * @param jeu Le jeu simple en cours
-     */
+     * @param jeu Le jeu simple en cours     */
     private static void afficherEtatSimple(Jeu jeu) {
         System.out.println(CYAN + "╔════════════════════════════════════════════════════════╗" + RESET);
         System.out.println(CYAN + "║" + BLEU + "                  SOKOBAN - EN JEU                  " + RESET + CYAN + "║" + RESET);
@@ -709,7 +676,7 @@ histo.ecrireHistoriqueRecursif(jeu);
             if (!(b instanceof Piece) && b.estSurCible()) surCibles++;
         }
         int total = g.getCibles().size();
-        System.out.println(CYAN + "📊 " + RESET
+        System.out.println(CYAN + "  " + RESET
             + "Mouvements: " + JAUNE + jeu.getNombreMouvements() + RESET
             + "  |  Poussées: " + JAUNE + jeu.getNombrePoussees() + RESET
             + "  |  Boîtes: " + VERT + surCibles + "/" + total + RESET);
@@ -731,9 +698,9 @@ histo.ecrireHistoriqueRecursif(jeu);
 
         // Indicateur de profondeur : dans quelle grille on est
         if (jeu.estDansUnePiece()) {
-            System.out.println(MAGENTA + "  ▶ Grille interne (profondeur " + jeu.getProfondeur() + ")" + RESET);
+            System.out.println(MAGENTA + "    Grille interne (profondeur " + jeu.getProfondeur() + ")" + RESET);
         } else {
-            System.out.println(BLEU   + "  ▶ Grille principale" + RESET);
+            System.out.println(BLEU   + "    Grille principale" + RESET);
         }
         System.out.println();
 
@@ -755,28 +722,26 @@ histo.ecrireHistoriqueRecursif(jeu);
             total++;
             if (b.estSurCible()) surCibles++;
         }
-        System.out.println(CYAN + "📊 " + RESET
+        System.out.println(CYAN + "  " + RESET
             + "Mouvements: " + JAUNE + jeu.getNombreMouvements() + RESET
             + "  |  Boîtes: " + VERT + surCibles + "/" + total + RESET
             + "  |  Profondeur: " + MAGENTA + jeu.getProfondeur() + RESET);
         System.out.println(VERT + "─────────────────────────────────────────────────────────" + RESET);
     }
 
-    /**
-     * Colorier une ligne de la grille pour l'affichage.
+    /** Colorier une ligne de la grille pour l'affichage.
      * Chaque type d'objet a une couleur différente.
-     *
-     *  '#' (mur)        → cyan
-     *  '@' (joueur)     → bleu
-     *  '$' (boîte)      → jaune
-     *  '*' (boîte/cible)→ vert
-     *  '.' (cible)      → rouge
-     *  Lettre majuscule → magenta (Piece = monde récursif)
+     *  '#' (mur)        -> cyan
+     *  '@' (joueur)     -> bleu
+     *  '$' (boîte)      -> jaune
+     *  '*' (boîte/cible)-> vert
+     *  '.' (cible)      -> rouge
+     *  Lettre majuscule -> magenta (Piece = monde récursif)
      *
      * @param ligne La ligne brute à colorier
      * @return La ligne avec les codes ANSI de couleur
      */
-    private static String colorier(String ligne) {
+    private static String colorier(String ligne){
         StringBuilder sb = new StringBuilder();
         for (char c : ligne.toCharArray()) {
             switch (c) {
@@ -805,7 +770,7 @@ histo.ecrireHistoriqueRecursif(jeu);
     private static void afficherVictoire(int mouvements, int poussees) {
         System.out.println();
         System.out.println(VERT + "╔════════════════════════════════════════════════════════╗" + RESET);
-        System.out.println(VERT + "║" + JAUNE + "            🎉  FÉLICITATIONS !  🎉                  " + RESET + VERT + "║" + RESET);
+        System.out.println(VERT + "║" + JAUNE + "               FÉLICITATIONS !                     " + RESET + VERT + "║" + RESET);
         System.out.println(VERT + "║" + RESET + "                NIVEAU TERMINÉ !                        " + VERT + "║" + RESET);
         System.out.println(VERT + "╚════════════════════════════════════════════════════════╝" + RESET);
         System.out.println();
@@ -815,14 +780,12 @@ histo.ecrireHistoriqueRecursif(jeu);
         System.out.println();
     }
 
-    // =========================================================================
-    //  AFFICHAGE DES CONTRÔLES
-    // =========================================================================
+    //  AFFICHAGE DES CONTRÔLES  //
 
     /** Afficher les contrôles communs aux deux versions. */
     private static void afficherControles() {
         System.out.println();
-        System.out.println(CYAN + "🎮 CONTRÔLES :" + RESET);
+        System.out.println(CYAN + "  CONTRÔLES :" + RESET);
         System.out.println("   " + VERT + "↑ ↓ ← →" + RESET + "  Flèches directionnelles");
         System.out.println("   " + VERT + "Z S Q D " + RESET + "  Alternative clavier AZERTY");
         System.out.println("   " + VERT + "8 2 4 6 " + RESET + "  Pavé numérique");
@@ -840,25 +803,20 @@ histo.ecrireHistoriqueRecursif(jeu);
     private static void afficherControlesRecursif() {
         afficherControles();
         System.out.println();
-        System.out.println(MAGENTA + "🌀 VERSION RÉCURSIVE :" + RESET);
+        System.out.println(MAGENTA + "  VERSION RÉCURSIVE :" + RESET);
         System.out.println("   Les " + MAGENTA + "LETTRES MAJUSCULES" + RESET + " sont des mondes internes.");
         System.out.println("   → Déplacez-vous vers une lettre pour y entrer.");
         System.out.println("   → Atteignez le bord de la grille interne pour sortir.");
     }
 
-    // =========================================================================
-    //  MENUS
-    // =========================================================================
+    //  MENUS  //
 
-    /**
-     * Afficher le menu principal et demander la version à jouer.
-     *
+    /** Afficher le menu principal et demander la version à jouer.
      * @param scanner Le scanner
-     * @return La version choisie (SIMPLE ou RECURSIVE)
-     */
+     * @return La version choisie (SIMPLE ou RECURSIVE)     */
     private static Version menuPrincipal(Scanner scanner) {
         System.out.println(CYAN + "╔════════════════════════════════════════════════════════╗" + RESET);
-        System.out.println(CYAN + "║" + JAUNE + "           🎮  SOKOBAN / PARABOX  🎮                " + RESET + CYAN + "║" + RESET);
+        System.out.println(CYAN + "║" + JAUNE + "              SOKOBAN / PARABOX                   " + RESET + CYAN + "║" + RESET);
         System.out.println(CYAN + "║" + RESET + "                  Projet L2 Informatique                " + CYAN + "║" + RESET);
         System.out.println(CYAN + "╚════════════════════════════════════════════════════════╝" + RESET);
         System.out.println();
@@ -888,15 +846,12 @@ histo.ecrireHistoriqueRecursif(jeu);
         return (choix == 1) ? Version.SIMPLE : Version.RECURSIVE;
     }
 
-    /**
-     * Demander un numéro de niveau entre min et max inclus.
-     *
+    /** Demander un numéro de niveau entre min et max inclus.
      * @param scanner Le scanner
      * @param min     Valeur minimale acceptée
      * @param max     Valeur maximale acceptée
-     * @return Le choix validé
-     */
-    private static int demanderChoix(Scanner scanner, int min, int max) {
+     * @return Le choix validé     */
+    private static int demanderChoix(Scanner scanner, int min, int max){
         int choix = -1;
         while (choix < min || choix > max) {
             System.out.print(JAUNE + "\n➤ Choisir un niveau (" + min + "-" + max + ") : " + RESET);
@@ -904,18 +859,16 @@ histo.ecrireHistoriqueRecursif(jeu);
                 choix = scanner.nextInt();
                 scanner.nextLine();
                 if (choix < min || choix > max)
-                    System.out.println(ROUGE + "✗ Choisissez entre " + min + " et " + max + " !" + RESET);
+                    System.out.println(ROUGE + " Choisissez entre " + min + " et " + max + " !" + RESET);
             } catch (Exception e) {
-                System.out.println(ROUGE + "✗ Entrée invalide !" + RESET);
+                System.out.println(ROUGE + " Entrée invalide !" + RESET);
                 scanner.nextLine();
             }
         }
         return choix;
     }
 
-    // =========================================================================
-    //  UTILITAIRES
-    // =========================================================================
+    //  UTILITAIRES  //
 
     /** Effacer l'écran via le code ANSI. */
     private static void effacer() {
@@ -923,12 +876,9 @@ histo.ecrireHistoriqueRecursif(jeu);
         System.out.flush();
     }
 
-    /**
-     * Lister les fichiers niveau*.txt dans le dossier courant,
+    /** Lister les fichiers niveau*.txt dans le dossier courant,
      * triés par ordre alphabétique.
-     *
-     * @return La liste des noms de fichiers trouvés
-     */
+     * @return La liste des noms de fichiers trouvés     */
     private static List<String> listerFichiersNiveaux() {
         List<String> liste = new ArrayList<>();
         File dir = new File(DOSSIER);
@@ -947,13 +897,10 @@ histo.ecrireHistoriqueRecursif(jeu);
         return liste;
     }
 
-    
-    /**
-     * Créer le niveau simple correspondant au numéro donné.
-     *
+
+    /** Créer le niveau simple correspondant au numéro donné.
      * @param numero Le numéro du niveau (1 à 10)
-     * @return La grille du niveau, ou null si numéro invalide
-     */
+     * @return La grille du niveau, ou null si numéro invalide     */
     private static Grille creerNiveauSimple(int numero) {
         switch (numero) {
             case 1:  return niveauSimple1();
