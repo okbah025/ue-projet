@@ -126,11 +126,11 @@ mvn -version
 
 | Rôle |               Responsabilité |
 |------|------------------------------|
-| Coordinateur -> Coordination générale, Git
-| Modèle -> Logique du jeu 
-| Interface graphique -> Affichage JavaFX 
-| Persistance -> Sauvegarde / chargement 
-| Chemin -> Algorithme de résolution 
-| Auto-résolution -> Résolution automatique 
-| **Installation -> Déploiement** | **Scripts, Maven, Git** |
+| Coordinateur | Coordination générale, Git|
+| Modèle |Logique du jeu| 
+| Interface graphique | Affichage JavaFX |
+| Persistance | Sauvegarde / chargement| 
+| Chemin | Algorithme de résolution| 
+| Auto-résolution | Résolution automatique |
+| **Installation Déploiement** | **Scripts, Maven, Git** |
 
