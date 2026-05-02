@@ -1,5 +1,8 @@
 package fr.paris13.parabox.ig;
+
 import fr.paris13.parabox.Modele.*;
+
+import java.util.Stack;
 
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -271,9 +274,12 @@ public class Level extends GridPane {
             }
         }
         
-        int i = player.getX();
-        int j = player.getY();
-        setPlayer(i, j, dir);
+        if(player !=null){
+            int i = player.getX();
+            int j = player.getY();
+            setPlayer(i, j, dir);
+        }
+        
     }
 
     /**
@@ -360,9 +366,19 @@ public class Level extends GridPane {
     public void updateBoardRec(Grille g, Direction dir){
         reset(g);
         setBoard(dir);
-
     }
     
+     /**
+     * Mets à jour l'affichage duvjeu récursif lors de l'annulation d'un mouvement.
+     * 
+     * @param pileGrilles pile des grilles visités
+     */
+    public void updateBoardRecReverse(Stack<Grille> pileGrilles){
+        for (Grille g : pileGrilles){
+            reset(g);
+            setBoard(Direction.BAS);
+        }   
+    }
     /**
      * Enlève tous les éléments de notre layout GridPane.
      * 
