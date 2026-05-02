@@ -34,7 +34,7 @@ public class ParaboxLevel {
      *
      * @return La liste des noms de fichiers trouvés
      */
-    public static List<String> listerFichiersNiveaux() {
+    /*public static List<String> listerFichiersNiveaux() {
         List<String> liste = new ArrayList<>();
         File dir = new File(DOSSIER);
         if (dir.exists() && dir.isDirectory()) {
@@ -50,5 +50,30 @@ public class ParaboxLevel {
             }
         }
         return liste;
+    }*/
+    public static List<String> listerFichiersNiveaux() {
+    List<String> liste = new ArrayList<>();
+    
+    // Essayer depuis le disque (mode développement)
+    File dir = new File(DOSSIER);
+    if (dir.exists() && dir.isDirectory()) {
+        File[] fichiers = dir.listFiles();
+        if (fichiers != null) {
+            Arrays.sort(fichiers);
+            for (File f : fichiers) {
+                if (f.isFile() && f.getName().startsWith("niveau")
+                        && f.getName().endsWith(".txt")) {
+                    liste.add(f.getName());
+                }
+            }
+        }
+        if (!liste.isEmpty()) return liste;
     }
+    
+    // Fallback : liste codée en dur pour le jar installé
+    for (int i = 1; i <= 5; i++) {
+        liste.add("niveau" + i + ".txt");
+    }
+    return liste;
+	}
 }
