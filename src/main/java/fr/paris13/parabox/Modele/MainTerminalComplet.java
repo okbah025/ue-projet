@@ -376,7 +376,7 @@ if (rep.equals("o")) {
 	    File f = new File(fichierSave);
 
 	    if (f.exists()) {
-		// ⚠️ ici il faut un chargeur de sauvegarde récursive (pas le simple)
+		//  ici il faut un chargeur de sauvegarde récursive (pas le simple)
 
 
 		grilleRacine = ChargeurNiveau.charger(fichierSave);
