@@ -18,7 +18,7 @@ public class Cible extends Objet {
     // ========== ATTRIBUT SUPPLÉMENTAIRE ==========
     
     /**
-     * Indique si une boîte est actuellement placée sur cette cible
+     *  si une boîte est actuellement placée sur cette cible
      */
     private boolean estOccupee;
     

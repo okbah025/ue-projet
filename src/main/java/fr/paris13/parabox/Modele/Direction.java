@@ -9,18 +9,16 @@ package fr.paris13.parabox.Modele;
  * 
  */
 public enum Direction {
-    // Les 4 directions possibles avec leur déplacement associé
     HAUT(0, -1),      // Se déplacer vers le haut = diminuer y
     BAS(0, 1),        // Se déplacer vers le bas = augmenter y
     GAUCHE(-1, 0),    // Se déplacer vers la gauche = diminuer x
     DROITE(1, 0);     // Se déplacer vers la droite = augmenter x
     
-    // Attributs : déplacement horizontal et vertical
     private final int dx;  // Déplacement sur l'axe X
     private final int dy;  // Déplacement sur l'axe Y
     
     /**
-     * Constructeur privé (car c'est une énumération)
+     * Constructeur privé (car  énumération)
      * @param dx Le déplacement horizontal
      * @param dy Le déplacement vertical
      */
@@ -71,7 +69,7 @@ public enum Direction {
     
     /**
      * Convertir une chaîne de caractères en Direction
-     * Utile pour le chargement de fichiers de niveaux
+     * (pour le chargement de fichiers de niveaux)
      * @param dir La chaîne représentant la direction ("u", "d", "l", "r")
      * @return La Direction correspondante, ou null si invalide
      */
