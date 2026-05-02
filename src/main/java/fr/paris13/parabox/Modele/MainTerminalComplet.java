@@ -1,4 +1,6 @@
 package fr.paris13.parabox.Modele;
+import fr.paris13.parabox.chemin.pile;
+import fr.paris13.parabox.chemin.c_chemin;
 
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoFonctions;
@@ -68,7 +70,10 @@ public class MainTerminalComplet extends ResoAutoRecursif {
     // ── Commandes reconnues en jeu ────────────────────────────────────────────
     private enum Commande {
         HAUT, BAS, GAUCHE, DROITE,
-        ANNULER, RECOMMENCER, AIDE, QUITTER, INDICE, INCONNU
+
+       
+        ANNULER, RECOMMENCER, AIDE, QUITTER, INDICE ,CHEMIN ,INCONNU
+
     }
 
     // =========================================================================
@@ -127,21 +132,26 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         }
         System.out.println(VERT + "─────────────────────────────────────────────────────────" + RESET);
 
-        int choix = demanderChoix(scanner, 1, 10);
-        String fichierSave = "niveau" + choix + "_save.txt";
+  	int choix = demanderChoix(scanner, 1, 10);
+
+String fichierSave = "niveau" + choix + "_save.txt";
 String fichierSolution = "niveau" + choix + "_solution.txt";
 
+String fichierHisto = "niveau" + choix + "_histo_deplacements.txt";
+String fichierHistoSolution = "niveau" + choix + "_sol_deplacements.txt";
 
-        
-        
-        
-        Grille grille = creerNiveauSimple(choix);
-        
 
-System.out.print("Reprendre une partie ? (o/n) : ");
-String rep = scanner.nextLine();
 
-if (rep.equalsIgnoreCase("o")) {
+Grille grille;
+
+// 🔥 lecture propre de la réponse
+String rep;
+do {
+    System.out.print("Reprendre une partie ? (o/n) : ");
+    rep = scanner.nextLine().trim().toLowerCase();
+} while (!rep.equals("o") && !rep.equals("n"));
+
+if (rep.equals("o")) {
 
     File f = new File(fichierSave);
 
@@ -156,10 +166,7 @@ if (rep.equalsIgnoreCase("o")) {
 } else {
     grille = creerNiveauSimple(choix);
 }
-        
-        
-        
-   
+   /* A FAIRE : charger l historique !!*/
         
         
         if (grille == null) {
@@ -207,8 +214,13 @@ if (rep.equalsIgnoreCase("o")) {
 			    SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
 			    save.ecrireGrille(jeu.getGrille());
 
-			    // suppression sauvegarde en cours
-			    new File(fichierSave).delete();
+			    /* suppression sauvegarde en cours
+			    new File(fichierSave).delete();*/
+			    SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
+					histoSolution.ecrireHistorique(jeu);
+					
+					
+					
 }
 
 
@@ -275,6 +287,12 @@ if (rep.equalsIgnoreCase("o")) {
                                         System.out.println("Cliquez sur J pour quitter l'option Indice.");
                                         if (jeu.estNiveauTermine()) {
                                             afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+                                            
+
+					SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
+					histoSolution.ecrireHistorique(jeu);
+                                          
+                                            
                                         }
                                     }
                                     break;
@@ -294,17 +312,24 @@ if (rep.equalsIgnoreCase("o")) {
                         
                         
                     case QUITTER:
-    SauvegardePlateau save = new SauvegardePlateau(fichierSave);
-    save.ecrireGrille(jeu.getGrille());
+                           continuer = false;
+			System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+			break;
 
-    System.out.println(CYAN + "\nPartie sauvegardée !" + RESET);
-    System.out.println(CYAN + "Merci d'avoir joué ! 👋" + RESET);
+			case CHEMIN:
 
-    continuer = false;
-    break;
+			    System.out.print("Entrez x y : ");
+			    int x = scanner.nextInt();
+			    int y = scanner.nextInt();
+			    scanner.nextLine();
 
-                    default:
-                        break; // INCONNU : on ignore silencieusement
+			    jeu.getGrille().chemin_court(x, y);
+			    break;
+
+			default:
+			    break; // INCONNU : on ignore
+
+           
                 }
             }
         }
@@ -483,8 +508,23 @@ if (rep.equalsIgnoreCase("o")) {
                     case QUITTER:
                         continuer = false;
                         System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+                        
+			
+			
+                        
                         break;
-                    default:
+                        
+                     case CHEMIN:   
+                          
+				    System.out.print("Entrez x y : ");
+				    int x = scanner.nextInt();
+				    int y = scanner.nextInt();
+				    scanner.nextLine();
+
+				     jeu.getGrilleActive().chemin_court(x, y);
+				    break;
+							
+                     default:
                         break;
                 }
             }
@@ -546,6 +586,7 @@ if (rep.equalsIgnoreCase("o")) {
                     case 'H': return Commande.AIDE;
                     case 'X': return Commande.QUITTER;
                     case 'I': return Commande.INDICE;
+                    case 'P': return Commande.CHEMIN;
                     default:  return Commande.INCONNU;
                 }
             }
@@ -725,6 +766,8 @@ if (rep.equalsIgnoreCase("o")) {
         System.out.println("   " + JAUNE + "H" + RESET + "  Afficher cette aide");
         System.out.println("   " + JAUNE + "I" + RESET + "  Indice");
         System.out.println("   " + JAUNE + "X" + RESET + "  Quitter");
+        System.out.println("    " + JAUNE + "P" + RESET + " chemin plus court (cliquer sur une cible)");
+ 
     }
 
     /** Afficher les contrôles avec les infos spécifiques à la version récursive. */
