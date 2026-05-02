@@ -5,12 +5,20 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * Gère les niveaux récursif du jeu
+ * 
+ */
 public class ParaboxLevel {
     
     private static final String DOSSIER = "src/main/resources";
     private static Grille[] levelList;
     
+    /**
+     * Initialise et retourne un tableau des noveaux disponibles.
+     * 
+     * @return tableau des niveaux disponibles
+     */
     public static Grille[] getList(){
         List<String> levels = listerFichiersNiveaux();   
         levelList = new Grille [levels.size()];
@@ -20,6 +28,12 @@ public class ParaboxLevel {
         return levelList;
     }
     
+    /**
+     * Lister les fichiers niveau*.txt dans le dossier courant,
+     * triés par ordre alphabétique.
+     *
+     * @return La liste des noms de fichiers trouvés
+     */
     public static List<String> listerFichiersNiveaux() {
         List<String> liste = new ArrayList<>();
         File dir = new File(DOSSIER);
