@@ -361,6 +361,7 @@ if (rep.equalsIgnoreCase("o")) {
         // Pile qui contiendra toutes les directions à prendre pour résoudre le niveau
         PileDir d = new PileDir();
 
+
         // Intro
         effacer();
         System.out.println(CYAN + "╔════════════════════════════════════════════════════════╗" + RESET);
@@ -424,8 +425,8 @@ if (rep.equalsIgnoreCase("o")) {
                         }
                         break;
                     case INDICE:
-                        // Les indices sont disponibles seulement pour les niveaux 2 et 3.
-                        if (choix>=2 && choix<=3) {
+                        // Les indices sont disponibles seulement pour les niveaux 1 et 2.
+                        if (choix>=1 && choix<=2) {
                             Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
                             if (ng2 != null) {
                                 jeu.reinitialiser(ng2);
