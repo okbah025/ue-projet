@@ -1,4 +1,5 @@
 package fr.paris13.parabox.ig.menu;
+
 import fr.paris13.parabox.Modele.Version;
 
 import javafx.geometry.Insets;
@@ -17,8 +18,8 @@ import javafx.scene.text.Text;
  */
 public class HelpMenu extends StackPane {
     
-    private static final String[] tabT = {"Annuler dernier mouvement", "Jeu automatique", "Recommencer le niveau", "Pause", "Aide"};
-    private static final String[] tabC = {"Z", "A", "R", "ESC", "H"};
+    private static final String[] tabT = {"Annuler dernier mouvement","Chemin vers cellule cliqué", "Jeu automatique", "Recommencer le niveau", "Pause", "Afficher/Désafficher aide"};
+    private static final String[] tabC = {"Z","P", "A", "R", "ESC", "H"};
     private static final String[] tabF = {"↑", "↓", "←", "→"};
     
     /**
@@ -63,8 +64,9 @@ public class HelpMenu extends StackPane {
         Text but = new Text("But du jeu :");
         but.setStyle("-fx-font: 15 system; ");
         Text aide = new Text("Poussez les fleurs sur une clible.");
-
-        cont.getChildren().addAll(but, aide);
+        Text aide1 = new Text("Appuyez sur P, puis une case pour afficher un chemin.");
+        
+        cont.getChildren().addAll(but, aide, aide1);
         
         if (ver == Version.RECURSIVE){
             Text aideRec1 = new Text("Déplacez-vous sur une flaque pour y entrer.");
@@ -72,6 +74,14 @@ public class HelpMenu extends StackPane {
             
             cont.getChildren().addAll(aideRec1, aideRec2);
         }
+        
+        Text auto = new Text();
+        if (ver == Version.RECURSIVE){
+            auto.setText("L'auto est dispo pour les niveaux 1, 2 et 4.");
+        } else {
+            auto.setText("L'auto est dispo pour les niveaux 1 à 5.");
+        }
+        cont.getChildren().add(auto);
         
         this.getChildren().add(cont);
 

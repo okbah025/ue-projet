@@ -1,4 +1,5 @@
 package fr.paris13.parabox.ig.menu;
+
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ig.Parabox;
@@ -64,6 +65,7 @@ public class LevelMenu extends VBox {
         MenuButton back = new MenuButton("Back", 100, 100);
         back.setOnAction(() -> root.getChildren().setAll(new MainMenu(root)));
         
+        this.setStyle("-fx-background-color: lightblue;");
         this.getChildren().addAll(text, box1, box2, back);
         this.setAlignment(Pos.CENTER);
     }

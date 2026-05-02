@@ -39,6 +39,7 @@ public class Main extends Application {
         stage.setTitle("HerTech Game");
         root = new BorderPane();
         StackPane game = new StackPane();
+        game.setStyle("-fx-background-color: lightblue;");
         
         showMainMenu(game);
         

@@ -5,6 +5,7 @@ import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.JeuRecursif;
 import fr.paris13.parabox.Modele.ParaboxLevel;
+import fr.paris13.parabox.Modele.Position;
 import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoRecursif;
@@ -114,13 +115,13 @@ public class Parabox extends StackPane {
                     jeu.reinitialiser(ng);
                     level.reset(ng);
                     level.setBoard(Direction.BAS);
-
                 }
                 break;
                 
             case A: // Auto
                 if (level.getLvl() >=2 && level.getLvl() <=3){
-                    Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);                    if(ng2 !=null) {
+                    Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);                    
+                    if(ng2 !=null) {
                         jeu.reinitialiser(ng2);
                         level.reset(ng2);
                         level.setBoard(Direction.BAS);
@@ -147,6 +148,25 @@ public class Parabox extends StackPane {
                     t.play();
                 }
                 break;
+            case P: // Chemin
+                level.setBoard(Direction.BAS);
+                Level copie = new Level(jeu.getGrilleActive(), lvl);
+                this.getChildren().add(copie);
+                copie.setBoard(Direction.BAS);
+                copie.setOnMouseClicked(e -> {
+                    Position pos = copie.getSelectedCell();
+                    this.getChildren().removeLast();
+                    if(jeu.getGrilleActive().estCaseLibre(pos)){
+                        level.chemin_court(pos.getX(), pos.getY(), jeu.getGrilleActive());
+                    } else {
+                        this.getChildren().add(showMsg("Mouvement impossible"));
+                        PauseTransition p = new PauseTransition(Duration.seconds(1));
+                        p.setOnFinished(ev -> 
+                            this.getChildren().removeLast());
+                        p.play();
+                    }
+                });
+                break;
                 
             case ESCAPE: // Pause
                 pause.setVisible(true);
@@ -170,5 +190,16 @@ public class Parabox extends StackPane {
                 }
             }
         }    
+    }
+    
+    private static StackPane showMsg(String s){
+        StackPane st = new StackPane();
+        Label msg = new Label(s);
+        st.setAlignment(Pos.TOP_CENTER);
+        msg.setPadding(new Insets(10));
+        msg.setStyle("-fx-font: 20 system; ");
+        st.getChildren().add(msg);
+        
+        return st;
     }
 }

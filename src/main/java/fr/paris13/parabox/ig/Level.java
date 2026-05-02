@@ -1,6 +1,8 @@
 package fr.paris13.parabox.ig;
 
 import fr.paris13.parabox.Modele.*;
+import fr.paris13.parabox.chemin.c_chemin;
+import fr.paris13.parabox.chemin.pile;
 
 import java.util.Stack;
 
@@ -24,6 +26,7 @@ public class Level extends GridPane {
     private int col;
     private int row;
     private final int lvl;
+    private Position selectedCell;
 
     
     /**
@@ -237,7 +240,16 @@ public class Level extends GridPane {
         
         cells[i][j].getChildren().add(level);
     }
-
+   
+    private void setPath(int i, int j){
+        ImageView level = new ImageView();
+        level.setImage(new Image("/images/path.png"));
+        level.setFitHeight(SIZE);
+        level.setFitWidth(SIZE);
+        level.setPreserveRatio(true);
+        
+        cells[i][j].getChildren().add(level);
+    }
     /**
      * Permet d'afficher le niveau en ajoutant les images dans les cellules qui
      * seront ensuite ajouté dans notre layout GridPane.
@@ -247,7 +259,14 @@ public class Level extends GridPane {
     public void setBoard(Direction dir){
         for (int i = 0; i<col; i++){
             for (int j = 0; j<row; j++){
+                final int x = i;
+                final int y = j;
                 cells[i][j] = new StackPane();
+                
+                cells[i][j].setOnMouseClicked(e -> 
+                    selectedCell = new Position(x, y)
+                );
+                
                 if(grid.getObjet(i, j) instanceof Mur){
                     setWall(i ,j);
                 } else {
@@ -379,11 +398,44 @@ public class Level extends GridPane {
             setBoard(Direction.BAS);
         }   
     }
+    
     /**
      * Enlève tous les éléments de notre layout GridPane.
      * 
      */
     private void clearBoard(){
         this.getChildren().clear();
+    }
+    
+    /**
+     * Affiche chemin le plus court vers des coordonnées données
+     * 
+     * @param x colonne
+     * @param y ligne
+     * @param grid grille actuelle
+     */
+    public void chemin_court(int x, int y, Grille grid) {
+        if (player == null) {
+            return;
+        }
+        int x1 = player.getX();
+        int y1 = player.getY();
+        boolean[][] M = grid.genererMatricebol();
+        // Appel algo
+        pile pi = c_chemin.c_chemin(M, x1, y1, x, y);
+        if (pi == null) {
+            return;
+        }
+        // dessiner le chemin
+        while (!pi.isEmpty()) {
+            Position p = pi.depiler();
+            setPath(p.getX(), p.getY());
+        }
+        // remettre le joueur
+        setPlayer(x1, y1, Direction.BAS);
+    }
+    
+    public Position getSelectedCell(){
+        return this.selectedCell;
     }
 }
