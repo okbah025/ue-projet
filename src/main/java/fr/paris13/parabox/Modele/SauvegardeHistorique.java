@@ -1,5 +1,5 @@
-/* on part du principe qu'il est question du sokoban classique*/
-/*on ecrit l'historique d'un seul niveau*/
+/*gère les niveaux classiques et récursifs*/
+/*on ecrit l'historique d'un seul niveau, un fichier par niveau*/
 package fr.paris13.parabox.Modele;
 
 import java.util.Stack;
@@ -18,8 +18,49 @@ public class SauvegardeHistorique {
 	
 	}
 	
+	
+	 //  version simple
+    public void ecrireHistorique(Jeu jeu) {
+        ecrireDepuisHistorique(jeu.getHistorique());
+    }
+
+    //  version récursive
+    public void ecrireHistoriqueRecursif(JeuRecursif jeu) {
+        ecrireDepuisHistorique(jeu.getHistorique());
+    }
+
+    // méthode commune (le vrai travail)
+    private void ecrireDepuisHistorique(Historique histo) {
+
+        try {
+            FileWriter fw = new FileWriter(fichierEcrireHisto, true);
+            BufferedWriter writer = new BufferedWriter(fw);
+
+            Stack<Character> stack = histo.viderEtConvertir();
+
+            StringBuilder chaine = new StringBuilder();
+
+            while (!stack.isEmpty()) {
+                chaine.append(stack.pop());
+            }
+
+            writer.write(chaine.toString());
+            writer.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
 
 
+
+
+
+
+
+
+/*
 	public void ecrireHistorique(Jeu jeu) {
 
     try {
@@ -35,17 +76,17 @@ public class SauvegardeHistorique {
         }
 
         writer.write(chaine);
-        /*on veut tous les historiques des sessions de jeu de ce niveau sur une seule ligne*/
+        /*on veut tous les historiques des sessions de jeu de ce niveau sur une seule ligne*
         writer.close();
 
     } catch (IOException e) {
         e.printStackTrace();
     }
-}
+} */
 
 
 
-
+/*
 	public char  convertir_direction_en_caractere(Direction d, Boite b) {
 		char c;
 		
