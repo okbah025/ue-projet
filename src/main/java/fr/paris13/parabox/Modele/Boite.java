@@ -1,36 +1,21 @@
 package fr.paris13.parabox.Modele;
 
-/**
- * Classe Boite
- * 
+/** Classe Boite
  * Cette classe représente une boîte dans le jeu Sokoban.
  * Une boîte peut être poussée par le joueur et doit être placée sur une cible.
- * 
  * Caractéristiques :
  * - Peut être poussée par le joueur
  * - Ne peut pas pousser d'autres boîtes
  * - Symbole ASCII : '$' (ou '*' si sur une cible)
- * - Le but du jeu est de placer toutes les boîtes sur les cibles
- * 
- */
-public class Boite extends Objet {
-    
-    // ========== ATTRIBUT SUPPLÉMENTAIRE ==========
-    
-    /**
-     * Indique si la boîte est actuellement sur une cible
-     * Important pour vérifier la condition de victoire
-     */
+ * - Le but du jeu est de placer toutes les boîtes sur les cibles */
+public class Boite extends Objet{
+    /** Indique si la boîte est actuellement sur une cible   */
     protected boolean surCible;
-    
-    // ========== CONSTRUCTEURS ==========
-    
-    /**
-     * Constructeur d'une boîte
+        
+    /** Constructeur d'une boîte
      * @param x Position horizontale initiale de la boîte
      * @param y Position verticale initiale de la boîte
-     * @param parent La grille contenant cette boîte
-     */
+     * @param parent La grille contenant cette boîte     */
     public Boite(int x, int y, Grille parent) {
         super(x, y, parent);
         this.surCible = false;
@@ -38,35 +23,26 @@ public class Boite extends Objet {
         this.couleur = "210,180,140";
     }
     
-    /**
-     * Constructeur avec un objet Position
+    /** Constructeur avec un objet Position
      * @param pos La position initiale de la boîte
-     * @param parent La grille contenant cette boîte
-     */
-    public Boite(Position pos, Grille parent) {
+     * @param parent La grille contenant cette boîte     */
+    public Boite(Position pos, Grille parent){
         super(pos, parent);
         this.surCible = false;
         this.couleur = "210,180,140";
     }
-    
-    // ========== GETTERS ET SETTERS ==========
-    
-    /**
-     * Vérifier si la boîte est sur une cible
-     * @return true si la boîte est sur une cible, false sinon
-     */
+        
+    /** Vérifier si la boîte est sur une cible
+     * @return true si la boîte est sur une cible, false sinon    */
     public boolean estSurCible() {
         return this.surCible;
     }
     
-    /**
-     * Indiquer si la boîte est sur une cible
+    /** Indiquer si la boîte est sur une cible
      * Cette méthode change aussi la couleur de la boîte
-     * @param surCible true si la boîte est sur une cible, false sinon
-     */
+     * @param surCible true si la boîte est sur une cible, false sinon   */
     public void setSurCible(boolean surCible) {
         this.surCible = surCible;
-        // Changer la couleur selon l'état
         if (surCible) {
             this.couleur = "0,200,0"; // Vert si sur cible
         } else {
@@ -75,27 +51,21 @@ public class Boite extends Objet {
     }
     
     // ========== IMPLÉMENTATION DES MÉTHODES ABSTRAITES ==========
-    
-    /**
-     * Une boîte n'est PAS franchissable normalement
-     * Elle bloque le passage sauf si elle peut être poussée
-     * @return false
-     */
+    /** Une boîte n'est PAS franchissable normalement
+     * Elle bloque le passage saauf si elle peut être poussée
+     * @return false    */
     @Override
     public boolean estFranchissable() {
         return false;
     }
     
-    /**
-     * Vérifier si la boîte peut être poussée dans une direction
+    /** Vérifier si la boîte peut être poussée dans une direction
      * Une boîte peut être poussée si :
      * - Elle a une grille parente
      * - La case de destination est libre ou franchissable
      * - La case de destination n'est pas hors de la grille
-     * 
      * @param direction La direction dans laquelle pousser la boîte
-     * @return true si la boîte peut être poussée, false sinon
-     */
+     * @return true si la boîte peut être poussée, false sinon     */
     @Override
     public boolean peutEtrePousse(Direction direction) {
         // Vérifier qu'on a une grille parente
@@ -103,15 +73,15 @@ public class Boite extends Objet {
             return false;
         }
         
-        // Calculer la position après le déplacement
+        // Calculer la pos après le déplacement
         Position nouvellePosition = direction.appliquerSur(this.position);
         
-        // Vérifier que la nouvelle position est dans la grille
+        // Vérifier que la nouvelle pos est dans la grille
         if (!grilleParente.estDansGrille(nouvellePosition)) {
             return false;
         }
         
-        // Vérifier ce qu'il y a à la position de destination
+        // Vérifier ce qu'il y a dan la position de destination
         Objet objetDestination = grilleParente.getObjet(nouvellePosition);
         
         // Si la case est vide (null) ou c'est une cible, on peut pousser
@@ -125,7 +95,7 @@ public class Boite extends Objet {
         }
         
         // Si c'est une Piece, on peut "pousser" la boîte vers elle
-        // (la boîte va entrer dans la Piece, c'est JeuRecursif qui gère ensuite)
+        // (la boîte va entrer dans la Piece  )
         if (objetDestination instanceof Piece) {
             return true;
         }
@@ -134,12 +104,10 @@ public class Boite extends Objet {
         return false;
     }
     
-    /**
-     * Symbole ASCII de la boîte selon la convention Sokoban
+    /** Symbole ASCII de la boîte selon la convention Sokoban
      * '$' si sur une case normale
      * '*' si sur une cible
-     * @return Le caractère représentant la boîte
-     */
+     * @return Le caractère représentant la boîte     */
     @Override
     public char getSymbole() {
         if (this.surCible) {
@@ -149,10 +117,8 @@ public class Boite extends Objet {
         }
     }
     
-    /**
-     * Créer une copie de cette boîte
-     * @return Une nouvelle instance de Boite avec les mêmes propriétés
-     */
+    /** Créer une copie de cette boîte
+     * @return Une nouvelle instance de Boite avec les mêmes propriétés     */
     @Override
     public Objet copier() {
         Boite copie = new Boite(this.getX(), this.getY(), this.grilleParente);
@@ -161,10 +127,8 @@ public class Boite extends Objet {
         return copie;
     }
     
-    /**
-     * Représentation textuelle de la boîte
-     * @return Une description de la boîte
-     */
+    /** Représentation textuelle de la boîte
+     * @return Une description de la boîte     */
     @Override
     public String toString() {
         String etat = surCible ? " (sur cible)" : "";

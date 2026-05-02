@@ -39,7 +39,7 @@ jobs:
             --type deb \
             --app-version 1.0 \
             --dest target/installer \
-            --icon src/main/resources/images/box.png \
+            --icon src/main/resources/icones/parabox.png \
             --java-options "-Xmx512m"
 
       - name: Upload artifact
@@ -67,7 +67,7 @@ jobs:
         run: mvn clean package -DskipTests
 
       - name: Create .exe installer
-        run: jpackage --input target/ --name Parabox --main-jar parabox-1.0-SNAPSHOT.jar --main-class fr.paris13.parabox.ig.Launcher --type exe --app-version 1.0 --dest target/installer --icon src/main/resources/images/box.png --win-shortcut --win-menu --java-options "-Xmx512m"
+        run: jpackage --input target/ --name Parabox --main-jar parabox-1.0-SNAPSHOT.jar --main-class fr.paris13.parabox.ig.Launcher --type exe --app-version 1.0 --dest target/installer --icon src/main/resources/icones/parabox.ico --win-shortcut --win-menu --java-options "-Xmx512m"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -103,7 +103,7 @@ jobs:
             --type dmg \
             --app-version 1.0 \
             --dest target/installer \
-            --icon src/main/resources/images/box.png \
+            --icon src/main/resources/icones/parabox.icns \
             --java-options "-Xmx512m"
 
       - name: Upload artifact
