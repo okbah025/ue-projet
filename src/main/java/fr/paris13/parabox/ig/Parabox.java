@@ -155,14 +155,14 @@ public class Parabox extends StackPane {
                 copie.setBoard(Direction.BAS);
                 copie.setOnMouseClicked(e -> {
                     Position pos = copie.getSelectedCell();
-                    this.getChildren().removeLast();
+                    this.getChildren().remove(getChildren().size()-1);
                     if(jeu.getGrilleActive().estCaseLibre(pos)){
                         level.chemin_court(pos.getX(), pos.getY(), jeu.getGrilleActive());
                     } else {
                         this.getChildren().add(showMsg("Mouvement impossible"));
                         PauseTransition p = new PauseTransition(Duration.seconds(1));
                         p.setOnFinished(ev -> 
-                            this.getChildren().removeLast());
+                            this.getChildren().remove(getChildren().size()-1));
                         p.play();
                     }
                 });
