@@ -12,7 +12,6 @@ import java.util.Map;
  * Cette classe est responsable de la lecture et du parsage des fichiers de niveaux
  * pour la VERSION RÉCURSIVE du jeu (Parabox).
  * FORMAT D'UN FICHIER DE NIVEAU :
- * ─────────────────────────────────
  * Ligne 1 : <NOM_GRILLE> <LARGEUR>
  *    - NOM_GRILLE : une lettre MAJUSCULE (ex: C, A, B...)
  *    - LARGEUR    : un entier représentant le nombre de colonnes

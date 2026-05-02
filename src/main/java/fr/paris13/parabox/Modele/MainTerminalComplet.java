@@ -15,8 +15,6 @@ import java.util.Scanner;
 /**
  * Classe MainTerminalComplet
  *
- * Point d'entrée principal du jeu Sokoban / Parabox en mode terminal.
- *
  * Ce programme propose DEUX modes de jeu :
  *
  *  1. VERSION SIMPLE  : Sokoban classique.
@@ -37,15 +35,10 @@ import java.util.Scanner;
  *   H         : afficher l'aide / les contrôles
  *   I         : demander un indice
  *   X         : quitter le jeu
- *
- * COMPILATION ET LANCEMENT :
- *   javac *.java
- *   java MainTerminalComplet
- *   (les fichiers niveau*.txt doivent être dans le même dossier)
  */
 public class MainTerminalComplet extends ResoAutoRecursif {
 
-    // ── Codes couleur ANSI pour l'affichage terminal ──────────────────────────
+    // Codes couleur ANSI pour l'affichage terminal
     private static final String CLEAR  = "\033[H\033[2J";
     private static final String ROUGE  = "\033[31m";
     private static final String VERT   = "\033[32m";
@@ -954,10 +947,7 @@ histo.ecrireHistoriqueRecursif(jeu);
         return liste;
     }
 
-    // =========================================================================
-    //  NIVEAUX VERSION SIMPLE (10 niveaux codés en dur)
-    // =========================================================================
-
+    
     /**
      * Créer le niveau simple correspondant au numéro donné.
      *
