@@ -1,4 +1,5 @@
 package fr.paris13.parabox.ig;
+
 import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.Jeu;
@@ -10,13 +11,17 @@ import fr.paris13.parabox.ig.menu.HelpMenu;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
 
-
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 /**
@@ -54,7 +59,15 @@ public class Sokoban extends StackPane {
         helpVisible = true;
         pause = new PauseMenu(root, Version.SIMPLE);
         pause.setVisible(false);
-        getChildren().addAll(level, help, pause);
+        StackPane niveau = new StackPane();
+        Label niv = new Label("Niveau "+ lvl);
+        Rectangle contour = new Rectangle(75, 45);
+        contour.setFill(Color.WHITE);
+        niveau.getChildren().addAll(contour, niv);
+        niveau.setAlignment(Pos.TOP_RIGHT);
+        niv.setPadding(new Insets(10));
+        niv.setStyle("-fx-font: 15 system; ");
+        getChildren().addAll(level, niveau, help, pause);
         
         
         Scene scene = root.getScene();

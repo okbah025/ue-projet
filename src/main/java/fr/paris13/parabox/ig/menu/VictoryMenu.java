@@ -45,7 +45,7 @@ public class VictoryMenu extends StackPane {
         next = new MenuButton("next", 100, 75);
         list = new MenuButton("list", 100, 75);
         home = new MenuButton("home", 100, 75);
-        text = new Text("Niveau terminé !!");
+        text = new Text("Niveau " + lvl.getLvl() + " terminé !!");
         Text text2 = new Text("Score final :");
         Text text3 = new Text("Mouvement : " + mvt);
         Text text4 = new Text("Poussées : " + pousse);

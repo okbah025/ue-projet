@@ -83,8 +83,9 @@ public class ChargeurNiveau {
 
     /** Lire toutes les lignes d'un fichier texte.
      * @param cheminFichier Le chemin du fichier
-     * @return La liste des lignes (peut être vide si le fichier est vide)     */
-    private static List<String> lireFichier(String cheminFichier) {
+     * @return La liste des lignes (peut être vide si le fichier est vide)
+     */
+   /* private static List<String> lireFichier(String cheminFichier) {
         List<String> lignes = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
             String ligne;
@@ -96,7 +97,37 @@ public class ChargeurNiveau {
             return null;
         }
         return lignes;
+    }*/
+    private static List<String> lireFichier(String cheminFichier) {
+    List<String> lignes = new ArrayList<>();
+    
+    // Essayer d'abord depuis le jar (ressource)
+    String nomFichier = new java.io.File(cheminFichier).getName();
+    java.io.InputStream is = ChargeurNiveau.class
+            .getResourceAsStream("/" + nomFichier);
+    
+    // Si pas trouvé dans le jar, essayer sur le disque (mode développement)
+    if (is == null) {
+        try {
+            is = new java.io.FileInputStream(cheminFichier);
+        } catch (java.io.FileNotFoundException e) {
+            System.out.println("Impossible de lire le fichier : " + cheminFichier);
+            return null;
+        }
     }
+    
+    try (BufferedReader reader = new BufferedReader(
+            new java.io.InputStreamReader(is))) {
+        String ligne;
+        while ((ligne = reader.readLine()) != null) {
+            lignes.add(ligne);
+        }
+    } catch (IOException e) {
+        System.out.println("Impossible de lire le fichier : " + cheminFichier);
+        return null;
+    }
+    return lignes;
+	}
 
     /** Découper la liste de toutes les lignes en blocs.
      * Un bloc correspond à une grille (nom+largeur puis les lignes de la grille).
@@ -344,5 +375,7 @@ public class ChargeurNiveau {
             }
         }
         return fichiers;
+        
     }
+    
 }

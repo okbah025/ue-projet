@@ -67,11 +67,15 @@ public class JeuRecursif {
         return pileGrilles.peek(); 
     }
 
-    /** nous donne la grille racine 
-     * @return La grille racine */
-    public Grille getGrilleRacine(){ 
-        return this.grilleRacine; 
-    }
+    /** Obtenir la grille racine (la grille principale du niveau).
+     * @return La grille racine   */
+    public Grille getGrilleRacine() { return this.grilleRacine; }
+    
+    /**
+     * Obtenir la pile des grilles visitées.
+     * @return La pile des grilles visitées
+     */
+    public Stack<Grille> getPileGrilles() { return this.pileGrilles; } 
 
     /** @return Le nombre de mouvements effectués */
     public int getNombreMouvements(){ 
