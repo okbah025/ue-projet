@@ -9,10 +9,19 @@ import fr.paris13.parabox.chemin.pile;
 
 public class ResoAutoFonctions extends PileDir {
 
+    public static boolean[][] matrice(int n, int m) {
+        boolean[][] M=new boolean[n][m];
+        int i, j;
+        for (i=0; i<n; i++)
+            for (j=0; j<m; j++)
+                M[i][j]=true;
+        return M;
+    }
+
     public static boolean[][] matriceVide(Grille g) {
         int n=g.getHauteur();
         int m=g.getLargeur();
-        boolean M[][]=new boolean[n][m];
+        boolean[][] M=new boolean[n][m];
         int i, j;
         for (i=0; i<n; i++)
             for (j=0; j<m; j++)
@@ -23,7 +32,7 @@ public class ResoAutoFonctions extends PileDir {
     public static boolean[][] matriceRemplie(Grille g) {
         int n=g.getHauteur();
         int m=g.getLargeur();
-        boolean M[][]=new boolean[n][m];
+        boolean[][] M=new boolean[n][m];
         int i, j;
         for (i=0; i<n; i++) {
             for (j=0; j<m; j++) {
@@ -42,13 +51,13 @@ public class ResoAutoFonctions extends PileDir {
         Position pos2=pos1;
         while (!p.isEmpty()) {
             pos2=p.depiler();
-            if (pos2.getX()<pos1.getX())
+            if (pos2.getX()==pos1.getX()-1)
                 p2.empilerDir(Direction.DROITE);
-            if (pos2.getX()>pos1.getX())
+            if (pos2.getX()==pos1.getX()+1)
                 p2.empilerDir(Direction.GAUCHE);
-            if (pos2.getY()<pos1.getY())
+            if (pos2.getY()==pos1.getY()-1)
                 p2.empilerDir(Direction.BAS);
-            if (pos2.getY()>pos1.getY())
+            if (pos2.getY()==pos1.getY()+1)
                 p2.empilerDir(Direction.HAUT);
             pos1=pos2;
         }
