@@ -61,11 +61,17 @@ public class JeuRecursif {
 
     // ========== METHODES ==========
 
-    /** nous donne la grille dans laquelle le joueur se trouve actuellement.
-     * @return La grille active */
-    public Grille getGrilleActive(){ 
-        return pileGrilles.peek(); 
-    }
+	public Historique getHistorique() {
+    return this.historique;
+}
+
+
+    /**
+     * Obtenir la grille dans laquelle le joueur se trouve actuellement.
+     * C'est toujours le sommet de la pile.
+     * @return La grille active
+     */
+    public Grille getGrilleActive() { return pileGrilles.peek(); }
 
     /** Obtenir la grille racine (la grille principale du niveau).
      * @return La grille racine   */

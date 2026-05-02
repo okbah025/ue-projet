@@ -56,11 +56,11 @@ public class SauvegardePlateauRecursif {
             }
 
             else if (o instanceof Joueur) {
-                ligne.append(((Joueur)o).isSurCible() ? '+' : '@');
+                ligne.append(((Joueur)o).estSurCible() ? '+' : '@');
             }
 
             else if (o instanceof Boite) {
-                ligne.append(((Boite)o).isSurCible() ? '*' : '$');
+                ligne.append(((Boite)o).estSurCible() ? '*' : '$');
             }
 
             else if (o instanceof Cible) {
@@ -68,7 +68,7 @@ public class SauvegardePlateauRecursif {
             }
 
             else if (o instanceof Piece) {
-                ligne.append(((Piece)o).getNom());
+                ligne.append(((Piece)o).getIdentifiant());
             }
         }
 
