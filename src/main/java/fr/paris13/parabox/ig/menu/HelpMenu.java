@@ -79,7 +79,7 @@ public class HelpMenu extends StackPane {
         if (ver == Version.RECURSIVE){
             auto.setText("L'auto est dispo pour les niveaux 1, 2 et 4.");
         } else {
-            auto.setText("L'auto est dispo pour les niveaux 1 à 5.");
+            auto.setText("L'auto est dispo pour les niveaux 1 à 4.");
         }
         cont.getChildren().add(auto);
         

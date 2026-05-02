@@ -119,7 +119,7 @@ public class Parabox extends StackPane {
                 break;
                 
             case A: // Auto
-                if (level.getLvl() >=2 && level.getLvl() <=3){
+                if (level.getLvl() == 1 && level.getLvl() == 2 && level.getLvl() == 4){
                     Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);                    
                     if(ng2 !=null) {
                         jeu.reinitialiser(ng2);

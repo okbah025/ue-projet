@@ -80,30 +80,30 @@ public class ResoAutoRecursif extends ResoAutoClassique  {
         return d;
     }
 
-    public static PileDir recursif3(Grille g) {
-        boolean[][] M=matriceVide(g);
-        pile chemin=new pile();
-        pile p=new pile();
-        p=inverserPile(c_chemin(M, 3, 1, 5, 1));
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        p=inverserPile(c_chemin(M, 5, 2, 2, 2));
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        p=inverserPile(c_chemin(M, 2, 1, 1, 1));
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        boolean[][] M2=matrice(6, 6);
-        p=inverserPile(c_chemin(M2, 2, 3, 2, 6));
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        boolean[][] M3=matrice(6, 6);
-        p=inverserPile(c_chemin(M3, 2, 0, 2, 2));
-        while (!p.isEmpty())
-            chemin.empiler(p.depiler());
-        PileDir d=pileDirections(chemin);
-        return d;
-    }
+//    public static PileDir recursif3(Grille g) {
+//        boolean[][] M=matriceVide(g);
+//        pile chemin=new pile();
+//        pile p=new pile();
+//        p=inverserPile(c_chemin(M, 3, 1, 5, 1));
+//        while (!p.isEmpty())
+//            chemin.empiler(p.depiler());
+//        p=inverserPile(c_chemin(M, 5, 2, 2, 2));
+//        while (!p.isEmpty())
+//            chemin.empiler(p.depiler());
+//        p=inverserPile(c_chemin(M, 2, 1, 1, 1));
+//        while (!p.isEmpty())
+//            chemin.empiler(p.depiler());
+//        boolean[][] M2=matrice(6, 6);
+//        p=inverserPile(c_chemin(M2, 2, 3, 2, 6));
+//        while (!p.isEmpty())
+//            chemin.empiler(p.depiler());
+//        boolean[][] M3=matrice(6, 6);
+//        p=inverserPile(c_chemin(M3, 2, 0, 2, 2));
+//        while (!p.isEmpty())
+//            chemin.empiler(p.depiler());
+//        PileDir d=pileDirections(chemin);
+//        return d;
+//    }
 
     public static PileDir recursif4(Grille g) {
         boolean[][] M=matriceVide(g);
@@ -219,8 +219,8 @@ public class ResoAutoRecursif extends ResoAutoClassique  {
             d=recursif1(g);
         if (niveau==2)
             d=recursif2(g);
-        if (niveau==3)
-            d=recursif3(g);
+//        if (niveau==3)
+//            d=recursif3(g);
         if (niveau==4)
             d=recursif4(g);
         if (niveau==5)
