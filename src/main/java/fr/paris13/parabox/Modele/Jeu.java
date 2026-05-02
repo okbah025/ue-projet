@@ -64,7 +64,7 @@ public class Jeu {
     }
     
     /**
-     * Constructeur sans grille (pour initialisation ultérieure)
+     * Constructeur sans grille 
      */
     public Jeu() {
         this.historique = new Historique();
@@ -181,7 +181,7 @@ public class Jeu {
         boolean mouvementReussi = grilleActuelle.deplacerJoueur(direction);
         
         if (mouvementReussi) {
-            // Le mouvement a réussi, mettre à jour les compteurs
+            // mouvement réussi, mettre à jour les compteurs
             nombreMouvements++;
             
             // Sauvegarder les positions après le mouvement

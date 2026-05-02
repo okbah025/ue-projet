@@ -301,12 +301,7 @@ public class Grille {
      * Le niveau est gagné si toutes les boîtes sont sur des cibles
      * @return true si le niveau est gagné, false sinon
      */
-    /**
- * Le niveau est gagné si toutes les boîtes NORMALES (pas les Pieces)
- * sont sur des cibles, et qu'il y en a au moins une.
- * Dans la version récursive, les Pieces (lettres majuscules) ne comptent
- * pas comme des boîtes à placer.
- */
+    
     public boolean estNiveauGagne() {
         int nombreBoitesNormales = 0;
         for (Boite boite : boites) {
@@ -500,7 +495,6 @@ public class Grille {
     
     /**
      * Afficher la grille en mode texte
-     * Utile pour le débogage et la persistance
      * @return Une chaîne représentant la grille
      */
     public String afficherGrille() {
@@ -567,10 +561,10 @@ public class Grille {
 			return;
 		    }
 
-		    // ✅ tableau d'affichage (ligne = y, colonne = x)
+		    // tableau d'affichage (ligne = y, colonne = x)
 		    char[][] affichage = new char[this.hauteur][this.largeur];
 
-		    // 🔹 copier la grille
+		    //  copier la grille
 		    for (int y2 = 0; y2 < hauteur; y2++) {
 			for (int x2 = 0; x2 < largeur; x2++) {
 			    Objet obj = this.getObjet(x2, y2);
@@ -583,7 +577,7 @@ public class Grille {
 			}
 		    }
 
-		    // 🔹 dessiner le chemin
+		    // dessiner le chemin
 		    while (!pi.isEmpty()) {
 			Position p = pi.depiler();
 
@@ -593,10 +587,10 @@ public class Grille {
 			}
 		    }
 
-		    // 🔹 remettre le joueur
+		    // remettre le joueur
 		    affichage[y1][x1] = '@';
 
-		    // 🔹 afficher
+		    //  afficher
 		    System.out.println("Chemin le plus court :");
 
 		    for (int y2 = 0; y2 < hauteur; y2++) {

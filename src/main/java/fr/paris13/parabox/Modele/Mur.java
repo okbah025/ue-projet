@@ -1,7 +1,6 @@
 package fr.paris13.parabox.Modele;
 
-/**
- * Classe Mur
+/**Classe Mur
  * 
  * Cette classe représente un mur dans le jeu Sokoban.
  * Un mur est un obstacle infranchissable et qui ne peut pas être poussé.
@@ -9,9 +8,7 @@ package fr.paris13.parabox.Modele;
  * Caractéristiques :
  * - Bloque le passage du joueur
  * - Ne peut pas être déplacé
- * - Symbole ASCII : '#'
- * 
- */
+ * - Symbole ASCII : '#' */
 public class Mur extends Objet {
     
     // ========== CONSTRUCTEURS ==========
@@ -53,7 +50,7 @@ public class Mur extends Objet {
     /**
      * Un mur ne peut PAS être poussé
      * C'est un obstacle fixe
-     * @param direction La direction (non utilisée ici)
+     * @param direction La direction 
      * @return false toujours
      */
     @Override

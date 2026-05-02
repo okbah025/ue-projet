@@ -1,11 +1,7 @@
 package fr.paris13.parabox.Modele;
-/**
- * Classe Position
- * 
+/** Classe Position
  * Cette classe représente une position (coordonnées) dans le jeu.
- * Elle permet de simplifier la gestion des coordonnées x et y.
- * 
- */
+ * Elle permet de simplifier la gestion des coordonnées x et y.   */
 public class Position {
     // Attributs : coordonnées de la position
     private int x;  // Position horizontale (colonne)

@@ -1,6 +1,5 @@
 package fr.paris13.parabox.Modele;
-/**
- * Classe Joueur
+/** Classe Joueur
  * 
  * Cette classe représente le joueur (personnage) dans le jeu Sokoban.
  * C'est l'élément que le joueur contrôle avec les touches directionnelles.
@@ -9,12 +8,10 @@ package fr.paris13.parabox.Modele;
  * - Peut se déplacer dans les 4 directions
  * - Peut pousser des boîtes
  * - Ne peut pas être poussé
- * - Symbole ASCII : '@' (ou '+' s'il est sur une cible)
- * 
- */
+ * - Symbole ASCII : '@' (ou '+' s'il est sur une cible)  */
 public class Joueur extends Objet {
     
-    // ========== ATTRIBUT SUPPLÉMENTAIRE ==========
+    // ========== ATTRIBUT SUPP ==========
     
     /**
      * Indique si le joueur est actuellement sur une cible
@@ -70,7 +67,6 @@ public class Joueur extends Objet {
     
     /**
      * Le joueur n'est PAS franchissable par d'autres objets
-     * (même si dans ce jeu, il est le seul à pouvoir se déplacer)
      * @return false
      */
     @Override
@@ -81,7 +77,7 @@ public class Joueur extends Objet {
     /**
      * Le joueur ne peut PAS être poussé
      * C'est lui qui pousse les autres objets
-     * @param direction La direction (non utilisée ici)
+     * @param direction La direction 
      * @return false toujours
      */
     @Override

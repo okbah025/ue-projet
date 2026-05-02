@@ -13,10 +13,7 @@ package fr.paris13.parabox.Modele;
  *
  * Différence avec Boite :
  *  - Boite : boîte à pousser sur une cible, symbole '$'
- *  - Piece  : monde récursif navigable, symbole = sa lettre (ex: 'E')
- *
- * Cette classe N'AFFECTE PAS la version simple du jeu.
- */
+ *  - Piece  : monde récursif navigable, symbole = sa lettre (ex: 'E')   */
 public class Piece extends Boite {
 
     /** La grille interne (le monde à l'intérieur de cette Piece) */
@@ -30,7 +27,6 @@ public class Piece extends Boite {
     /**
      * Constructeur principal : grille interne DÉJÀ construite.
      * Utilisé par ChargeurNiveau après avoir parsé les fichiers.
-     *
      * @param x             Colonne dans la grille parente
      * @param y             Ligne dans la grille parente
      * @param parent        La grille parente
@@ -41,14 +37,13 @@ public class Piece extends Boite {
         super(x, y, parent);
         this.identifiant = id;
         this.grilleInterne = grilleInterne;
-        // Couleur violette pour distinguer visuellement les Pieces
+        // Couleur violet 
         this.couleur = "200,50,200";
     }
 
     /**
      * Constructeur secondaire : grille interne VIDE à créer.
      * Utile pour les tests ou la création manuelle.
-     *
      * @param x       Colonne dans la grille parente
      * @param y       Ligne dans la grille parente
      * @param parent  La grille parente
@@ -96,7 +91,7 @@ public class Piece extends Boite {
 
     /**
      * Copier cette Piece (pour l'historique des mouvements).
-     * La grille interne est partagée (copie superficielle, simplification L2).
+     * La grille interne est partagée 
      */
     @Override
     public Objet copier() {
