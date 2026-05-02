@@ -5,7 +5,9 @@ import fr.paris13.parabox.Modele.Position;
  import java.util.*;
  public class c_chemin {
     public static pile c_chemin(boolean[][] M , int x1,int y1,int x2,int y2){
-        int n=M.length ; 
+      //  int n=M.length ;
+      int largeur =M.length;
+      int hauteur=M[0].length; 
         pile copi =new pile();
         //la file qui contient l'ensemble des points possibles vers le cible
         file  F=new file();
@@ -46,7 +48,7 @@ import fr.paris13.parabox.Modele.Position;
            int nx =p.getX();
            int ny=p.getY();
            // condition avant l'ajout 
-           if(nx>=0 && nx <n && ny>=0 && ny <n && M[nx][ny]==true && !V.contains(p)){
+           if(nx>=0 && nx <largeur && ny>=0 && ny <hauteur && M[nx][ny]==true && !V.contains(p)){
            
            V.add(p); //on marque qu'on l'a ajouter 
            pile copie=c.copie();

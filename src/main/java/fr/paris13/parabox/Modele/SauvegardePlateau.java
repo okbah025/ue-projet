@@ -21,7 +21,8 @@ public class SauvegardePlateau {
             String nom = grille.getNom();
 
             // Header
-            writer.write(nom + " " + largeur + " " + hauteur);
+            writer.write(nom.replace(" ", "").toLowerCase() + " " + largeur + " " + hauteur);
+           /* writer.write(nom + " " + largeur + " " + hauteur);*/
             writer.newLine();
 
             // Grille

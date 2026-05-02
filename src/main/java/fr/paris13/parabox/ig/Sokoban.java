@@ -1,4 +1,5 @@
 package fr.paris13.parabox.ig;
+
 import fr.paris13.parabox.Modele.Direction;
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.Jeu;
@@ -6,16 +7,21 @@ import fr.paris13.parabox.Modele.SokobanLevel;
 import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoClassique;
+import fr.paris13.parabox.ig.menu.HelpMenu;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
-
 
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 /**
@@ -28,9 +34,11 @@ public class Sokoban extends StackPane {
     private final Jeu jeu;
     private final Level level;
     private final PauseMenu pause;
+    private final HelpMenu help;
     private final StackPane root;
     private final int lvl;
     private final PileDir d;
+    private boolean helpVisible;
     
     
     /**
@@ -47,9 +55,19 @@ public class Sokoban extends StackPane {
         jeu = new Jeu(g);
         level = new Level(g, lvl);
         level.setBoard(Direction.BAS);
+        help = new HelpMenu(Version.SIMPLE);
+        helpVisible = true;
         pause = new PauseMenu(root, Version.SIMPLE);
         pause.setVisible(false);
-        getChildren().addAll(level, pause);
+        StackPane niveau = new StackPane();
+        Label niv = new Label("Niveau "+ lvl);
+        Rectangle contour = new Rectangle(75, 45);
+        contour.setFill(Color.WHITE);
+        niveau.getChildren().addAll(contour, niv);
+        niveau.setAlignment(Pos.TOP_RIGHT);
+        niv.setPadding(new Insets(10));
+        niv.setStyle("-fx-font: 15 system; ");
+        getChildren().addAll(level, niveau, help, pause);
         
         
         Scene scene = root.getScene();
@@ -87,12 +105,14 @@ public class Sokoban extends StackPane {
                 Grille nouvelleGrille = creerNiveauSimple(lvl);
                 jeu.setGrille(nouvelleGrille);
                 level.reset(nouvelleGrille);
+                level.setBoard(Direction.BAS);
                 break;
             case A: // Auto
                 if (level.getLvl() >=1 && level.getLvl() <=4){
                     Grille nouvelleGrille2 = creerNiveauSimple(lvl);                 
                     jeu.setGrille(nouvelleGrille2);
                     level.reset(nouvelleGrille2);
+                    level.setBoard(Direction.BAS);
                     auto = true;
                 }
                 if(auto && !jeu.estNiveauTermine()) {
@@ -118,6 +138,15 @@ public class Sokoban extends StackPane {
             
             case ESCAPE: // Pause
                 pause.setVisible(true);
+                
+            case H: // Aide
+                if(helpVisible){
+                    help.setVisible(false);
+                    helpVisible = false;
+                } else {
+                    help.setVisible(true);
+                    helpVisible = true;
+                } 
         }
 
         if (!auto && direction != null) {

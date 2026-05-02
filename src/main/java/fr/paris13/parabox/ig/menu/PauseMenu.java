@@ -1,24 +1,33 @@
-
 package fr.paris13.parabox.ig.menu;
-
 import fr.paris13.parabox.Modele.Grille;
 import fr.paris13.parabox.Modele.ParaboxLevel;
 import fr.paris13.parabox.Modele.SokobanLevel;
 import fr.paris13.parabox.Modele.Version;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 
 /**
- *
- * @author yakuros
+ * Classe PauseMenu qui affiche le menu de pause.
+ * 
  */
 public class PauseMenu extends StackPane {
+    
+    /** Bouton pour reprendre le jeu. **/
     private final MenuButton resume;
+    /** Bouton pour afficher les niveaux. **/
     private final MenuButton levels;
+    /** Bouton pour afficher le menu principal. **/
     private final MenuButton mainMenu;
     
+    /**
+     * Initialise le menu de pause.
+     * 
+     * @param root pour changement de vue
+     * @param ver version du jeu
+     */
     public PauseMenu(StackPane root, Version ver){
         Grille[] levelList;
         VBox box = new VBox();

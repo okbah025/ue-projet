@@ -1,4 +1,6 @@
 package fr.paris13.parabox.Modele;
+import fr.paris13.parabox.chemin.pile;
+import fr.paris13.parabox.chemin.c_chemin;
 
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoFonctions;
@@ -68,7 +70,10 @@ public class MainTerminalComplet extends ResoAutoRecursif {
     // ── Commandes reconnues en jeu ────────────────────────────────────────────
     private enum Commande {
         HAUT, BAS, GAUCHE, DROITE,
-        ANNULER, RECOMMENCER, AIDE, QUITTER, INDICE, INCONNU
+
+       
+        ANNULER, RECOMMENCER, AIDE, QUITTER, INDICE ,CHEMIN ,INCONNU
+
     }
 
     // =========================================================================
@@ -127,8 +132,43 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         }
         System.out.println(VERT + "─────────────────────────────────────────────────────────" + RESET);
 
-        int choix = demanderChoix(scanner, 1, 10);
-        Grille grille = creerNiveauSimple(choix);
+  	int choix = demanderChoix(scanner, 1, 10);
+
+String fichierSave = "niveau" + choix + "_save.txt";
+String fichierSolution = "niveau" + choix + "_solution.txt";
+
+String fichierHisto = "niveau" + choix + "_histo_deplacements.txt";
+String fichierHistoSolution = "niveau" + choix + "_sol_deplacements.txt";
+
+
+
+Grille grille;
+
+// 🔥 lecture propre de la réponse
+String rep;
+do {
+    System.out.print("Reprendre une partie ? (o/n) : ");
+    rep = scanner.nextLine().trim().toLowerCase();
+} while (!rep.equals("o") && !rep.equals("n"));
+
+if (rep.equals("o")) {
+
+    File f = new File(fichierSave);
+
+    if (f.exists()) {
+        grille = ChargeurSauvegarde.charger(fichierSave);
+        System.out.println(VERT + "✓ Partie chargée !" + RESET);
+    } else {
+        System.out.println(ROUGE + "✗ Aucune sauvegarde trouvée !" + RESET);
+        grille = creerNiveauSimple(choix);
+    }
+
+} else {
+    grille = creerNiveauSimple(choix);
+}
+   /* A FAIRE : charger l historique !!*/
+        
+        
         if (grille == null) {
             System.out.println(ROUGE + "Niveau invalide !" + RESET);
             return;
@@ -164,8 +204,30 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     effacer();
                     afficherEtatSimple(jeu);
                     if (jeu.estNiveauTermine()) {
-                        afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
-                    }
+                    
+                    
+                    
+                    
+			    afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+
+			    // sauvegarde solution
+			    SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
+			    save.ecrireGrille(jeu.getGrille());
+
+			    /* suppression sauvegarde en cours
+			    new File(fichierSave).delete();*/
+			    SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
+					histoSolution.ecrireHistorique(jeu);
+					
+					
+					
+}
+
+
+
+
+
+
                 }
                 // Si ok=false : mur, on ne fait rien (pas de message parasite)
 
@@ -225,6 +287,12 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                                         System.out.println("Cliquez sur J pour quitter l'option Indice.");
                                         if (jeu.estNiveauTermine()) {
                                             afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+                                            
+
+					SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
+					histoSolution.ecrireHistorique(jeu);
+                                          
+                                            
                                         }
                                     }
                                     break;
@@ -241,12 +309,27 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     case AIDE:
                         afficherControles();
                         break;
+                        
+                        
                     case QUITTER:
-                        continuer = false;
-                        System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
-                        break;
-                    default:
-                        break; // INCONNU : on ignore silencieusement
+                           continuer = false;
+			System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+			break;
+
+			case CHEMIN:
+
+			    System.out.print("Entrez x y : ");
+			    int x = scanner.nextInt();
+			    int y = scanner.nextInt();
+			    scanner.nextLine();
+
+			    jeu.getGrille().chemin_court(x, y);
+			    break;
+
+			default:
+			    break; // INCONNU : on ignore
+
+           
                 }
             }
         }
@@ -333,6 +416,12 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     effacer();
                     afficherEtatRecursif(jeu);
                     if (jeu.estNiveauTermine()) {
+                    
+                    
+                    
+                    
+                    
+                    
                         afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
                     }
                 }
@@ -419,8 +508,23 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     case QUITTER:
                         continuer = false;
                         System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+                        
+			
+			
+                        
                         break;
-                    default:
+                        
+                     case CHEMIN:   
+                          
+				    System.out.print("Entrez x y : ");
+				    int x = scanner.nextInt();
+				    int y = scanner.nextInt();
+				    scanner.nextLine();
+
+				     jeu.getGrilleActive().chemin_court(x, y);
+				    break;
+							
+                     default:
                         break;
                 }
             }
@@ -482,6 +586,7 @@ public class MainTerminalComplet extends ResoAutoRecursif {
                     case 'H': return Commande.AIDE;
                     case 'X': return Commande.QUITTER;
                     case 'I': return Commande.INDICE;
+                    case 'P': return Commande.CHEMIN;
                     default:  return Commande.INCONNU;
                 }
             }
@@ -661,6 +766,8 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         System.out.println("   " + JAUNE + "H" + RESET + "  Afficher cette aide");
         System.out.println("   " + JAUNE + "I" + RESET + "  Indice");
         System.out.println("   " + JAUNE + "X" + RESET + "  Quitter");
+        System.out.println("    " + JAUNE + "P" + RESET + " chemin plus court (cliquer sur une cible)");
+ 
     }
 
     /** Afficher les contrôles avec les infos spécifiques à la version récursive. */
