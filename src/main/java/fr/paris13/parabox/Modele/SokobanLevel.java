@@ -4,6 +4,11 @@ public class SokobanLevel {
     
     public static final Grille[] levelList = {niveauSimple1(), niveauSimple2(), niveauSimple3(), niveauSimple4(), niveauSimple5(), niveauSimple6(), niveauSimple7(), niveauSimple8(), niveauSimple9(), niveauSimple10()};
     
+    /**
+     * Retourne tableau de Grille des niveaux disponibles.
+     * 
+     * @return tableau des grille des niveaux
+     */
     public static Grille[] getList(){
         return SokobanLevel.levelList;
     }
