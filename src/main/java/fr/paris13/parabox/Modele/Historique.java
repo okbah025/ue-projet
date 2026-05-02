@@ -2,23 +2,13 @@ package fr.paris13.parabox.Modele;
 
 import java.util.Stack;
 
-/**
- * Classe Historique
- * 
+/** Classe Historique
  * Cette classe gère l'historique des mouvements du jeu.
  * Elle permet de sauvegarder chaque mouvement et de les annuler (Ctrl+Z).
- * 
- * Utilise une pile (Stack) pour stocker les mouvements dans l'ordre.
- * 
- */
-public class Historique {
-    
-    // ========== CLASSE INTERNE : MOUVEMENT ==========
-    
-    /**
-     * Classe interne représentant un mouvement
-     * Contient la direction et les positions avant/après le mouvement
-     */
+ * Utilise une pile (Stack) pour stocker les mouvements dans l'ordre. */
+public class Historique {    
+    /** Classe interne représentant un mouvement
+     * Contient la direction et les positions avant/après le mouvement   */
     private class Mouvement {
         Direction direction;
         Position positionJoueurAvant;
@@ -40,11 +30,8 @@ public class Historique {
         Position posJoueurDansGrilleAvant;  // Position du joueur dans la grille d'avant
         Position posJoueurDansGrilleApres;  // Position du joueur dans la grille d'après
         
-        /**
-         * Constructeur d'un mouvement simple (sans pousser de boîte)
-         */
-        public Mouvement(Direction dir, Position posJoueurAvant, Position posJoueurApres,
-                        boolean joueurCibleAvant, boolean joueurCibleApres) {
+        /** Constructeur d'un mouvement simple (sans pousser de boîte)     */
+        public Mouvement(Direction dir, Position posJoueurAvant, Position posJoueurApres, boolean joueurCibleAvant, boolean joueurCibleApres) {
             this.direction = dir;
             this.positionJoueurAvant = posJoueurAvant;
             this.positionJoueurApres = posJoueurApres;
@@ -53,13 +40,11 @@ public class Historique {
             this.boitePoussee = null;
         }
         
-        /**
-         * Constructeur d'un mouvement avec poussée de boîte
-         */
+        /** Constructeur d'un mouvement avec poussée de boîte    */
         public Mouvement(Direction dir, Position posJoueurAvant, Position posJoueurApres,
                         boolean joueurCibleAvant, boolean joueurCibleApres,
                         Boite boite, Position posBoiteAvant, Position posBoiteApres,
-                        boolean boiteCibleAvant, boolean boiteCibleApres) {
+                        boolean boiteCibleAvant, boolean boiteCibleApres){
             this(dir, posJoueurAvant, posJoueurApres, joueurCibleAvant, joueurCibleApres);
             this.boitePoussee = boite;
             this.positionBoiteAvant = posBoiteAvant;
@@ -68,20 +53,16 @@ public class Historique {
             this.boiteSurCibleApres = boiteCibleApres;
         }
 
-        /**
-         * Constructeur d'un mouvement de transition (entrée ou sortie de Piece).
-         *
+        /** Constructeur d'un mouvement de transition (entrée ou sortie de Piece).
          * @param dir       La direction du déplacement
          * @param piece     La Piece concernée
          * @param entree    true si c'est une entrée dans la Piece, false si c'est une sortie
          * @param grilleAv  La grille où était le joueur avant
          * @param grilleAp  La grille où est le joueur après
          * @param posAv     Position du joueur dans la grille d'avant
-         * @param posAp     Position du joueur dans la grille d'après
-         */
-        public Mouvement(Direction dir, Piece piece, boolean entree,
-                         Grille grilleAv, Grille grilleAp,
-                         Position posAv, Position posAp) {
+         * @param posAp     Position du joueur dans la grille d'après       */
+        public Mouvement(Direction dir, Piece piece, boolean entree, Grille grilleAv, Grille grilleAp,
+                         Position posAv, Position posAp){
             this.direction = dir;
             this.pieceTransition = piece;
             this.estEntree = entree;
@@ -90,7 +71,6 @@ public class Historique {
             this.posJoueurDansGrilleAvant = posAv;
             this.posJoueurDansGrilleApres = posAp;
             this.boitePoussee = null;
-            // Les positions joueurAvant/Apres "standards" ne sont pas utilisées ici
             this.positionJoueurAvant = posAv;
             this.positionJoueurApres = posAp;
         }
@@ -98,41 +78,28 @@ public class Historique {
     
     // ========== ATTRIBUTS ==========
     
-    /**
-     * Pile contenant l'historique des mouvements
-     * Le dernier mouvement est au sommet de la pile
-     */
+    /** Pile contenant l'historique des mouvements
+     * Le dernier mouvement est au sommet de la pile   */
     private Stack<Mouvement> mouvements;
-    
-    /**
-     * Informations sur la dernière annulation, si c'était une transition de grille.
-     * Utilisé par JeuRecursif.annulerMouvement() pour ajuster ses piles.
-     */
+
+    /** Informations sur la dernière annulation, si c'était une transition de grille.
+     * Utilisé par JeuRecursif.annulerMouvement() pour ajuster ses piles.    */
     public boolean estDerniereAnnulationTransition = false;
     public boolean derniereTransitionEstEntree = false;
     public Piece derniereTransitionPiece = null;
     
-    /**
-     * Nombre maximum de mouvements à conserver
-     * Évite de consommer trop de mémoire
-     */
+    /** Nombre maximum de mouvements à conserver
+     * ce quii évite de consommer trop de mémoire     */
     private static final int TAILLE_MAX = 1000;
-    
-    // ========== CONSTRUCTEUR ==========
-    
-    /**
-     * Constructeur de l'historique
-     * Initialise une pile vide
-     */
-    public Historique() {
+        
+    /** Constructeur de l'historique
+     * Initialise une pile vide    */
+    public Historique(){
         this.mouvements = new Stack<>();
     }
-    
-    // ========== MÉTHODES PRINCIPALES ==========
-    
-    /**
-     * Ajouter un mouvement simple à l'historique
-     * (déplacement du joueur sans pousser de boîte)
+        
+    /** Ajouter un mouvement simple à l'historique
+     * (càd un déplacement du joueur sans pousser de boîte)
      * @param direction La direction du mouvement
      * @param posAvant Position du joueur avant le mouvement
      * @param posApres Position du joueur après le mouvement
@@ -154,8 +121,7 @@ public class Historique {
         }
     }
     
-    /**
-     * Ajouter un mouvement avec poussée de boîte à l'historique
+    /** Ajouter un mouvement avec poussée de boîte à l'historique
      * @param direction La direction du mouvement
      * @param posJoueurAvant Position du joueur avant
      * @param posJoueurApres Position du joueur après
@@ -165,12 +131,9 @@ public class Historique {
      * @param posBoiteAvant Position de la boîte avant
      * @param posBoiteApres Position de la boîte après
      * @param boiteCibleAvant La boîte était sur une cible avant
-     * @param boiteCibleApres La boîte est sur une cible après
-     */
-    public void ajouterMouvementAvecBoite(Direction direction,
-                                         Position posJoueurAvant, Position posJoueurApres,
-                                         boolean joueurCibleAvant, boolean joueurCibleApres,
-                                         Boite boite,
+     * @param boiteCibleApres La boîte est sur une cible après     */
+    public void ajouterMouvementAvecBoite(Direction direction, Position posJoueurAvant, Position posJoueurApres,
+                                         boolean joueurCibleAvant, boolean joueurCibleApres, Boite boite,
                                          Position posBoiteAvant, Position posBoiteApres,
                                          boolean boiteCibleAvant, boolean boiteCibleApres) {
         // Créer le mouvement
@@ -188,10 +151,8 @@ public class Historique {
         }
     }
     
-    /**
-     * Ajouter une transition de grille à l'historique.
+    /** Ajouter une transition de grille à l'historique.
      * Utilisé quand le joueur entre ou sort d'une Piece.
-     *
      * @param direction La direction du déplacement
      * @param piece     La Piece concernée (le monde dans lequel on entre/sort)
      * @param estEntree true = le joueur vient d'entrer dans la Piece,
@@ -200,11 +161,10 @@ public class Historique {
      * @param grilleApres La grille interne (où est le joueur après, si entrée)
      *                    ou la grille parente (si sortie)
      * @param posAvant  Position du joueur avant la transition
-     * @param posApres  Position du joueur après la transition
-     */
+     * @param posApres  Position du joueur après la transition    */
     public void ajouterTransition(Direction direction, Piece piece, boolean estEntree,
                                    Grille grilleAvant, Grille grilleApres,
-                                   Position posAvant, Position posApres) {
+                                   Position posAvant, Position posApres){
         Mouvement mvt = new Mouvement(direction, piece, estEntree,
                                       grilleAvant, grilleApres, posAvant, posApres);
         mouvements.push(mvt);
@@ -213,14 +173,12 @@ public class Historique {
         }
     }
 
-    /**
-     * Annuler le dernier mouvement (Ctrl+Z / touche U).
+    /** Annuler le dernier mouvement (Ctrl+Z / touche U).
      * Gère trois cas :
      *  - Mouvement simple : repositionne le joueur
      *  - Mouvement avec boîte : repositionne joueur ET boîte
      *  - Transition de grille : repositionne le joueur entre les deux grilles
-     *    et met à jour la pile dans JeuRecursif (via le callback)
-     *
+     *    et met à jour la pile dans JeuRecursi
      * @param grille La grille active au moment de l'annulation
      * @return true si un mouvement a été annulé, false si l'historique est vide
      */
@@ -231,10 +189,7 @@ public class Historique {
 
         Mouvement dernierMvt = mouvements.pop();
 
-        // ── Cas : transition de grille (entrée ou sortie de Piece) ──
-        // Ce cas est signalé par pieceTransition != null.
-        // La restauration de la pile (pileGrilles/pilePieces) est faite
-        // par JeuRecursif.annulerMouvement() qui détecte ce cas.
+        // cas: transition de grille (entrée ou sortie de Piece) 
         if (dernierMvt.pieceTransition != null) {
             // Retirer le joueur de la grille où il se trouve APRÈS la transition
             Joueur joueur = dernierMvt.grilleApres.getJoueur();
@@ -255,7 +210,7 @@ public class Historique {
             return true;
         }
 
-        // ── Cas : déplacement normal (avec ou sans boîte) ──
+        // cas: déplacement normal (avec ou sans boîte)
         this.estDerniereAnnulationTransition = false;
 
         Joueur joueur = grille.getJoueur();
@@ -278,48 +233,36 @@ public class Historique {
         return true;
     }
     
-    /**
-     * Vider l'historique
-     * Utilisé par exemple lors du chargement d'un nouveau niveau
-     */
+    /** Vider l'historique
+     * ex pour le  chargement d'un nouveau niveau     */
     public void vider() {
         mouvements.clear();
     }
     
-    /**
-     * Vérifier si l'historique est vide
-     * @return true si aucun mouvement n'est enregistré, false sinon
-     */
+    /** Vérifier si l'historique est vide
+     * @return true si aucun mouvement n'est enregistré, false sinon    */
     public boolean estVide() {
         return mouvements.isEmpty();
     }
     
-    /**
-     * Obtenir le nombre de mouvements dans l'historique
-     * @return Le nombre de mouvements
-     */
+    /** Obtenir le nombre de mouvements dans l'historique
+     * @return Le nombre de mouvements     */
     public int getNombreMouvements() {
         return mouvements.size();
     }
     
-    
-    /**
-     * Représentation textuelle de l'historique
-     * @return Une description de l'historique
-     */
+    /** Représentation textuelle de l'historique
+     * @return Une description de l'historique    */
     @Override
     public String toString() {
         return "Historique : " + mouvements.size() + " mouvement(s)";
     }
 
-
-
-/*nouvelle methode pour la sauvegarde*/
-public Stack<Character> viderEtConvertir() {
+public Stack<Character> viderEtConvertir(){
 
     Stack<Character> res = new Stack<>();
 
-    while (!mouvements.isEmpty()) {
+    while (!mouvements.isEmpty()){
 
         Mouvement m = mouvements.pop();
         char c;
@@ -381,5 +324,4 @@ public Stack<Character> convertirSansVider() { //pour la persistance
 
     return res;
 }
-
 }

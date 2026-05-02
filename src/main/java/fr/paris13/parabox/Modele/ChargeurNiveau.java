@@ -8,18 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Classe ChargeurNiveau
- *
+/**Classe ChargeurNiveau
  * Cette classe est responsable de la lecture et du parsage des fichiers de niveaux
  * pour la VERSION RÉCURSIVE du jeu (Parabox).
- *
  * FORMAT D'UN FICHIER DE NIVEAU :
  * ─────────────────────────────────
  * Ligne 1 : <NOM_GRILLE> <LARGEUR>
  *    - NOM_GRILLE : une lettre MAJUSCULE (ex: C, A, B...)
  *    - LARGEUR    : un entier représentant le nombre de colonnes
- *
  * Lignes suivantes : la grille elle-même (caractère par caractère)
  *    - '#' = mur
  *    - '@' = joueur
@@ -27,35 +23,13 @@ import java.util.Map;
  *    - '.' = cible
  *    - ' ' = case vide
  *    - Lettre MAJUSCULE (A-Z sauf @) = sous-grille (enfant)
- *      → ex: 'E' signifie qu'il y a une grille nommée 'E' ici
- *
  * Après la grille parente, on retrouve les grilles enfants dans le même ordre
- * qu'elles apparaissent dans le fichier.
- *
- * EXEMPLE :
- *   C 9         ← grille "C" de largeur 9
- *   #########
- *   # @ E  .#   ← le joueur est en (2,1), grille E en (4,1), cible en (7,1)
- *   #########
- *
- *   E 5         ← sous-grille "E" de largeur 5
- *   #####
- *   #   #
- *   #####
- *
- * ATTENTION : Cette classe ne modifie PAS la version simple du jeu.
- */
+ * qu'elles apparaissent dans le fichier.   */
 public class ChargeurNiveau {
-
-    // ========== MÉTHODE PRINCIPALE ==========
-
-    /**
-     * Charger un fichier de niveau et construire la grille principale (parent).
-     *
+    /** Charger un fichier de niveau et construire la grille principale (parent
      * @param cheminFichier Le chemin vers le fichier .txt du niveau
-     * @return La grille principale du niveau, ou null en cas d'erreur
-     */
-    public static Grille charger(String cheminFichier) {
+     * @return La grille principale du niveau, ou null en cas d'erreur     */
+    public static Grille charger(String cheminFichier){
         try {
             // Lire toutes les lignes du fichier
             List<String> lignes = lireFichier(cheminFichier);
@@ -65,15 +39,14 @@ public class ChargeurNiveau {
             }
 
             // Découper le fichier en blocs (un bloc = une grille)
-            // Un bloc commence par "NOM LARGEUR" (ex: "C 9")
+            // Un bloc commence par "NOM LARGEUR" 
             List<List<String>> blocs = decouperEnBlocs(lignes);
             if (blocs.isEmpty()) {
                 System.out.println("Erreur : aucun bloc trouvé dans le fichier.");
                 return null;
             }
 
-            // Parser chaque bloc pour créer les données brutes
-            // On stocke les données dans une map : NOM -> données brutes
+            // On stocke les données dans une map : NOM -> données 
             Map<Character, DonneesGrille> donneesMap = new HashMap<>();
             for (List<String> bloc : blocs) {
                 DonneesGrille donnees = parserBloc(bloc);
@@ -95,8 +68,7 @@ public class ChargeurNiveau {
                 return null;
             }
 
-            // Construire toutes les grilles (en commençant par les enfants)
-            // puis assembler la grille principale avec ses Piece
+            // Construire toutes les grillespuis assembler la grille principale avec ses Piece
             Map<Character, Grille> grillesConstituees = new HashMap<>();
             Grille grillePrincipale = construireGrille(donneesPrincipales, donneesMap, grillesConstituees);
 
@@ -109,20 +81,15 @@ public class ChargeurNiveau {
         }
     }
 
-    // ========== MÉTHODES PRIVÉES - LECTURE ==========
-
-    /**
-     * Lire toutes les lignes d'un fichier texte.
-     *
+    /** Lire toutes les lignes d'un fichier texte.
      * @param cheminFichier Le chemin du fichier
-     * @return La liste des lignes (peut être vide si le fichier est vide)
-     */
+     * @return La liste des lignes (peut être vide si le fichier est vide)     */
     private static List<String> lireFichier(String cheminFichier) {
         List<String> lignes = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(cheminFichier))) {
             String ligne;
             while ((ligne = reader.readLine()) != null) {
-                lignes.add(ligne); // On garde toutes les lignes, même vides
+                lignes.add(ligne); // n garde toutes les lignes, même vides
             }
         } catch (IOException e) {
             System.out.println("Impossible de lire le fichier : " + cheminFichier);
@@ -131,26 +98,17 @@ public class ChargeurNiveau {
         return lignes;
     }
 
-    /**
-     * Découper la liste de toutes les lignes en blocs.
+    /** Découper la liste de toutes les lignes en blocs.
      * Un bloc correspond à une grille (nom+largeur puis les lignes de la grille).
-     *
-     * On détecte le début d'un nouveau bloc quand une ligne a le format :
-     *   <LETTRE_MAJUSCULE> <ENTIER>
-     * ex: "C 9" ou "E 5" ou "I 1"
-     *
      * @param lignes Toutes les lignes du fichier
-     * @return Une liste de blocs, chaque bloc étant une liste de lignes
-     */
+     * @return Une liste de blocs, chaque bloc étant une liste de lignes     */
     private static List<List<String>> decouperEnBlocs(List<String> lignes) {
         List<List<String>> blocs = new ArrayList<>();
         List<String> blocCourant = null;
 
         for (String ligne : lignes) {
-            // Gestion des lignes vides :
             // - Une ligne VIDE (length 0) sert de SÉPARATEUR entre deux blocs
-            // - Une ligne avec des espaces (" ") est une ligne de grille valide !
-            //   Ex: "A 1" / " " = grille 1x1 avec une case vide
+            // - Une ligne avec des espaces (" ") est une ligne de grille valide 
             if (ligne.isEmpty()) {
                 // Séparateur de blocs : terminer le bloc courant
                 if (blocCourant != null && !blocCourant.isEmpty()) {
@@ -160,7 +118,7 @@ public class ChargeurNiveau {
                 continue;
             }
 
-            // Vérifier si cette ligne est un en-tête de grille ("X N" avec X majuscule, N entier)
+            // Vérifier si cette ligne est un en-tête de grille 
             if (estEnTeteGrille(ligne)) {
                 // Nouveau bloc : on sauvegarde l'ancien et on commence un nouveau
                 if (blocCourant != null && !blocCourant.isEmpty()) {
@@ -173,34 +131,29 @@ public class ChargeurNiveau {
                 if (blocCourant != null) {
                     blocCourant.add(ligne);
                 }
-                // (si blocCourant est null, on ignore la ligne : ça ne devrait pas arriver)
             }
         }
 
         // Ajouter le dernier bloc
-        if (blocCourant != null && !blocCourant.isEmpty()) {
+        if (blocCourant != null && !blocCourant.isEmpty()){
             blocs.add(blocCourant);
         }
 
         return blocs;
     }
 
-    /**
-     * Vérifie si une ligne est un en-tête de grille.
+    /** Vérifie si une ligne est un en-tête de grille.
      * Format attendu : une lettre majuscule, un espace, un entier
-     * Exemples valides : "C 9", "E 5", "I 1"
-     *
      * @param ligne La ligne à tester
-     * @return true si c'est un en-tête de grille
-     */
+     * @return true si c'est un en-tête de grille     */
     private static boolean estEnTeteGrille(String ligne) {
         ligne = ligne.trim();
-        // On cherche le pattern : LETTRE_MAJ ESPACE NOMBRE
+
         if (ligne.length() < 3) return false;
         char premierChar = ligne.charAt(0);
         if (!Character.isUpperCase(premierChar)) return false;
         if (ligne.charAt(1) != ' ') return false;
-        // Le reste doit être un entier
+
         try {
             Integer.parseInt(ligne.substring(2).trim());
             return true;
@@ -209,34 +162,27 @@ public class ChargeurNiveau {
         }
     }
 
-    // ========== MÉTHODES PRIVÉES - PARSING ==========
-
-    /**
-     * Classe interne pour stocker les données brutes d'une grille
-     * avant de la construire en objets Java.
-     */
+    /**Classe interne pour stocker les données brutes d'une grille
+     * avant de la construire en objets Java.     */
     private static class DonneesGrille {
         char nom;           // Lettre identifiant la grille (ex: 'C', 'E')
         int largeur;        // Nombre de colonnes
         List<String> lignes; // Lignes de la grille (texte brut)
 
-        DonneesGrille(char nom, int largeur, List<String> lignes) {
+        DonneesGrille(char nom, int largeur, List<String> lignes){
             this.nom = nom;
             this.largeur = largeur;
             this.lignes = lignes;
         }
     }
 
-    /**
-     * Parser un bloc (liste de lignes) pour en extraire les données brutes.
-     *
+    /** Parser un bloc (liste de lignes) pour en extraire les données brutes.
      * @param bloc La liste de lignes d'un bloc
-     * @return Les données brutes de la grille, ou null si erreur
-     */
+     * @return Les données brutes de la grille, ou null si erreur    */
     private static DonneesGrille parserBloc(List<String> bloc) {
         if (bloc.isEmpty()) return null;
 
-        // Première ligne : "NOM LARGEUR"
+        // Première ligne  "NOM LARGEUR"
         String premiereLigne = bloc.get(0).trim();
         char nom = premiereLigne.charAt(0);
         int largeur;
@@ -256,22 +202,16 @@ public class ChargeurNiveau {
         return new DonneesGrille(nom, largeur, lignesGrille);
     }
 
-    // ========== MÉTHODES PRIVÉES - CONSTRUCTION ==========
-
-    /**
-     * Construire une Grille Java à partir des données brutes.
+    /** Construire une Grille Java à partir des données brutes.
      * Cette méthode est récursive : si la grille contient des lettres majuscules
      * (sous-grilles), elle construit d'abord ces sous-grilles, puis les place
      * comme des objets Piece dans la grille courante.
-     *
      * @param donnees         Les données brutes de la grille à construire
      * @param donneesMap      La map contenant toutes les données brutes disponibles
      * @param grillesDejaFaites Map des grilles déjà construites (pour éviter les doublons)
-     * @return La Grille construite
-     */
-    private static Grille construireGrille(DonneesGrille donnees,
-                                           Map<Character, DonneesGrille> donneesMap,
-                                           Map<Character, Grille> grillesDejaFaites) {
+     * @return La Grille construite    */
+    private static Grille construireGrille(DonneesGrille donnees, Map<Character, DonneesGrille> donneesMap,
+                                           Map<Character, Grille> grillesDejaFaites){
 
         // Si déjà construite, on retourne la version existante
         if (grillesDejaFaites.containsKey(donnees.nom)) {
@@ -303,10 +243,7 @@ public class ChargeurNiveau {
         return grille;
     }
 
-    /**
-     * Placer un objet dans la grille en fonction du caractère lu dans le fichier.
-     *
-     * Correspondances :
+    /**Placer un objet dans la grille en fonction du caractère lu dans le fichier.
      *  '#' -> Mur
      *  '@' -> Joueur
      *  '$' -> Boite
@@ -315,14 +252,12 @@ public class ChargeurNiveau {
      *  '*' -> Boite sur Cible (on place les deux)
      *  '+' -> Joueur sur Cible (on place les deux)
      *  Lettre majuscule A-Z -> Piece (sous-grille récursive)
-     *
      * @param grille          La grille où placer l'objet
      * @param c               Le caractère lu
      * @param x               Position colonne
      * @param y               Position ligne
      * @param donneesMap      Toutes les données brutes disponibles
-     * @param grillesDejaFaites Grilles déjà construites
-     */
+     * @param grillesDejaFaites Grilles déjà construites     */
     private static void placerObjet(Grille grille, char c, int x, int y,
                                     Map<Character, DonneesGrille> donneesMap,
                                     Map<Character, Grille> grillesDejaFaites) {
@@ -355,14 +290,14 @@ public class ChargeurNiveau {
             case '*':
                 // Boite sur cible
                 Cible cibleSousBoite = new Cible(x, y, grille);
-                grille.getCibles().add(cibleSousBoite); // On l'enregistre
+                grille.getCibles().add(cibleSousBoite); // on enregistre
                 Boite boiteSurCible = new Boite(x, y, grille);
                 boiteSurCible.setSurCible(true);
                 grille.setObjet(boiteSurCible, x, y);
                 break;
 
             case '.':
-                // Cible (emplacement vide où poser une boîte)
+                // Cible ( vide où poser une boîte)
                 grille.setObjet(new Cible(x, y, grille), x, y);
                 break;
 
@@ -371,9 +306,9 @@ public class ChargeurNiveau {
                 break;
 
             default:
-                // Si c'est une lettre majuscule A-Z : c'est une sous-grille (Piece)
+                // Si c'est une lettre majuscule A-Z alor c'est une sous-grille (Piece)
                 if (Character.isUpperCase(c)) {
-                    // Construire (ou récupérer) la sous-grille correspondante
+                    // Construire (ou on  récupérer) la sous-grille correspondante
                     DonneesGrille donneesEnfant = donneesMap.get(c);
 
                     if (donneesEnfant != null) {
@@ -385,27 +320,20 @@ public class ChargeurNiveau {
                         grille.setObjet(piece, x, y);
                     } else {
                         // La grille enfant n'est pas dans le fichier -> grille vide 1x1
-                        // (cas d'une grille "I 1" avec juste "#" par exemple)
                         System.out.println("Avertissement : sous-grille '" + c + "' introuvable, ignorée.");
-                        // On place un mur à la place pour ne pas laisser de case étrange
+                        // On place un mur à la place
                         grille.setObjet(new Mur(x, y, grille), x, y);
                     }
                 }
-                // Sinon on ignore le caractère inconnu (ne devrait pas arriver)
                 break;
         }
     }
 
-    // ========== MÉTHODE UTILITAIRE ==========
-
-    /**
-     * Lister les fichiers de niveaux disponibles dans un dossier.
+    /** Lister les fichiers de niveaux disponibles dans un dossier.
      * Utile pour afficher la liste des niveaux au joueur.
-     *
      * @param dossier Le chemin du dossier contenant les fichiers
-     * @return La liste des noms de fichiers .txt trouvés
-     */
-    public static List<String> listerFichiers(String dossier) {
+     * @return La liste des noms de fichiers .txt trouvés     */
+    public static List<String> listerFichiers(String dossier){
         List<String> fichiers = new ArrayList<>();
         java.io.File dir = new java.io.File(dossier);
         if (dir.exists() && dir.isDirectory()) {
