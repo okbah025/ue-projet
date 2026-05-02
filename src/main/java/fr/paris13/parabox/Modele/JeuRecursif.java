@@ -92,6 +92,11 @@ public class JeuRecursif {
 
     // ========== GETTERS ==========
 
+	public Historique getHistorique() {
+    return this.historique;
+}
+
+
     /**
      * Obtenir la grille dans laquelle le joueur se trouve actuellement.
      * C'est toujours le sommet de la pile.

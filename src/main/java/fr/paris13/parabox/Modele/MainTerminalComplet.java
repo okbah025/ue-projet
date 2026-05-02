@@ -400,7 +400,9 @@ if (rep.equals("o")) {
 
 	    if (f.exists()) {
 		// ⚠️ ici il faut un chargeur de sauvegarde récursive (pas le simple)
-		grilleRacine = ChargeurSauvegardeRecursif.charger(fichierSave);
+
+
+		grilleRacine = ChargeurNiveau.charger(fichierSave);
 
 		System.out.println(VERT + "✓ Partie récursive chargée !" + RESET);
 	    } else {
@@ -472,7 +474,7 @@ if (rep.equals("o")) {
                         
 		    // sauvegarde plateau solution
 		    SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
-		    saveSol.ecrireGrilleRecursif(jeu.getGrille());
+		    saveSol.sauvegarder(jeu.getGrilleRacine());
 
 		    // sauvegarde historique solution
 		    SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
@@ -549,7 +551,7 @@ if (rep.equals("o")) {
                                             
                                             // sauvegarde plateau solution
 				    SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
-				    saveSol.ecrireGrilleRecursif(jeu.getGrille());
+				    saveSol.sauvegarder(jeu.getGrilleRacine());
 
 				    //  sauvegarde historique solution
 				    SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
@@ -579,7 +581,7 @@ if (rep.equals("o")) {
                         
                         /*new : persistance*/
                         SauvegardePlateauRecursif save = new SauvegardePlateauRecursif(fichierSave);
-save.ecrireGrilleRecursif(jeu.getGrille());
+save.sauvegarder(jeu.getGrilleRacine());
 
 SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
 histo.ecrireHistoriqueRecursif(jeu);
