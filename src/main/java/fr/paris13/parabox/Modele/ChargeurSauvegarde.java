@@ -1,69 +1,57 @@
 package fr.paris13.parabox.Modele;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
 public class ChargeurSauvegarde {
 
-    public static Grille charger(String fichierLecture) {
 
-        try (FileReader entree = new FileReader(fichierLecture)) {
+public static Grille charger(String fichierLecture) {
 
-            // ─────────────────────────────
-            // 1. LIRE LIGNE D'EN-TÊTE
-            // format : Nom largeur hauteur
-            // ─────────────────────────────
+    try {
 
-            StringBuilder header = new StringBuilder();
-            int c;
+        BufferedReader br = new BufferedReader(new FileReader(fichierLecture));
 
-            while ((c = entree.read()) != -1 && c != '\n') {
-                header.append((char) c);
-            }
+        // header
+        String header = br.readLine();
+        String[] infos = header.split(" ");
 
-            String[] infos = header.toString().trim().split(" ");
+        String nom = infos[0];
+        int largeur = Integer.parseInt(infos[1]);
+        int hauteur = Integer.parseInt(infos[2]);
 
-            String nom = infos[0];
-            int largeur = Integer.parseInt(infos[1]);
-            int hauteur = Integer.parseInt(infos[2]);
+        Grille grille = new Grille(largeur, hauteur, nom);
 
-            Grille grille = new Grille(largeur, hauteur, nom);
+        String ligne;
+        int y = 0;
 
-            // ─────────────────────────────
-            // 2. LIRE LA GRILLE
-            // ─────────────────────────────
+        while ((ligne = br.readLine()) != null && y < hauteur) {
 
-            int x = 0;
-            int y = 0;
+            for (int x = 0; x < largeur; x++) {
 
-            while ((c = entree.read()) != -1) {
-		    if (c == '\r') continue; /*windows*/
-		    
-                if (c == '\n') {
-                    y++;
-                    x = 0;
-                    continue;
-                }
-
-                if (y >= hauteur) break;
+                char c = (x < ligne.length()) ? ligne.charAt(x) : ' ';
 
                 Objet o = convertir(c, x, y, grille);
 
                 if (o != null) {
                     grille.setObjet(o, x, y);
                 }
-
-                x++;
             }
 
-            return grille;
-
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-            return null;
+            y++;
         }
-    }
 
+        br.close();
+        return grille;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
+    }
+}
+
+       
     // ─────────────────────────────
     // CONVERSION CHAR → OBJET
     // ─────────────────────────────

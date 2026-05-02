@@ -302,6 +302,7 @@ public class Historique {
         return mouvements.size();
     }
     
+    
     /**
      * Représentation textuelle de l'historique
      * @return Une description de l'historique
@@ -310,4 +311,75 @@ public class Historique {
     public String toString() {
         return "Historique : " + mouvements.size() + " mouvement(s)";
     }
+
+
+
+/*nouvelle methode pour la sauvegarde*/
+public Stack<Character> viderEtConvertir() {
+
+    Stack<Character> res = new Stack<>();
+
+    while (!mouvements.isEmpty()) {
+
+        Mouvement m = mouvements.pop();
+        char c;
+
+        if (m.boitePoussee == null) {
+            switch (m.direction) {
+                case HAUT: c = 'u'; break;
+                case BAS: c = 'd'; break;
+                case GAUCHE: c = 'l'; break;
+                case DROITE: c = 'r'; break;
+                default: throw new IllegalArgumentException();
+            }
+        } else {
+            switch (m.direction) {
+                case HAUT: c = 'U'; break;
+                case BAS: c = 'D'; break;
+                case GAUCHE: c = 'L'; break;
+                case DROITE: c = 'R'; break;
+                default: throw new IllegalArgumentException();
+            }
+        }
+
+        res.push(c);
+    }
+
+    return res;
+}
+
+
+public Stack<Character> convertirSansVider() { //pour la persistance
+
+    Stack<Character> res = new Stack<>();
+
+    for (int i = 0; i < mouvements.size(); i++) {
+
+        Mouvement m = mouvements.get(i);
+        char c;
+
+        if (m.boitePoussee == null) {
+            switch (m.direction) {
+                case HAUT: c = 'u'; break;
+                case BAS: c = 'd'; break;
+                case GAUCHE: c = 'l'; break;
+                case DROITE: c = 'r'; break;
+                default: throw new IllegalArgumentException();
+            }
+        } else {
+            switch (m.direction) {
+                case HAUT: c = 'U'; break;
+                case BAS: c = 'D'; break;
+                case GAUCHE: c = 'L'; break;
+                case DROITE: c = 'R'; break;
+                default: throw new IllegalArgumentException();
+            }
+        }
+
+        res.push(c);
+    }
+
+    return res;
+}
+
 }
