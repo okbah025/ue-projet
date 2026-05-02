@@ -72,7 +72,7 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         HAUT, BAS, GAUCHE, DROITE,
 
        
-        ANNULER, RECOMMENCER, AIDE, QUITTER, CHEMIN ,INCONNU
+        ANNULER, RECOMMENCER, AIDE, QUITTER, INDICE ,CHEMIN ,INCONNU
 
     }
 
@@ -312,39 +312,24 @@ if (rep.equals("o")) {
                         
                         
                     case QUITTER:
-<<<<<<< HEAD
-    SauvegardePlateau save = new SauvegardePlateau(fichierSave);
-    save.ecrireGrille(jeu.getGrille());
+                           continuer = false;
+			System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
+			break;
 
+			case CHEMIN:
 
-   SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
-histo.ecrireHistorique(jeu);
-
-
-
-    System.out.println(CYAN + "\nPartie sauvegardée !" + RESET);
-    System.out.println(CYAN + "Merci d'avoir joué ! 👋" + RESET);
-
-    continuer = false;
-    break;
-
-                    default:
-=======
-                        continuer = false;
-                        System.out.println(CYAN + "\nMerci d'avoir joué ! 👋" + RESET);
-                        break;
-                     case CHEMIN:
-						 
 			    System.out.print("Entrez x y : ");
 			    int x = scanner.nextInt();
 			    int y = scanner.nextInt();
 			    scanner.nextLine();
-                             
-			    jeu.getGrille().chemin_court(x, y );
+
+			    jeu.getGrille().chemin_court(x, y);
 			    break;
-		      default:
->>>>>>> f3f2ff6 (src/main/java/fr/paris13/parabox/Modele/ MainTerminalComplet.java)
-                        break; // INCONNU : on ignore silencieusement
+
+			default:
+			    break; // INCONNU : on ignore
+
+           
                 }
             }
         }
@@ -600,11 +585,8 @@ histo.ecrireHistorique(jeu);
                     case 'R': return Commande.RECOMMENCER;
                     case 'H': return Commande.AIDE;
                     case 'X': return Commande.QUITTER;
-<<<<<<< HEAD
                     case 'I': return Commande.INDICE;
-=======
                     case 'P': return Commande.CHEMIN;
->>>>>>> f3f2ff6 (src/main/java/fr/paris13/parabox/Modele/ MainTerminalComplet.java)
                     default:  return Commande.INCONNU;
                 }
             }
