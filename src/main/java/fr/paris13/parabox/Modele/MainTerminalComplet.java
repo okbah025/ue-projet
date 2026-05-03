@@ -199,7 +199,7 @@ if (rep.equals("o")) {
 			    /* suppression sauvegarde en cours
 			    new File(fichierSave).delete();*/
 			    SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
-					histoSolution.ecrireHistorique(jeu);
+			    histoSolution.ecrireHistorique(jeu);
 					
 					
 					
@@ -296,6 +296,15 @@ if (rep.equals("o")) {
                     case QUITTER:
                            continuer = false;
 			System.out.println(CYAN + "\nMerci d'avoir joué ! " + RESET);
+			 /*new : persistance*/
+			 SauvegardePlateau save = new SauvegardePlateau(fichierSave);
+			    save.ecrireGrille(jeu.getGrille());
+
+			    
+			    SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
+			histo.ecrireHistorique(jeu);
+
+			
 			break;
 
 			case CHEMIN:
