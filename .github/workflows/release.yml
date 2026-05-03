@@ -104,7 +104,7 @@ jobs:
             --java-options "-Xmx512m"
       - name: Sign app
         run: |
-          codesign --force --deep --sign - target/installer/Parabox.app
+          codesign --force --deep --sign - target/installer/Parabox-1.0.dmg
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
