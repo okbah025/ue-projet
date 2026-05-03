@@ -7,7 +7,7 @@ Un jeu de type Sokoban développé en Java.
 
 ## Ce qu'il faut avoir installé
 
-- **Java 17** minimum (si t'as pas ça, ça marchera pas) → [adoptium.net](https://adoptium.net)
+- **Java 17** minimum (si t'as pas ça, ça marchera pas) 
 - **Maven 3.x** — pas besoin de l'installer à la main, le script s'en occupe si t'as pas
 
 ---
