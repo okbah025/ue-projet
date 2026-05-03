@@ -121,36 +121,7 @@ mvn clean            # nettoyer les fichiers compilés
 
 ---
 
-## Structure du projet
 
-.
-├── Makefile
-├── install.bat
-├── install.sh
-├── pom.xml
-├── README.md
-├── run.bat
-├── run.sh
-└── src
-├── main
-│   ├── java/fr/paris13/parabox/
-│   │   									├── chemin
-│   │   									├── ig
-│   │   									├── Modele
-│   │   									└── ResoAuto
-│   └── resources
-│       ├── images
-│       ├── icones
-│       ├── niveau1.txt
-│       ├── niveau2.txt
-│       ├── niveau3.txt
-│       ├── niveau4.txt
-│       └── niveau5.txt
-└── test
-└── java/fr/paris13/parabox/  
-											└── ParaboxTest.java  # Tests JUnit
-											
----
 
 ## Problèmes courants
 
