@@ -1,6 +1,19 @@
 # Jeu Sokoban-Parabox
-Projet UE L2 Informatique — Université Paris 13  
-Un jeu de type Sokoban développé en Java.
+UE Projet L2 Informatique — Université Paris 13  
+
+---
+
+## Équipe
+
+| Nom Prénom | Rôle | Responsabilité |
+|-------------|---------|--------------|
+| **Bah Oumou koultoumy** | Coordinatrice | Coordination générale, Git |
+| **Mesbahi Khadija** | Modèle | Logique du jeu |
+| **Luu Léa** | Interface graphique | Affichage JavaFX |
+| **Ramdane Massylia** |Persistance | Sauvegarde / chargement |
+| **Ndiaye Maguette** | Chemin | Algorithme de résolution |
+| **Harzallah Nour** | Auto-résolution | Résolution automatique |
+| **Bahadori Somayya** | **Installation Déploiement** | Scripts, Maven, jpackage, CI/CD GitHub Actions |
 
 ---
 
@@ -16,14 +29,19 @@ Utiliser l'installateur fourni à côté de l'archive du code :
 
 - **Windows** : Double-cliquer sur l'installateur `.exe`  pour installer.
 
-- **macOS (Apple Silicon M1/M2/M3)** : télécharger le `.dmg`, glisser Parabox dans Applications.  
+- **macOS (Apple Silicon M1/M2/M3)** : télécharger le `.dmg` pour macOs arm, glisser Parabox dans Applications.  
   Si macOS affiche "application endommagée", ouvrir le Terminal et taper :
 ```bash
   xattr -cr /Applications/Parabox.app
 ```
   Puis relancer l'application.
 
-- **macOS (Intel)** : installer le `.dmg` Intel fourni parmi les autres installateurs.
+- **macOS (Intel)** : télécharger le `.dmg` pour macOs intel, glisser Parabox dans Applications.  
+  Si macOS affiche "application endommagée", ouvrir le Terminal et taper :
+```bash
+  xattr -cr /Applications/Parabox.app
+```
+  Puis relancer l'application.
 
 ---
 
@@ -158,16 +176,4 @@ xattr -cr /Applications/Parabox.app
 /opt/parabox/bin/Parabox
 ```
 
----
 
-## Équipe
-
-| Rôle | Responsabilité |
-|------|----------------|
-| Coordinateur | Coordination générale, Git |
-| Modèle | Logique du jeu |
-| Interface graphique | Affichage JavaFX |
-| Persistance | Sauvegarde / chargement |
-| Chemin | Algorithme de résolution |
-| Auto-résolution | Résolution automatique |
-| **Installation Déploiement** | **Scripts, Maven, jpackage, CI/CD GitHub Actions** |
