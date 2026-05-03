@@ -10,16 +10,16 @@ import java.io.IOException;
 
 public class SauvegardeHistorique {
 
-	String fichierEcrireHisto;
+    String fichierEcrireHisto;
 
 
-	public SauvegardeHistorique(String fichierEcrireHisto) {
-		this.fichierEcrireHisto = fichierEcrireHisto;
+    public SauvegardeHistorique(String fichierEcrireHisto) {
+            this.fichierEcrireHisto = fichierEcrireHisto;
+
+    }
 	
-	}
 	
-	
-	 //  version simple
+    //  version simple
     public void ecrireHistorique(Jeu jeu) {
         ecrireDepuisHistorique(jeu.getHistorique());
     }

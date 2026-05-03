@@ -118,39 +118,39 @@ public class MainTerminalComplet extends ResoAutoRecursif {
 
   	int choix = demanderChoix(scanner, 1, 10);
 
-String fichierSave = "niveau" + choix + "_save.txt";
-String fichierSolution = "niveau" + choix + "_solution.txt";
+        String fichierSave = "niveau" + choix + "_save.txt";
+        String fichierSolution = "niveau" + choix + "_solution.txt";
 
-String fichierHisto = "niveau" + choix + "_histo_deplacements.txt";
-String fichierHistoSolution = "niveau" + choix + "_sol_deplacements.txt";
+        String fichierHisto = "niveau" + choix + "_histo_deplacements.txt";
+        String fichierHistoSolution = "niveau" + choix + "_sol_deplacements.txt";
 
 
 
-Grille grille;
+        Grille grille;
 
-//  lecture de la réponse
-String rep;
-do {
-    System.out.print("Reprendre une partie ? (o/n) : ");
-    rep = scanner.nextLine().trim().toLowerCase();
-} while (!rep.equals("o") && !rep.equals("n"));
+        //  lecture de la réponse
+        String rep;
+        do {
+            System.out.print("Reprendre une partie ? (o/n) : ");
+            rep = scanner.nextLine().trim().toLowerCase();
+        } while (!rep.equals("o") && !rep.equals("n"));
 
-if (rep.equals("o")) {
+        if (rep.equals("o")) {
 
-    File f = new File(fichierSave);
+            File f = new File(fichierSave);
 
-    if (f.exists()) {
-        grille = ChargeurSauvegarde.charger(fichierSave);
-        System.out.println(VERT + " Partie chargée !" + RESET);
-    } else {
-        System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
-        grille = creerNiveauSimple(choix);
-    }
+            if (f.exists()) {
+                grille = ChargeurSauvegarde.charger(fichierSave);
+                System.out.println(VERT + " Partie chargée !" + RESET);
+            } else {
+                System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
+                grille = creerNiveauSimple(choix);
+            }
 
-} else {
-    grille = creerNiveauSimple(choix);
-}
-        
+        } else {
+            grille = creerNiveauSimple(choix);
+        }
+
         if (grille == null) {
             System.out.println(ROUGE + "Niveau invalide !" + RESET);
             return;
@@ -187,27 +187,19 @@ if (rep.equals("o")) {
                     afficherEtatSimple(jeu);
                     if (jeu.estNiveauTermine()) {
                     
-                    
-                    
-                    
-			    afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
+                        afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
 
-			    // sauvegarde solution
-			    SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
-			    save.ecrireGrille(jeu.getGrille());
+                        // sauvegarde solution
+                        SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
+                        save.ecrireGrille(jeu.getGrille());
 
-			    /* suppression sauvegarde en cours
-			    new File(fichierSave).delete();*/
-			    SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
-			    histoSolution.ecrireHistorique(jeu);
+                        /* suppression sauvegarde en cours
+                        new File(fichierSave).delete();*/
+                        SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
+                        histoSolution.ecrireHistorique(jeu);
+		
 					
-					
-					
-}
-
-
-
-
+                    }
 
 
                 }
@@ -271,9 +263,9 @@ if (rep.equals("o")) {
                                             afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
                                             
 
-					SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
-					histoSolution.ecrireHistorique(jeu);
-                                          
+                                            SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
+                                            histoSolution.ecrireHistorique(jeu);
+
                                             
                                         }
                                     }
@@ -294,31 +286,30 @@ if (rep.equals("o")) {
                         
                         
                     case QUITTER:
-                           continuer = false;
+                        continuer = false;
 			System.out.println(CYAN + "\nMerci d'avoir joué ! " + RESET);
 			 /*new : persistance*/
-			 SauvegardePlateau save = new SauvegardePlateau(fichierSave);
-			    save.ecrireGrille(jeu.getGrille());
-
-			    
-			    SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
+			SauvegardePlateau save = new SauvegardePlateau(fichierSave);
+			save.ecrireGrille(jeu.getGrille());
+                        
+			SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
 			histo.ecrireHistorique(jeu);
 
 			
-			break;
+                        break;
 
-			case CHEMIN:
+                    case CHEMIN:
 
-			    System.out.print("Entrez x y : ");
-			    int x = scanner.nextInt();
-			    int y = scanner.nextInt();
-			    scanner.nextLine();
+                        System.out.print("Entrez x y : ");
+                        int x = scanner.nextInt();
+                        int y = scanner.nextInt();
+                        scanner.nextLine();
 
-			    jeu.getGrille().chemin_court(x, y);
-			    break;
+                        jeu.getGrille().chemin_court(x, y);
+                        break;
 
-			default:
-			    break; // INCONNU : on ignore
+                    default:
+                        break; // INCONNU : on ignore
 
            
                 }
@@ -458,16 +449,15 @@ if (rep.equals("o")) {
                         
                         /*new : ajout persistance*/
                         
-		    // sauvegarde plateau solution
-		    SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
-		    saveSol.sauvegarder(jeu.getGrilleRacine());
+                        // sauvegarde plateau solution
+                        SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
+                        saveSol.sauvegarder(jeu.getGrilleRacine());
 
-		    // sauvegarde historique solution
-		    SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
-		    histoSol.ecrireHistoriqueRecursif(jeu);
+                        // sauvegarde historique solution
+                        SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
+                        histoSol.ecrireHistoriqueRecursif(jeu);
                         
-                        
-                        
+                    
                     }
                 }
                 // ok=false = mouvement bloqué (mur)
@@ -536,15 +526,14 @@ if (rep.equals("o")) {
                                             afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
                                             
                                             // sauvegarde plateau solution
-				    SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
-				    saveSol.sauvegarder(jeu.getGrilleRacine());
+                                            SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
+                                            saveSol.sauvegarder(jeu.getGrilleRacine());
 
-				    //  sauvegarde historique solution
-				    SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
-				    histoSol.ecrireHistoriqueRecursif(jeu);
+                                            //  sauvegarde historique solution
+                                            SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
+                                            histoSol.ecrireHistoriqueRecursif(jeu);
 
-                                            
-                                            
+                                        
                                         }
                                     }
                                     break;
@@ -567,25 +556,25 @@ if (rep.equals("o")) {
                         
                         /*new : persistance*/
                         SauvegardePlateauRecursif save = new SauvegardePlateauRecursif(fichierSave);
-save.sauvegarder(jeu.getGrilleRacine());
+                        save.sauvegarder(jeu.getGrilleRacine());
 
-SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
-histo.ecrireHistoriqueRecursif(jeu);
-			
+                        SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
+                        histo.ecrireHistoriqueRecursif(jeu);
+
                         
                         break;
                         
-                     case CHEMIN:   
+                    case CHEMIN:   
                           
-				    System.out.print("Entrez x y : ");
-				    int x = scanner.nextInt();
-				    int y = scanner.nextInt();
-				    scanner.nextLine();
+                        System.out.print("Entrez x y : ");
+                        int x = scanner.nextInt();
+                        int y = scanner.nextInt();
+                        scanner.nextLine();
 
-				     jeu.getGrilleActive().chemin_court(x, y);
-				    break;
+                        jeu.getGrilleActive().chemin_court(x, y);
+                        break;
 							
-                     default:
+                    default:
                         break;
                 }
             }

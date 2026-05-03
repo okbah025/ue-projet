@@ -69,28 +69,28 @@ public static Grille charger(String fichierLecture) {
             case '$':
                 return new Boite(x, y, grille);
 
-           case '.': {
-   	 Cible cible = new Cible(x, y, grille);
-   	 grille.getCibles().add(cible);
-   	 return cible;
-	}
+            case '.': {
+                Cible cible = new Cible(x, y, grille);
+                grille.getCibles().add(cible);
+                return cible;
+            }
 
             case '+': {
-    Cible cible = new Cible(x, y, grille);
-    grille.getCibles().add(cible);
+                Cible cible = new Cible(x, y, grille);
+                grille.getCibles().add(cible);
 
-    Joueur j = new Joueur(x, y, grille);
-    j.setSurCible(true);
-    return j;
-}
+                Joueur j = new Joueur(x, y, grille);
+                j.setSurCible(true);
+                return j;
+            }
             case '*': {
-    Cible cible = new Cible(x, y, grille);
-    grille.getCibles().add(cible);
+                Cible cible = new Cible(x, y, grille);
+                grille.getCibles().add(cible);
 
-    Boite b = new Boite(x, y, grille);
-    b.setSurCible(true);
-    return b;
-}
+                Boite b = new Boite(x, y, grille);
+                b.setSurCible(true);
+                return b;
+            }
 
 
             case ' ':

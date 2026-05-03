@@ -71,15 +71,16 @@ public class Position {
     
     /**
      * Vérifier si deux positions sont identiques
-     * @param autre L'autre position à comparer
+     * @param o L'autre position à comparer
      * @return true si les positions sont identiques, false sinon
      */
   
-       public boolean equals(Object o) {
-     if(this ==o) return true;
-     if(! (o instanceof Position)) return false ;
-     Position autre = (Position) o ; 
-        
+    @Override
+    public boolean equals(Object o) {
+        if(this ==o) return true;
+        if(! (o instanceof Position)) return false ;
+        Position autre = (Position) o ; 
+
         return (this.x == autre.x && this.y == autre.y);
     }
     /**

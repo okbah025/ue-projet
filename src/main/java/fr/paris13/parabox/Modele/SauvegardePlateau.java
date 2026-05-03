@@ -56,7 +56,7 @@ public class SauvegardePlateau {
         }
 
         if (o instanceof Cible) return '.';
-
+        
         return ' ';
     }
 }

@@ -527,81 +527,80 @@ public class Grille {
     }
      
     
-  public boolean[][] genererMatricebol() {
-	    boolean[][] M = new boolean[this.largeur][this.hauteur];
+    public boolean[][] genererMatricebol() {
+        boolean[][] M = new boolean[this.largeur][this.hauteur];
 
-	    for (int x = 0; x < largeur; x++) {
-		for (int y = 0; y < hauteur; y++) {
-		    M[x][y] = estCaseLibre(x, y);
-		}
-	    }
+        for (int x = 0; x < largeur; x++) {
+            for (int y = 0; y < hauteur; y++) {
+                M[x][y] = estCaseLibre(x, y);
+            }
+        }
 
-	    return M ;
-
-         } 
-      public void chemin_court(int x, int y) {
+        return M ;
+    } 
+    public void chemin_court(int x, int y) {
 
 		  
-		    Joueur j = this.getJoueur();
-		    if (j == null) {
-			System.out.println("Pas de joueur !");
-			return;
-		    }
+        Joueur j = this.getJoueur();
+        if (j == null) {
+            System.out.println("Pas de joueur !");
+            return;
+        }
 
-		    int x1 = j.getPosition().getX();
-		    int y1 = j.getPosition().getY();
+        int x1 = j.getPosition().getX();
+        int y1 = j.getPosition().getY();
 
-		    boolean[][] M = this.genererMatricebol();
+        boolean[][] M = this.genererMatricebol();
 
-		    // Appel de ton algo
-		    pile pi = c_chemin.c_chemin(M, x1, y1, x, y);
+        // Appel de ton algo
+        pile pi = c_chemin.c_chemin(M, x1, y1, x, y);
 
-		    if (pi == null) {
-			System.out.println("Pas de chemin !");
-			return;
-		    }
+        if (pi == null) {
+            System.out.println("Pas de chemin !");
+            return;
+        }
 
-		    // tableau d'affichage (ligne = y, colonne = x)
-		    char[][] affichage = new char[this.hauteur][this.largeur];
+        // tableau d'affichage (ligne = y, colonne = x)
+        char[][] affichage = new char[this.hauteur][this.largeur];
 
-		    //  copier la grille
-		    for (int y2 = 0; y2 < hauteur; y2++) {
-			for (int x2 = 0; x2 < largeur; x2++) {
-			    Objet obj = this.getObjet(x2, y2);
+        //  copier la grille
+        for (int y2 = 0; y2 < hauteur; y2++) {
+            for (int x2 = 0; x2 < largeur; x2++) {
+                Objet obj = this.getObjet(x2, y2);
 
-			    if (obj == null) {
-				affichage[y2][x2] = ' ';
-			    } else {
-				affichage[y2][x2] = obj.getSymbole();
-			    }
-			}
-		    }
+                if (obj == null) {
+                    affichage[y2][x2] = ' ';
+                } else {
+                    affichage[y2][x2] = obj.getSymbole();
+                }
+            }
+        }
 
-		    // dessiner le chemin
-		    while (!pi.isEmpty()) {
-			Position p = pi.depiler();
+        // dessiner le chemin
+        while (!pi.isEmpty()) {
+            Position p = pi.depiler();
 
-			// on évite d'écraser mur, joueur, boite...
-			if (affichage[p.getY()][p.getX()] == ' ') {
-			    affichage[p.getY()][p.getX()] = '+';
-			}
-		    }
+            // on évite d'écraser mur, joueur, boite...
+            if (affichage[p.getY()][p.getX()] == ' ') {
+            affichage[p.getY()][p.getX()] = '+';
+            }
+        }
 
-		    // remettre le joueur
-		    affichage[y1][x1] = '@';
+        // remettre le joueur
+        affichage[y1][x1] = '@';
 
-		    //  afficher
-		    System.out.println("Chemin le plus court :");
+        //  afficher
+        System.out.println("Chemin le plus court :");
 
-		    for (int y2 = 0; y2 < hauteur; y2++) {
-			for (int x2 = 0; x2 < largeur; x2++) {
-			    System.out.print(affichage[y2][x2]);
-			}
-			System.out.println();
-		    }
-		}
-         
-         }
+        for (int y2 = 0; y2 < hauteur; y2++) {
+            for (int x2 = 0; x2 < largeur; x2++) {
+                System.out.print(affichage[y2][x2]);
+            }
+        System.out.println();
+        }
+    }
+
+}
          
          
          
