@@ -45,7 +45,6 @@ public class Sokoban extends StackPane {
     private boolean helpVisible;
     private final String fichierSave;
     private final String fichierSolution;
-
     private final String fichierHisto;
     private final String fichierHistoSolution;
 
@@ -140,15 +139,16 @@ public class Sokoban extends StackPane {
                                 level.updateBoard(dir2);
                                 
                                 if (jeu.estNiveauTermine()) {
-                                    PauseTransition p = new PauseTransition(Duration.seconds(0.5));
-                                    p.setOnFinished(ev -> {
-                                        // sauvegarde solution
+                                    // sauvegarde solution
                                     SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
                                     save.ecrireGrille(jeu.getGrille());
                                     /* suppression sauvegarde en cours
                                     new File(fichierSave).delete();*/
                                     SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
                                     histoSolution.ecrireHistorique(jeu);
+                                    
+                                    PauseTransition p = new PauseTransition(Duration.seconds(0.5));
+                                    p.setOnFinished(ev -> {
                                         root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees()));});
                                     p.play();
                                 }
@@ -178,6 +178,10 @@ public class Sokoban extends StackPane {
                 });
                 break;
             case ESCAPE: // Pause
+                SauvegardePlateau save = new SauvegardePlateau(fichierSave);
+                save.ecrireGrille(jeu.getGrille());
+                SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
+                histo.ecrireHistorique(jeu);
                 pause.setVisible(true);
                 
             case H: // Aide
