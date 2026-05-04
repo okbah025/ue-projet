@@ -130,7 +130,7 @@ public class Parabox extends StackPane {
                 break;
                 
             case A: // Auto
-                if (level.getLvl() == 1 && level.getLvl() == 2 && level.getLvl() == 4){
+                if (level.getLvl() == 1 || level.getLvl() == 2 || level.getLvl() == 4){
                     Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);                    
                     if(ng2 !=null) {
                         jeu.reinitialiser(ng2);
@@ -145,7 +145,7 @@ public class Parabox extends StackPane {
                         e -> {
                             Direction dir2 = d.depilerDir();
                             jeu.deplacerJoueur(dir2);
-                            level.updateBoard(dir2);
+                            level.updateBoardRec(jeu.getGrilleActive(), dir2);
 
                             if (jeu.estNiveauTermine()) {
                                 // sauvegarde plateau solution
