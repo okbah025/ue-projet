@@ -44,13 +44,8 @@ public class Parabox extends StackPane {
     private final HelpMenu help;
     private final StackPane root;
     private final int lvl;
-    private final PileDir d;
     private final String nomFich;
     private boolean helpVisible;
-    private final String fichierSave;
-    private final String fichierSolution;
-    private final String fichierHisto;
-    private final String fichierHistoSolution;
     
     /**
      * Initialise le jeu récursif avec une grille donnée
@@ -62,13 +57,8 @@ public class Parabox extends StackPane {
     public Parabox(Grille g, StackPane root, int lvl){
         this.root = root;
         this.lvl = lvl;
-        fichierSave = "niveau" + lvl + "_rec_save.txt";
-	fichierSolution = "niveau" + lvl + "_rec_solution.txt";
-	fichierHisto = "niveau" + lvl + "_rec_histo_deplacements.txt";
-	fichierHistoSolution = "niveau" + lvl + "_rec_sol_deplacements.txt";
-        
         nomFich = ParaboxLevel.listerFichiersNiveaux().get(lvl-1);
-        d = ResoAutoRecursif.recursif(g, lvl);
+        
         jeu = new JeuRecursif(g);
         level = new Level(g, lvl);
         level.setBoard(Direction.BAS);
@@ -76,16 +66,8 @@ public class Parabox extends StackPane {
         helpVisible = true;
         pause = new PauseMenu(root, Version.RECURSIVE);
         pause.setVisible(false);
-        StackPane niveau = new StackPane();
-        Label niv = new Label("Niveau "+ lvl);
-        Rectangle contour = new Rectangle(75, 45);
-        contour.setFill(Color.WHITE);
-        niveau.getChildren().addAll(contour, niv);
-        niveau.setAlignment(Pos.TOP_RIGHT);
-        niv.setPadding(new Insets(10));
-        niv.setStyle("-fx-font: 15 system; ");
         
-        getChildren().addAll(level, niveau, help, pause);
+        getChildren().addAll(level, showLevelNum(), help, pause);
         
         Scene scene = root.getScene();
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -99,8 +81,7 @@ public class Parabox extends StackPane {
      */
     private void handleKeyInput(KeyCode code){
         Direction direction = null;
-        boolean auto = false;
-        
+
         switch(code){
             case UP:
                 direction = Direction.HAUT;
@@ -119,51 +100,29 @@ public class Parabox extends StackPane {
                     level.updateBoardRecReverse(jeu.getPileGrilles());
                 }
                 break;
-                
             case R: // Recommencer
-                Grille ng = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);
-                if(ng !=null) {
-                    jeu.reinitialiser(ng);
-                    level.reset(ng);
-                    level.setBoard(Direction.BAS);
-                }
+                restart();
                 break;
-                
             case A: // Auto
-                if (level.getLvl() == 1 || level.getLvl() == 2 || level.getLvl() == 4){
-                    Grille ng2 = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);                    
-                    if(ng2 !=null) {
-                        jeu.reinitialiser(ng2);
-                        level.reset(ng2);
-                        level.setBoard(Direction.BAS);
-                    }
-                    auto = true;
-                }
-                if(auto && !jeu.estNiveauTermine()) {
-                    int cmpt = d.size();
-                    Timeline t = new Timeline(new KeyFrame(Duration.seconds(0.5), 
-                        e -> {
-                            Direction dir2 = d.depilerDir();
-                            jeu.deplacerJoueur(dir2);
-                            level.updateBoardRec(jeu.getGrilleActive(), dir2);
+                if (lvl == 1 || lvl == 2 || lvl == 4){
+                    restart();
+                    if(!jeu.estNiveauTermine()) {
+                        PileDir d = ResoAutoRecursif.recursif(jeu.getGrilleActive(), lvl);
+                        int cmpt = d.size();
+                        Timeline t = new Timeline(new KeyFrame(Duration.seconds(0.5), 
+                            e -> {
+                                Direction dir2 = d.depilerDir();
+                                jeu.deplacerJoueur(dir2);
+                                level.updateBoardRec(jeu.getGrilleActive(), dir2);
 
-                            if (jeu.estNiveauTermine()) {
-                                // sauvegarde plateau solution
-                                SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
-                                saveSol.sauvegarder(jeu.getGrilleRacine());
-                                // sauvegarde historique solution
-                                SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
-                                histoSol.ecrireHistoriqueRecursif(jeu);
-                                
-                                PauseTransition p = new PauseTransition(Duration.seconds(0.5));
-                                p.setOnFinished(ev -> 
-                                    root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees())));
-                                p.play();
+                                if (jeu.estNiveauTermine()) {
+                                    showVictory();
+                                }
                             }
-                        }
-                    ));
-                    t.setCycleCount(cmpt);
-                    t.play();
+                        ));
+                        t.setCycleCount(cmpt);
+                        t.play();
+                    }
                 }
                 break;
             case P: // Chemin
@@ -184,16 +143,9 @@ public class Parabox extends StackPane {
                         p.play();
                     }
                 });
-                break;
-                
+                break; 
             case ESCAPE: // Pause
-                /*new : persistance*/
-                SauvegardePlateauRecursif save = new SauvegardePlateauRecursif(fichierSave);
-                save.sauvegarder(jeu.getGrilleRacine());
-                SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
-                histo.ecrireHistoriqueRecursif(jeu);
-                pause.setVisible(true);
-                
+                showPauseMenu();
             case H: // Aide
                 if(helpVisible){
                     help.setVisible(false);
@@ -202,23 +154,18 @@ public class Parabox extends StackPane {
                     help.setVisible(true);
                     helpVisible = true;
                 }
+            default:
         }
 
         if (direction != null) {
             boolean ok = jeu.deplacerJoueur(direction);
             if (ok){
                 level.updateBoardRec(jeu.getGrilleActive(), direction);
-                if (jeu.estNiveauTermine()) {
-                    // sauvegarde plateau solution
-		    SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
-		    saveSol.sauvegarder(jeu.getGrilleRacine());
-		    // sauvegarde historique solution
-		    SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
-		    histoSol.ecrireHistoriqueRecursif(jeu);
-                    root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees()));
-                }
             }
-        }    
+        }
+        if (jeu.estNiveauTermine()) {
+            showVictory();
+        }
     }
     
     private static StackPane showMsg(String s){
@@ -230,5 +177,54 @@ public class Parabox extends StackPane {
         st.getChildren().add(msg);
         
         return st;
+    }
+    
+    private void showVictory(){
+        String fichierSolution = "niveau" + lvl + "_solution.txt";
+        String fichierHistoSolution = "niveau" + lvl + "_sol_deplacements.txt";
+        // sauvegarde plateau solution
+        SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
+        saveSol.sauvegarder(jeu.getGrilleRacine());
+        // sauvegarde historique solution
+        SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
+        histoSol.ecrireHistoriqueRecursif(jeu);
+        
+        PauseTransition p = new PauseTransition(Duration.seconds(0.5));
+        p.setOnFinished(ev -> 
+            root.getChildren().setAll(new VictoryMenu(root, Version.RECURSIVE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees())));
+        p.play();
+    }
+    
+    private void restart(){
+        Grille ng = ChargeurNiveau.charger(DOSSIER + File.separator + nomFich);
+        if(ng !=null) {
+            jeu.reinitialiser(ng);
+            level.reset(ng);
+            level.setBoard(Direction.BAS);
+        }
+    }
+    
+    private void showPauseMenu(){
+        String fichierSave = "niveau" + lvl + "_save.txt";
+        String fichierHisto = "niveau" + lvl + "_histo_deplacements.txt";
+        /*new : persistance*/
+        SauvegardePlateauRecursif save = new SauvegardePlateauRecursif(fichierSave);
+        save.sauvegarder(jeu.getGrilleRacine());
+        SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
+        histo.ecrireHistoriqueRecursif(jeu);
+        pause.setVisible(true);
+    }
+    
+    private StackPane showLevelNum(){
+        StackPane niveau = new StackPane();
+        Label niv = new Label("Niveau "+ lvl);
+        Rectangle contour = new Rectangle(75, 45);
+        contour.setFill(Color.WHITE);
+        niveau.getChildren().addAll(contour, niv);
+        niveau.setAlignment(Pos.TOP_RIGHT);
+        niv.setPadding(new Insets(10));
+        niv.setStyle("-fx-font: 15 system; ");
+        
+        return niveau;
     }
 }

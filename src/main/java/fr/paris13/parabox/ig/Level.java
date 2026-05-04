@@ -131,6 +131,16 @@ public class Level extends GridPane {
 
         cells[i][j].getChildren().add(box);
     }
+    
+    private void setBoxOnTarget(int i, int j){
+        ImageView box = new ImageView();
+        box.setImage(new Image("/images/boxOnTarget.png"));
+        box.setFitHeight(SIZE);
+        box.setFitWidth(SIZE);
+        box.setPreserveRatio(true);
+
+        cells[i][j].getChildren().add(box);
+    }
 
     /**
     * Ajoute une image (cible) à la cellule position (i,j).
@@ -289,7 +299,11 @@ public class Level extends GridPane {
                 setRoom(i, j);
             }
             else {
-                setBox(i, j);
+                if (!box.estSurCible()){
+                    setBox(i, j);
+                } else {
+                    setBoxOnTarget(i, j);
+                }
             }
         }
         
@@ -338,7 +352,11 @@ public class Level extends GridPane {
                 setRoom(i, j);
             }
             else {
-                setBox(i, j);
+                if (!box.estSurCible()){
+                    setBox(i, j);
+                } else {
+                    setBoxOnTarget(i, j);
+                }
             }
         }
     }
@@ -368,7 +386,11 @@ public class Level extends GridPane {
         for (Boite box : grid.getBoites()){
             int i = box.getX();
             int j = box.getY();
-            setBox(i, j);
+            if (!box.estSurCible()){
+                    setBox(i, j);
+                } else {
+                    setBoxOnTarget(i, j);
+                }
         }
 
         int i = player.getX();

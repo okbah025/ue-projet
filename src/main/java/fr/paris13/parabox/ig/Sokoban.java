@@ -13,7 +13,6 @@ import fr.paris13.parabox.ResoAuto.ResoAutoClassique;
 import fr.paris13.parabox.ig.menu.HelpMenu;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
-import java.io.File;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -41,13 +40,7 @@ public class Sokoban extends StackPane {
     private final HelpMenu help;
     private final StackPane root;
     private final int lvl;
-    private final PileDir d;
     private boolean helpVisible;
-    private final String fichierSave;
-    private final String fichierSolution;
-    private final String fichierHisto;
-    private final String fichierHistoSolution;
-
     
     /**
      * Initialise le jeu classique avec une grille donnée
@@ -59,13 +52,6 @@ public class Sokoban extends StackPane {
     public Sokoban(Grille g, StackPane root, int lvl){
         this.root = root;
         this.lvl = lvl;
-        d = ResoAutoClassique.classique(g, lvl);
-   
-        fichierSave = "niveau" + lvl + "_save.txt";
-        fichierSolution = "niveau" + lvl + "_solution.txt";
-        fichierHisto = "niveau" + lvl + "_histo_deplacements.txt";
-        fichierHistoSolution = "niveau" + lvl + "_sol_deplacements.txt";
-        File f = new File(fichierSave);
 
         jeu = new Jeu(g);
         level = new Level(g, lvl);
@@ -74,16 +60,8 @@ public class Sokoban extends StackPane {
         helpVisible = true;
         pause = new PauseMenu(root, Version.SIMPLE);
         pause.setVisible(false);
-        
-        StackPane niveau = new StackPane();
-        Label niv = new Label("Niveau "+ lvl);
-        Rectangle contour = new Rectangle(75, 45);
-        contour.setFill(Color.WHITE);
-        niveau.getChildren().addAll(contour, niv);
-        niveau.setAlignment(Pos.TOP_RIGHT);
-        niv.setPadding(new Insets(10));
-        niv.setStyle("-fx-font: 15 system; ");
-        getChildren().addAll(level, niveau, help, pause);
+       
+        getChildren().addAll(level, showLevelNum(), help, pause);
         
         Scene scene = root.getScene();
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -96,7 +74,6 @@ public class Sokoban extends StackPane {
      */
     private void handleKeyInput(KeyCode code){
         Direction direction = null;
-        boolean auto = false;
           
         switch(code){
             case UP:
@@ -117,45 +94,28 @@ public class Sokoban extends StackPane {
                 }
                 break;
             case R: // Recommencer
-                Grille nouvelleGrille = creerNiveauSimple(lvl);
-                jeu.setGrille(nouvelleGrille);
-                level.reset(nouvelleGrille);
-                level.setBoard(Direction.BAS);
+                restart();
                 break;
             case A: // Auto
                 if (level.getLvl() >=1 && level.getLvl() <=4){
-                    Grille nouvelleGrille2 = creerNiveauSimple(lvl);                 
-                    jeu.setGrille(nouvelleGrille2);
-                    level.reset(nouvelleGrille2);
-                    level.setBoard(Direction.BAS);
-                    auto = true;
-                }
-                if(auto && !jeu.estNiveauTermine()) {
-                    int cmpt = d.size();
-                    Timeline t = new Timeline(new KeyFrame(Duration.seconds(0.5), 
+                    restart();
+                    if(!jeu.estNiveauTermine()) {
+                        PileDir d = ResoAutoClassique.classique(jeu.getGrille(), lvl);
+                        int cmpt = d.size();
+                        Timeline t = new Timeline(new KeyFrame(Duration.seconds(0.5), 
                             e -> {
                                 Direction dir2 = d.depilerDir();
                                 jeu.deplacerJoueur(dir2);
                                 level.updateBoard(dir2);
-                                
+
                                 if (jeu.estNiveauTermine()) {
-                                    // sauvegarde solution
-                                    SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
-                                    save.ecrireGrille(jeu.getGrille());
-                                    /* suppression sauvegarde en cours
-                                    new File(fichierSave).delete();*/
-                                    SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
-                                    histoSolution.ecrireHistorique(jeu);
-                                    
-                                    PauseTransition p = new PauseTransition(Duration.seconds(0.5));
-                                    p.setOnFinished(ev -> {
-                                        root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees()));});
-                                    p.play();
+                                    showVictory();
                                 }
                             }
                         ));
-                    t.setCycleCount(cmpt);
-                    t.play();
+                        t.setCycleCount(cmpt);
+                        t.play();
+                    }
                 }
                 break;
             case P: // Chemin
@@ -178,12 +138,7 @@ public class Sokoban extends StackPane {
                 });
                 break;
             case ESCAPE: // Pause
-                SauvegardePlateau save = new SauvegardePlateau(fichierSave);
-                save.ecrireGrille(jeu.getGrille());
-                SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
-                histo.ecrireHistorique(jeu);
-                pause.setVisible(true);
-                
+               showPauseMenu();
             case H: // Aide
                 if(helpVisible){
                     help.setVisible(false);
@@ -194,20 +149,12 @@ public class Sokoban extends StackPane {
                 }
         }
 
-        if (!auto && direction != null) {
+        if (direction != null) {
             jeu.deplacerJoueur(direction);
             level.updateBoard(direction);
 
             if (jeu.estNiveauTermine()) {
-                // sauvegarde solution
-                SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
-                save.ecrireGrille(jeu.getGrille());
-                /* suppression sauvegarde en cours
-                new File(fichierSave).delete();*/
-                SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
-                histoSolution.ecrireHistorique(jeu);
-                
-                root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees()));
+                showVictory();
             }
         }
     }
@@ -244,5 +191,52 @@ public class Sokoban extends StackPane {
         
         return st;
     }
-}
+    
+    private void showVictory(){
+        String fichierSolution = "niveau" + lvl + "_solution.txt";
+        String fichierHistoSolution = "niveau" + lvl + "_sol_deplacements.txt";
+        // sauvegarde solution
+        SauvegardePlateau save = new SauvegardePlateau(fichierSolution);
+        save.ecrireGrille(jeu.getGrille());
+        /* suppression sauvegarde en cours
+        new File(fichierSave).delete();*/
+        SauvegardeHistorique histoSolution = new SauvegardeHistorique(fichierHistoSolution);
+        histoSolution.ecrireHistorique(jeu);
 
+        PauseTransition p = new PauseTransition(Duration.seconds(0.5));
+        p.setOnFinished(ev -> {
+            root.getChildren().setAll(new VictoryMenu(root, Version.SIMPLE, level, jeu.getNombreMouvements(), jeu.getNombrePoussees()));});
+        p.play();
+    }
+    
+    private void restart(){
+        Grille nouvelleGrille = creerNiveauSimple(lvl);
+        jeu.setGrille(nouvelleGrille);
+        level.reset(nouvelleGrille);
+        level.setBoard(Direction.BAS);
+    }
+    
+    private void showPauseMenu(){
+        String fichierSave = "niveau" + lvl + "_save.txt";
+        String fichierHisto = "niveau" + lvl + "_histo_deplacements.txt";
+   
+        SauvegardePlateau save = new SauvegardePlateau(fichierSave);
+        save.ecrireGrille(jeu.getGrille());
+        SauvegardeHistorique histo = new SauvegardeHistorique(fichierHisto);
+        histo.ecrireHistorique(jeu);
+        pause.setVisible(true);
+    }
+    
+    private StackPane showLevelNum(){
+        StackPane niveau = new StackPane();
+        Label niv = new Label("Niveau "+ lvl);
+        Rectangle contour = new Rectangle(75, 45);
+        contour.setFill(Color.WHITE);
+        niveau.getChildren().addAll(contour, niv);
+        niveau.setAlignment(Pos.TOP_RIGHT);
+        niv.setPadding(new Insets(10));
+        niv.setStyle("-fx-font: 15 system; ");
+        
+        return niveau;
+    }
+}
