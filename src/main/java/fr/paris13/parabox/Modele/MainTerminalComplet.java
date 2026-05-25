@@ -138,120 +138,115 @@ public class MainTerminalComplet extends ResoAutoRecursif {
 
        
        // création de la grille initiale
-grille = creerNiveauSimple(choix);
-
-if (grille == null) {
-    System.out.println(ROUGE + "Niveau invalide !" + RESET);
-    return;
-}
-
-// création du jeu
-jeu = new Jeu(grille);
-
-
-// si on reprend une partie
-if (rep.equals("o")) {
-
-    File f = new File(fichierHisto);
-
-    if (f.exists()) {
-
-        System.out.println(VERT + " Partie chargée !" + RESET);
-
-        // chargement de l'historique
-        SauvegardeHistorique histo =
-            new SauvegardeHistorique(fichierHisto);
-
-        List<Character> coups =
-            histo.chargerHistorique();
-
-        // replay des déplacements
-      /*  Jeu jeu = new Jeu(grille);*/
-
-        for (char c : coups) {
-
-            Direction dir =
-                SauvegardeHistorique.charVersDirection(c);
-
-            if (dir != null) {
-                jeu.deplacerJoueur(dir);
-            }
-        }
-
-    } else {
-
-        System.out.println(
-            ROUGE + "Aucune sauvegarde trouvée !" + RESET
-        );
-    }
-}
-
-// Intro
-effacer();
-       
-       
-       
-       
-       /**************************************************************
-               if (rep.equals("o")) {
-
-            File f = new File(fichierHisto);
-
-           if (f.exists()) {
-              /*  grille = ChargeurSauvegarde.charger(fichierSave);*/
-                System.out.println(VERT + " Partie chargée !" + RESET);
-                
-                
-                /*Charger *
-                
-                grille = creerNiveauSimple(choix);
-
-Jeu jeu = new Jeu(grille);
-
-SauvegardeHistorique histo =
-    new SauvegardeHistorique(fichierHisto);
-
-List<Character> coups =
-    histo.chargerHistorique();
-
-for (char c : coups) {
-
-    Direction dir =
-        SauvegardeHistorique.charVersDirection(c);
-
-    if (dir != null) {
-        jeu.deplacerJoueur(dir);
-    }
-} 
-                
-                
-                
-                /******************
-                
-                
-                
-            } else {
-                System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
-                grille = creerNiveauSimple(choix);
-            }
-
-        } else {
-            grille = creerNiveauSimple(choix);
-        }
+        grille = creerNiveauSimple(choix);
 
         if (grille == null) {
             System.out.println(ROUGE + "Niveau invalide !" + RESET);
             return;
         }
 
+        // création du jeu
+        jeu = new Jeu(grille);
+
+
+        // si on reprend une partie
+        if (rep.equals("o")) {
+
+            File f = new File(fichierHisto);
+
+            if (f.exists()) {
+
+                System.out.println(VERT + " Partie chargée !" + RESET);
+
+                // chargement de l'historique
+                SauvegardeHistorique histo =
+                    new SauvegardeHistorique(fichierHisto);
+
+                List<Character> coups =
+                    histo.chargerHistorique();
+
+                // replay des déplacements
+                /*  Jeu jeu = new Jeu(grille);*/
+
+                for (char c : coups) {
+
+                    Direction dir =
+                        SauvegardeHistorique.charVersDirection(c);
+
+                    if (dir != null) {
+                        jeu.deplacerJoueur(dir);
+                    }
+                }
+
+            } else {
+
+                System.out.println(
+                    ROUGE + "Aucune sauvegarde trouvée !" + RESET
+                );
+            }
+        }
+
+        // Intro
+        effacer();
+       
+       
+        System.out.println(VERT + " Partie chargée !" + RESET);
+
+        /**************************************************************
+        if (rep.equals("o")) {
+
+            File f = new File(fichierHisto);
+
+            if (f.exists()) {
+                /*  grille = ChargeurSauvegarde.charger(fichierSave);*/
+       
+
+                /*Charger *
+
+                grille = creerNiveauSimple(choix);
+
+                Jeu jeu = new Jeu(grille);
+
+                SauvegardeHistorique histo =
+                    new SauvegardeHistorique(fichierHisto);
+
+                List<Character> coups =
+                    histo.chargerHistorique();
+
+                for (char c : coups) {
+
+                    Direction dir =
+                        SauvegardeHistorique.charVersDirection(c);
+
+                    if (dir != null) {
+                        jeu.deplacerJoueur(dir);
+                    }
+                } 
+
+
+
+        /******************
+
+
+
+            } else {
+                System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
+                grille = creerNiveauSimple(choix);
+            }
+
+            } else {
+                grille = creerNiveauSimple(choix);
+            }
+
+            if (grille == null) {
+                System.out.println(ROUGE + "Niveau invalide !" + RESET);
+                return;
+            }
+
         // Intro
         effacer();
         
         ************************************************************/
-        
-        
-        
-        
         
         System.out.println(CYAN + "╔════════════════════════════════════════════════════════╗" + RESET);
         System.out.println(CYAN + "║" + BLEU + "         SOKOBAN - Niveau " + choix + " : " + noms[choix-1] + "               " + RESET + CYAN + "║" + RESET);
@@ -264,7 +259,7 @@ for (char c : coups) {
         PileDir d = new PileDir();
 
         // Boucle de jeu
-      /*  Jeu jeu = new Jeu(grille);*/
+        /*  Jeu jeu = new Jeu(grille);*/
         effacer();
         afficherEtatSimple(jeu);
         afficherControles();
@@ -456,67 +451,67 @@ for (char c : coups) {
 
 	Grille grilleRacine;
 
-/****************************************************new*/
- // toujours charger la grille racine depuis fichier
-    grilleRacine = ChargeurNiveau.charger(
-        DOSSIER + File.separator + fichierChoisi
-    );
+        /****************************************************new*/
+         // toujours charger la grille racine depuis fichier
+            grilleRacine = ChargeurNiveau.charger(
+                DOSSIER + File.separator + fichierChoisi
+            );
 
-    if (grilleRacine == null) {
-        System.out.println(ROUGE + "Niveau invalide !" + RESET);
-        return;
-    }
+            if (grilleRacine == null) {
+                System.out.println(ROUGE + "Niveau invalide !" + RESET);
+                return;
+            }
 
-    // création du jeu récursif (TOUJOURS neuf)
-    JeuRecursif jeu = new JeuRecursif(grilleRacine);
+            // création du jeu récursif (TOUJOURS neuf)
+            JeuRecursif jeu = new JeuRecursif(grilleRacine);
 
-/****************************************************/
+        /****************************************************/
 
 
 
-	// reprise de partie
-	String rep;
-	
-	do {
-    System.out.print("Reprendre une partie récursive ? (o/n) : ");
-    rep = scanner.nextLine().trim().toLowerCase();
-} while (!rep.equals("o") && !rep.equals("n"));
+        // reprise de partie
+        String rep;
 
-if (rep.equals("o")) {
+        do {
+            System.out.print("Reprendre une partie récursive ? (o/n) : ");
+            rep = scanner.nextLine().trim().toLowerCase();
+        } while (!rep.equals("o") && !rep.equals("n"));
 
-    File f = new File(fichierHisto);
+        if (rep.equals("o")) {
 
-    if (f.exists()) {
+            File f = new File(fichierHisto);
 
-        System.out.println(VERT + " Replay en cours..." + RESET);
+            if (f.exists()) {
 
-        SauvegardeHistorique histo =
-            new SauvegardeHistorique(fichierHisto);
+                System.out.println(VERT + " Replay en cours..." + RESET);
 
-        List<Character> coups =
-            histo.chargerHistorique();
+                SauvegardeHistorique histo =
+                    new SauvegardeHistorique(fichierHisto);
 
-        for (char c : coups) {
+                List<Character> coups =
+                    histo.chargerHistorique();
 
-            Direction dir =
-                SauvegardeHistorique.charVersDirection(c);
+                for (char c : coups) {
 
-            if (dir != null) {
-                boolean ok = jeu.deplacerJoueur(dir);
+                    Direction dir =
+                        SauvegardeHistorique.charVersDirection(c);
 
-                // IMPORTANT debug sécurité
-                if (!ok) {
-                    System.out.println(ROUGE +
-                        "Replay incohérent à une étape !" + RESET);
+                    if (dir != null) {
+                        boolean ok = jeu.deplacerJoueur(dir);
+
+                        // IMPORTANT debug sécurité
+                        if (!ok) {
+                            System.out.println(ROUGE +
+                                "Replay incohérent à une étape !" + RESET);
+                        }
+                    }
                 }
+
+            } else {
+                System.out.println(ROUGE + "Aucune sauvegarde !" + RESET);
             }
         }
 
-    } else {
-        System.out.println(ROUGE + "Aucune sauvegarde !" + RESET);
-    }
-}
-	
         
        /* **************************************/
 
@@ -634,7 +629,6 @@ if (rep.equals("o")) {
                                         System.out.println("Cliquez sur J pour quitter l'option Indice.");
                                         if (jeu.estNiveauTermine()) {
                                             afficherVictoire(jeu.getNombreMouvements(), jeu.getNombrePoussees());
-                                            
                                             // sauvegarde plateau solution
                                             SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
                                             saveSol.sauvegarder(jeu.getGrilleRacine());
@@ -642,8 +636,6 @@ if (rep.equals("o")) {
                                             //  sauvegarde historique solution
                                             SauvegardeHistorique histoSol = new SauvegardeHistorique(fichierHistoSolution);
                                             histoSol.ecrireHistoriqueRecursif(jeu);
-
-                                        
                                         }
                                     }
                                     break;
