@@ -12,10 +12,12 @@ import fr.paris13.parabox.Modele.Version;
 import fr.paris13.parabox.ResoAuto.PileDir;
 import fr.paris13.parabox.ResoAuto.ResoAutoRecursif;
 import fr.paris13.parabox.ig.menu.HelpMenu;
+import fr.paris13.parabox.ig.menu.MenuButton;
 import fr.paris13.parabox.ig.menu.PauseMenu;
 import fr.paris13.parabox.ig.menu.VictoryMenu;
 
 import java.io.File;
+import java.util.List;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
@@ -25,6 +27,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -45,8 +48,9 @@ public class Parabox extends StackPane {
     private final StackPane root;
     private final int lvl;
     private final String nomFich;
+    private final String fichierHisto;
     private boolean helpVisible;
-    
+    private PileDir di;
     /**
      * Initialise le jeu récursif avec une grille donnée
      * 
@@ -66,8 +70,10 @@ public class Parabox extends StackPane {
         helpVisible = true;
         pause = new PauseMenu(root, Version.RECURSIVE);
         pause.setVisible(false);
-        
-        getChildren().addAll(level, showLevelNum(), help, pause);
+        di = ResoAutoRecursif.recursif(jeu.getGrilleActive(), lvl);
+        fichierHisto = "niveau" + lvl + "_rec_histo_deplacements.txt";
+
+        getChildren().addAll(level, showLevelNum(), help, pause, loadMenu());
         
         Scene scene = root.getScene();
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
@@ -102,6 +108,20 @@ public class Parabox extends StackPane {
                 break;
             case R: // Recommencer
                 restart();
+                di = ResoAutoRecursif.recursif(jeu.getGrilleActive(), lvl);
+                break;
+            case I: // Indice
+                if (lvl == 1 || lvl == 2 || lvl == 4){
+                    if(!jeu.estNiveauTermine()) {
+                        Direction dir = di.depilerDir();
+                        jeu.deplacerJoueur(dir);
+                        level.updateBoardRec(jeu.getGrilleActive(), dir);
+
+                        if (jeu.estNiveauTermine()) {
+                            showVictory();
+                        }
+                    }
+                }
                 break;
             case A: // Auto
                 if (lvl == 1 || lvl == 2 || lvl == 4){
@@ -154,7 +174,7 @@ public class Parabox extends StackPane {
                     help.setVisible(true);
                     helpVisible = true;
                 }
-            default:
+                break;
         }
 
         if (direction != null) {
@@ -180,8 +200,8 @@ public class Parabox extends StackPane {
     }
     
     private void showVictory(){
-        String fichierSolution = "niveau" + lvl + "_solution.txt";
-        String fichierHistoSolution = "niveau" + lvl + "_sol_deplacements.txt";
+        String fichierSolution = "niveau" + lvl + "_rec_sol.txt";
+        String fichierHistoSolution = "niveau" + lvl + "_rec_sol_deplacements.txt";
         // sauvegarde plateau solution
         SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
         saveSol.sauvegarder(jeu.getGrilleRacine());
@@ -205,8 +225,7 @@ public class Parabox extends StackPane {
     }
     
     private void showPauseMenu(){
-        String fichierSave = "niveau" + lvl + "_save.txt";
-        String fichierHisto = "niveau" + lvl + "_histo_deplacements.txt";
+        String fichierSave = "niveau" + lvl + "_rec_save.txt";
         /*new : persistance*/
         SauvegardePlateauRecursif save = new SauvegardePlateauRecursif(fichierSave);
         save.sauvegarder(jeu.getGrilleRacine());
@@ -226,5 +245,46 @@ public class Parabox extends StackPane {
         niv.setStyle("-fx-font: 15 system; ");
         
         return niveau;
+    }
+    
+    private StackPane loadMenu(){
+        StackPane pane = new StackPane();
+        MenuButton load = new MenuButton("Load", 150, 75);
+        MenuButton start = new MenuButton("Start", 150, 75);
+        
+        HBox box = new HBox(25);
+        box.getChildren().addAll(load, start);
+        box.setAlignment(Pos.CENTER);
+        File f = new File(fichierHisto);
+        
+        load.setOnAction(() -> {
+            if (f.exists()) {
+                // chargement de l'historique
+                SauvegardeHistorique histo =
+                    new SauvegardeHistorique(fichierHisto);
+                List<Character> coups =
+                    histo.chargerHistorique();
+                // replay des déplacements
+                /*  Jeu jeu = new Jeu(grille);*/
+                for (char c : coups) {
+                    Direction dir =
+                        SauvegardeHistorique.charVersDirection(c);
+                    if (dir != null) {
+                        jeu.deplacerJoueur(dir);
+                        level.updateBoardRec(jeu.getGrilleActive(), dir);
+                    }
+                }
+            }
+            this.getChildren().remove(getChildren().size()-1);
+        });
+        
+        start.setOnAction(() -> {
+            restart();
+            this.getChildren().remove(getChildren().size()-1);
+        });
+        
+        pane.setStyle("-fx-background-color: lightblue;");
+        pane.getChildren().addAll(box);
+        return pane;
     }
 }
