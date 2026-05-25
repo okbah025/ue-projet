@@ -61,7 +61,11 @@ public class VictoryMenu extends StackPane {
         text3.setStyle("-fx-font: 24 system;");
         text4.setStyle("-fx-font: 24 system;");
         
-        button.getChildren().addAll(home, list, next);
+        if ((ver == Version.SIMPLE && lvl.getLvl() == 10) || (ver == Version.RECURSIVE && lvl.getLvl() == 5)){
+            button.getChildren().addAll(home, list);
+        } else {
+            button.getChildren().addAll(home, list, next);
+        }
         score.getChildren().addAll(text3, text4);
         box.getChildren().addAll(text, text2, score, button);
         

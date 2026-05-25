@@ -200,7 +200,7 @@ public class Parabox extends StackPane {
     }
     
     private void showVictory(){
-        String fichierSolution = "niveau" + lvl + "_rec_sol.txt";
+        String fichierSolution = "niveau" + lvl + "_rec_solution.txt";
         String fichierHistoSolution = "niveau" + lvl + "_rec_sol_deplacements.txt";
         // sauvegarde plateau solution
         SauvegardePlateauRecursif saveSol = new SauvegardePlateauRecursif(fichierSolution);
@@ -271,9 +271,9 @@ public class Parabox extends StackPane {
                         SauvegardeHistorique.charVersDirection(c);
                     if (dir != null) {
                         jeu.deplacerJoueur(dir);
-                        level.updateBoardRec(jeu.getGrilleActive(), dir);
                     }
                 }
+                level.updateBoardRec(jeu.getGrilleActive(), Direction.BAS);
             }
             this.getChildren().remove(getChildren().size()-1);
         });
