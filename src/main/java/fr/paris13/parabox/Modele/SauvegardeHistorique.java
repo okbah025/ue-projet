@@ -7,6 +7,9 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 
+import java.io.*;
+import java.util.*;
+
 
 public class SauvegardeHistorique {
 
@@ -51,90 +54,73 @@ public class SauvegardeHistorique {
             e.printStackTrace();
         }
     }
-}
 
 
+	
+	/*dans la même classe cette fois, méthode pour CHARGER l'historique des déplacements d'une partie précédente*/
+    // CHARGEMENT
 
+    public List<Character> chargerHistorique() {
 
+        List<Character> coups =
+            new ArrayList<>();
 
+        try {
 
+            BufferedReader reader =
+                new BufferedReader(
+                    new FileReader(fichierEcrireHisto)
+                );
 
+            String ligne;
 
-/*
-	public void ecrireHistorique(Jeu jeu) {
+            while ((ligne = reader.readLine()) != null) {
 
-    try {
-        FileWriter fw = new FileWriter(fichierEcrireHisto, true); //mode append
-        BufferedWriter writer = new BufferedWriter(fw);
+                for (char c : ligne.toCharArray()) {
 
-        Stack<Character> stack = jeu.getHistorique().viderEtConvertir();
+                    if ("udlrUDLR".indexOf(c) != -1) {
+                        coups.add(c);
+                    }
+                }
+            }
 
-        String chaine = "";
+            reader.close();
 
-        while (!stack.isEmpty()) {
-            chaine += stack.pop();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        writer.write(chaine);
-        /*on veut tous les historiques des sessions de jeu de ce niveau sur une seule ligne*
-        writer.close();
-
-    } catch (IOException e) {
-        e.printStackTrace();
+        return coups;
     }
-} */
 
+    // =========================
+    // CONVERSION
+    // =========================
 
+    public static Direction charVersDirection(char c) {
 
-/*
-	public char  convertir_direction_en_caractere(Direction d, Boite b) {
-		char c;
-		
-		if (b == null) {
-			
-			switch (d) {
-			    case HAUT:
-				c = 'u';
-				break;
-			    case BAS:
-				c = 'd';
-				break;
-			    case GAUCHE:
-				c = 'l';
-				break;
-			    case DROITE:
-				c = 'r';
-				break;
-			    default:
-				throw new IllegalArgumentException("Direction inconnue");
-			}
-		}
-		
-		else {
-			switch (d) {
-			    case HAUT:
-				c = 'U';
-				break;
-			    case BAS:
-				c = 'D';
-				break;
-			    case GAUCHE:
-				c = 'L';
-				break;
-			    case DROITE:
-				c = 'R';
-				break;
-			    default:
-				throw new IllegalArgumentException("Direction inconnue");
-			}
-			
-		}
-		
-		return c;
-	}	
+        switch (Character.toLowerCase(c)) {
 
+            case 'u':
+                return Direction.HAUT;
 
+            case 'd':
+                return Direction.BAS;
+
+            case 'l':
+                return Direction.GAUCHE;
+
+            case 'r':
+                return Direction.DROITE;
+
+            default:
+                return null;
+        }
+    }
 }
+
+
+
 
 
 /* dans main , au moment de quitter la partie : 

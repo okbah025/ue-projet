@@ -127,6 +127,7 @@ public class MainTerminalComplet extends ResoAutoRecursif {
 
 
         Grille grille;
+        Jeu jeu;
 
         //  lecture de la réponse
         String rep;
@@ -135,13 +136,100 @@ public class MainTerminalComplet extends ResoAutoRecursif {
             rep = scanner.nextLine().trim().toLowerCase();
         } while (!rep.equals("o") && !rep.equals("n"));
 
-        if (rep.equals("o")) {
+       
+       // création de la grille initiale
+grille = creerNiveauSimple(choix);
 
-            File f = new File(fichierSave);
+if (grille == null) {
+    System.out.println(ROUGE + "Niveau invalide !" + RESET);
+    return;
+}
 
-            if (f.exists()) {
-                grille = ChargeurSauvegarde.charger(fichierSave);
+// création du jeu
+jeu = new Jeu(grille);
+
+
+// si on reprend une partie
+if (rep.equals("o")) {
+
+    File f = new File(fichierHisto);
+
+    if (f.exists()) {
+
+        System.out.println(VERT + " Partie chargée !" + RESET);
+
+        // chargement de l'historique
+        SauvegardeHistorique histo =
+            new SauvegardeHistorique(fichierHisto);
+
+        List<Character> coups =
+            histo.chargerHistorique();
+
+        // replay des déplacements
+      /*  Jeu jeu = new Jeu(grille);*/
+
+        for (char c : coups) {
+
+            Direction dir =
+                SauvegardeHistorique.charVersDirection(c);
+
+            if (dir != null) {
+                jeu.deplacerJoueur(dir);
+            }
+        }
+
+    } else {
+
+        System.out.println(
+            ROUGE + "Aucune sauvegarde trouvée !" + RESET
+        );
+    }
+}
+
+// Intro
+effacer();
+       
+       
+       
+       
+       /**************************************************************
+               if (rep.equals("o")) {
+
+            File f = new File(fichierHisto);
+
+           if (f.exists()) {
+              /*  grille = ChargeurSauvegarde.charger(fichierSave);*/
                 System.out.println(VERT + " Partie chargée !" + RESET);
+                
+                
+                /*Charger *
+                
+                grille = creerNiveauSimple(choix);
+
+Jeu jeu = new Jeu(grille);
+
+SauvegardeHistorique histo =
+    new SauvegardeHistorique(fichierHisto);
+
+List<Character> coups =
+    histo.chargerHistorique();
+
+for (char c : coups) {
+
+    Direction dir =
+        SauvegardeHistorique.charVersDirection(c);
+
+    if (dir != null) {
+        jeu.deplacerJoueur(dir);
+    }
+} 
+                
+                
+                
+                /******************
+                
+                
+                
             } else {
                 System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
                 grille = creerNiveauSimple(choix);
@@ -158,6 +246,13 @@ public class MainTerminalComplet extends ResoAutoRecursif {
 
         // Intro
         effacer();
+        
+        ************************************************************/
+        
+        
+        
+        
+        
         System.out.println(CYAN + "╔════════════════════════════════════════════════════════╗" + RESET);
         System.out.println(CYAN + "║" + BLEU + "         SOKOBAN - Niveau " + choix + " : " + noms[choix-1] + "               " + RESET + CYAN + "║" + RESET);
         System.out.println(CYAN + "╚════════════════════════════════════════════════════════╝" + RESET);
@@ -169,7 +264,7 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         PileDir d = new PileDir();
 
         // Boucle de jeu
-        Jeu jeu = new Jeu(grille);
+      /*  Jeu jeu = new Jeu(grille);*/
         effacer();
         afficherEtatSimple(jeu);
         afficherControles();
@@ -361,54 +456,69 @@ public class MainTerminalComplet extends ResoAutoRecursif {
 
 	Grille grilleRacine;
 
+/****************************************************new*/
+ // toujours charger la grille racine depuis fichier
+    grilleRacine = ChargeurNiveau.charger(
+        DOSSIER + File.separator + fichierChoisi
+    );
+
+    if (grilleRacine == null) {
+        System.out.println(ROUGE + "Niveau invalide !" + RESET);
+        return;
+    }
+
+    // création du jeu récursif (TOUJOURS neuf)
+    JeuRecursif jeu = new JeuRecursif(grilleRacine);
+
+/****************************************************/
 
 
 
 	// reprise de partie
 	String rep;
+	
 	do {
-	    System.out.print("Reprendre une partie récursive ? (o/n) : ");
-	    rep = scanner.nextLine().trim().toLowerCase();
-	} while (!rep.equals("o") && !rep.equals("n"));
+    System.out.print("Reprendre une partie récursive ? (o/n) : ");
+    rep = scanner.nextLine().trim().toLowerCase();
+} while (!rep.equals("o") && !rep.equals("n"));
 
-	if (rep.equals("o")) {
+if (rep.equals("o")) {
 
-	    File f = new File(fichierSave);
+    File f = new File(fichierHisto);
 
-	    if (f.exists()) {
-		//  ici il faut un chargeur de sauvegarde récursive (pas le simple)
+    if (f.exists()) {
 
+        System.out.println(VERT + " Replay en cours..." + RESET);
 
-		grilleRacine = ChargeurNiveau.charger(fichierSave);
+        SauvegardeHistorique histo =
+            new SauvegardeHistorique(fichierHisto);
 
-		System.out.println(VERT + " Partie récursive chargée !" + RESET);
-	    } else {
-		System.out.println(ROUGE + " Aucune sauvegarde trouvée !" + RESET);
-		grilleRacine = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
-	    }
+        List<Character> coups =
+            histo.chargerHistorique();
 
-	} else {
-	    grilleRacine = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
-	}
+        for (char c : coups) {
 
-	if (grilleRacine == null) {
-	    System.out.println(ROUGE + "Niveau invalide !" + RESET);
-	    return;
-	}
+            Direction dir =
+                SauvegardeHistorique.charVersDirection(c);
 
+            if (dir != null) {
+                boolean ok = jeu.deplacerJoueur(dir);
 
-
-
-        /* Charger la grille depuis le fichier
-        System.out.println(CYAN + "\nChargement : " + fichierChoisi + "..." + RESET);
-        Grille grilleRacine = ChargeurNiveau.charger(DOSSIER + File.separator + fichierChoisi);
-        if (grilleRacine == null) {
-            System.out.println(ROUGE + "Impossible de charger le niveau !" + RESET);
-            return;
+                // IMPORTANT debug sécurité
+                if (!ok) {
+                    System.out.println(ROUGE +
+                        "Replay incohérent à une étape !" + RESET);
+                }
+            }
         }
-        */
+
+    } else {
+        System.out.println(ROUGE + "Aucune sauvegarde !" + RESET);
+    }
+}
+	
         
-        
+       /* **************************************/
 
         // Pile qui contiendra toutes les directions à prendre pour résoudre le niveau
         PileDir d = new PileDir();
@@ -427,7 +537,7 @@ public class MainTerminalComplet extends ResoAutoRecursif {
         scanner.nextLine();
 
         // Boucle de jeu récursif
-        JeuRecursif jeu = new JeuRecursif(grilleRacine);
+        /*JeuRecursif jeu = new JeuRecursif(grilleRacine);*/
         effacer();
         afficherEtatRecursif(jeu);
         afficherControlesRecursif();
