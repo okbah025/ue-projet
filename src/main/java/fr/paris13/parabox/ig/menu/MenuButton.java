@@ -29,12 +29,15 @@ public class MenuButton extends StackPane {
         text = new Text(name);
         text.setFill(Color.BLACK);
         
+        Rectangle contour = new Rectangle(width, height);
+        contour.setStroke(Color.BLACK);
+        contour.setFill(Color.ALICEBLUE);
         button = new Rectangle(width, height);
         button.setStroke(Color.BLACK);
         button.setFill(Color.PINK);
         button.setVisible(false);
         
-        this.getChildren().addAll(button, text);
+        this.getChildren().addAll(contour, button, text);
         
         this.setOnMouseEntered(e -> {
             onSelect();

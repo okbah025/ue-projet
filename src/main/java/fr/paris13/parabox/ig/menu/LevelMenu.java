@@ -29,8 +29,8 @@ public class LevelMenu extends VBox {
         
         Label text = new Label("Choose a Level");
         
-        HBox box1 = new HBox();
-        HBox box2 = new HBox();
+        HBox box1 = new HBox(10);
+        HBox box2 = new HBox(10);
         
         for (int i = 0; i<grid.length/2; i++){
             int level = i + 1;
@@ -65,6 +65,7 @@ public class LevelMenu extends VBox {
         MenuButton back = new MenuButton("Back", 100, 100);
         back.setOnAction(() -> root.getChildren().setAll(new MainMenu(root)));
         
+        this.setSpacing(10);
         this.setStyle("-fx-background-color: lightblue;");
         this.getChildren().addAll(text, box1, box2, back);
         this.setAlignment(Pos.CENTER);

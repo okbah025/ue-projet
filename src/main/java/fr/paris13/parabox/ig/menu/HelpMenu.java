@@ -18,8 +18,8 @@ import javafx.scene.text.Text;
  */
 public class HelpMenu extends StackPane {
     
-    private static final String[] tabT = {"Annuler dernier mouvement","Chemin vers cellule cliqué", "Jeu automatique", "Recommencer le niveau", "Pause", "Afficher/Désafficher aide"};
-    private static final String[] tabC = {"Z","P", "A", "R", "ESC", "H"};
+    private static final String[] tabT = {"Annuler dernier mouvement","Chemin vers cellule cliqué", "Indice", "Jeu automatique", "Recommencer le niveau", "Pause", "Afficher/Désafficher aide"};
+    private static final String[] tabC = {"Z","P", "I", "A", "R", "ESC", "H"};
     private static final String[] tabF = {"↑", "↓", "←", "→"};
     
     /**
@@ -65,8 +65,9 @@ public class HelpMenu extends StackPane {
         but.setStyle("-fx-font: 15 system; ");
         Text aide = new Text("Poussez les fleurs sur une clible.");
         Text aide1 = new Text("Appuyez sur P, puis une case pour afficher un chemin.");
+        Text aide2 = new Text("Pour utiliser indice il faut recommencer le jeu (R).");
         
-        cont.getChildren().addAll(but, aide, aide1);
+        cont.getChildren().addAll(but, aide, aide2, aide1);
         
         if (ver == Version.RECURSIVE){
             Text aideRec1 = new Text("Déplacez-vous sur une flaque pour y entrer.");

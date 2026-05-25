@@ -5,8 +5,10 @@ import fr.paris13.parabox.Modele.SokobanLevel;
 import fr.paris13.parabox.Modele.Version;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  * Classe MainMenu qui affiche le menu principal de l'application.
@@ -33,7 +35,10 @@ public class MainMenu extends VBox {
         parabox = new MenuButton("Parabox", 200, 75);
         exit = new MenuButton("Exit", 200, 75);
         
-        this.getChildren().addAll(sokoban, parabox, exit);
+        Label title = new Label("HerTech");
+        title.setStyle("-fx-font-size: 100;");
+        
+        this.getChildren().addAll(title, sokoban, parabox, exit);
         this.setAlignment(Pos.CENTER);
         this.setSpacing(25);
         this.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
