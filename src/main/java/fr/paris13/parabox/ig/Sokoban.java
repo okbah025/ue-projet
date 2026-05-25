@@ -264,8 +264,8 @@ public class Sokoban extends StackPane {
     
     private StackPane loadMenu(){
         StackPane pane = new StackPane();
-        MenuButton load = new MenuButton("Load", 150, 75);
-        MenuButton start = new MenuButton("Start", 150, 75);
+        MenuButton load = new MenuButton("Charger", 150, 75);
+        MenuButton start = new MenuButton("Commencer", 150, 75);
         
         HBox box = new HBox(25);
         box.getChildren().addAll(load, start);

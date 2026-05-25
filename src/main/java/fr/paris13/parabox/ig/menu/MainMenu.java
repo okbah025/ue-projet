@@ -32,7 +32,7 @@ public class MainMenu extends VBox {
         
         sokoban = new MenuButton("Sokoban", 200, 75);
         parabox = new MenuButton("Parabox", 200, 75);
-        exit = new MenuButton("Exit", 200, 75);
+        exit = new MenuButton("Quitter", 200, 75);
         
         Label title = new Label("HerTech");
         title.setStyle("-fx-font-size: 100;");

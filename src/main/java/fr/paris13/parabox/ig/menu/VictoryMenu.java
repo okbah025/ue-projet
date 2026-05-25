@@ -8,10 +8,11 @@ import fr.paris13.parabox.ig.Parabox;
 import fr.paris13.parabox.ig.Sokoban;
 
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 
@@ -42,9 +43,14 @@ public class VictoryMenu extends StackPane {
         HBox score = new HBox();
         VBox box = new VBox();
         
-        next = new MenuButton("next", 100, 75);
-        list = new MenuButton("list", 100, 75);
-        home = new MenuButton("home", 100, 75);
+        Rectangle cont = new Rectangle(600, 400, Color.WHITE);
+        cont.setArcWidth(70);
+        cont.setArcHeight(70);
+        
+        
+        next = new MenuButton("Suivant", 100, 75);
+        list = new MenuButton("Niveaux", 100, 75);
+        home = new MenuButton("Accueil", 100, 75);
         text = new Text("Niveau " + lvl.getLvl() + " terminé !!");
         Text text2 = new Text("Score final :");
         Text text3 = new Text("Mouvement : " + mvt);
@@ -66,7 +72,7 @@ public class VictoryMenu extends StackPane {
         box.setSpacing(25);
         box.setMaxSize(USE_PREF_SIZE, USE_PREF_SIZE);
         
-        this.getChildren().add(box);
+        this.getChildren().addAll(cont, box);
         this.setStyle("-fx-background-color: lightblue;");
         
         if (ver == Version.SIMPLE){

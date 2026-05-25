@@ -31,9 +31,9 @@ public class PauseMenu extends StackPane {
     public PauseMenu(StackPane root, Version ver){
         Grille[] levelList;
         VBox box = new VBox();
-        resume = new MenuButton("Resume", 200, 75);
-        levels = new MenuButton("Levels", 200, 75);
-        mainMenu = new MenuButton("Main Menu", 200, 75);
+        resume = new MenuButton("Reprendre", 200, 75);
+        levels = new MenuButton("Niveaux", 200, 75);
+        mainMenu = new MenuButton("Menu Principal", 200, 75);
         box.getChildren().addAll(resume, levels, mainMenu);
         box.setAlignment(Pos.CENTER);
         box.setSpacing(25);

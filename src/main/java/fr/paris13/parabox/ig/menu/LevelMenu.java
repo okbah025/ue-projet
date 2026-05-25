@@ -27,14 +27,14 @@ public class LevelMenu extends VBox {
      */
     public LevelMenu(StackPane root, Grille[] grid, Version ver){
         
-        Label text = new Label("Choose a Level");
+        Label text = new Label("Choisissez un niveau");
         
         HBox box1 = new HBox(10);
         HBox box2 = new HBox(10);
         
         for (int i = 0; i<grid.length/2; i++){
             int level = i + 1;
-            MenuButton btn = new MenuButton("Lvl " + level, 150, 75);
+            MenuButton btn = new MenuButton("Niv " + level, 150, 75);
             Grille g = grid[i];
             
             if (ver == Version.SIMPLE){
@@ -48,7 +48,7 @@ public class LevelMenu extends VBox {
         
         for (int i = grid.length/2; i<grid.length; i++){
             int level = i + 1;
-            MenuButton btn = new MenuButton("Lvl " + level, 150, 75);
+            MenuButton btn = new MenuButton("Niv " + level, 150, 75);
             Grille g = grid[i];
             
             if (ver == Version.SIMPLE){
