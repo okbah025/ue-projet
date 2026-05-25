@@ -7,6 +7,7 @@ import fr.paris13.parabox.chemin.pile;
 import java.util.Stack;
 
 import javafx.geometry.Pos;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -241,14 +242,20 @@ public class Level extends GridPane {
      * @param i colonne i
      * @param j ligne j
      */
-    private void setRoom(int i, int j){
-        ImageView level = new ImageView();
-        level.setImage(new Image("/images/room.png"));
-        level.setFitHeight(SIZE);
-        level.setFitWidth(SIZE);
-        level.setPreserveRatio(true);
+    private void setRoom(int i, int j, char c){
+        ImageView room = new ImageView();
+        room.setImage(new Image("/images/room.png"));
+        room.setFitHeight(SIZE);
+        room.setFitWidth(SIZE);
+        room.setPreserveRatio(true);
         
-        cells[i][j].getChildren().add(level);
+        ColorAdjust colorAdjust = new ColorAdjust();
+        double s = (c - 'A' + 1) * 0.1 - 1;
+        colorAdjust.setHue(s);
+        
+        room.setEffect(colorAdjust);
+        
+        cells[i][j].getChildren().add(room);
     }
    
     private void setPath(int i, int j){
@@ -296,7 +303,7 @@ public class Level extends GridPane {
             int j = box.getY();
             
             if (box instanceof Piece){
-                setRoom(i, j);
+                setRoom(i, j, box.getSymbole());
             }
             else {
                 if (!box.estSurCible()){
@@ -349,7 +356,7 @@ public class Level extends GridPane {
             setFloor(i, j);
             
             if (box instanceof Piece){
-                setRoom(i, j);
+                setRoom(i, j, ((Piece) box).getIdentifiant());
             }
             else {
                 if (!box.estSurCible()){
